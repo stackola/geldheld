@@ -8,7 +8,7 @@ export default class Shop extends Component {
   render() {
     return (
       <Wrapper>
-        <Header title="Shop"/>
+        <Header title="Shop" />
       </Wrapper>
     );
   }

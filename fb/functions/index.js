@@ -14,6 +14,6 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     .create({
       id: uid,
       coins: defaultBalance,
-      time: admin.firestore.FieldValue.serverTimestamp(),
+      time: admin.firestore.FieldValue.serverTimestamp()
     });
 });

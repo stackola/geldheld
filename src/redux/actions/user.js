@@ -21,8 +21,7 @@ export function userSubscribe(cb) {
           dispatch(setUserObject({}));
         } else {
           dispatch(setUserObject(doc._data));
-          cb && 
-          cb();
+          cb && cb();
         }
       });
   };
