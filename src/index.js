@@ -16,26 +16,9 @@ import store from "./redux/store";
 import { Provider } from "react-redux";
 import colors from "./colors";
 
-
 const PlayStack = createStackNavigator(
   {
     Play
-    //Details: Details,
-    //Report: Report,
-    //Profile: Profile,
-    //MyPosts: MyPosts,
-    //Chat: Chat,
-    //Chats: Chats
-    /*
-  SingleComment: SingleComment,
-  Events: Events,
-  EditProfile: EditProfile,
-  Group: Group,
-  ImageView: ImageView,
-  Profile: Profile,
-  CreateGroup: CreateGroup,
-  Messages: Messages,
-  Message: Message,*/
   },
   {
     initialRouteName: "Play",
@@ -48,25 +31,9 @@ const PlayStack = createStackNavigator(
 const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
-    Play: Play,
+    Play: PlayStack,
     Shop,
     Settings
-    //Details: Details,
-    //Report: Report,
-    //Profile: Profile,
-    //MyPosts: MyPosts,
-    //Chat: Chat,
-    //Chats: Chats
-    /*
-  SingleComment: SingleComment,
-  Events: Events,
-  EditProfile: EditProfile,
-  Group: Group,
-  ImageView: ImageView,
-  Profile: Profile,
-  CreateGroup: CreateGroup,
-  Messages: Messages,
-  Message: Message,*/
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -93,8 +60,6 @@ const AppStack = createBottomTabNavigator(
         if (routeName === "Play") {
           iconName = `cards-playing-outline`;
         }
-
-        // You can return any component that you like here!
         return <Icon name={iconName} size={25} color={tintColor} />;
       }
     }),
