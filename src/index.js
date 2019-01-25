@@ -6,15 +6,15 @@ import {
   createBottomTabNavigator,
   createAppContainer
 } from "react-navigation";
-import Home from "./screens/Home";
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import Earn from "./screens/Earn";
 import Play from "./screens/Play";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
-//import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import store from "./redux/store";
 import { Provider } from "react-redux";
+import colors from "./colors";
 class OtherScreen extends React.Component {
   render() {
     return (
@@ -27,7 +27,6 @@ class OtherScreen extends React.Component {
 
 const AppStack = createBottomTabNavigator(
   {
-    Home: Home,
     Earn: Earn,
     Play,
     Shop,
@@ -52,23 +51,37 @@ const AppStack = createBottomTabNavigator(
   {
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
-      /*tabBarIcon: ({ focused, horizontal, tintColor }) => {
+      tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
         let iconName="plus";
         if (routeName === "Home") {
-          iconName = 'home';
+          iconName = 'home-outline';
           
-        } else if (routeName === "Settings") {
-          iconName = `gear`;
+        }
+        if (routeName === "Settings") {
+          iconName = `settings`;
+        }
+
+        if (routeName === "Earn") {
+          iconName = `coin`;
+        }
+
+        if (routeName === "Shop") {
+          iconName = `cart-outline`;
+        }
+
+
+        if (routeName === "Play") {
+          iconName = `cards-playing-outline`;
         }
 
         // You can return any component that you like here!
         return <Icon name={iconName} size={25} color={tintColor} />;
-      }*/
+      }
     }),
     tabBarOptions: {
-      activeTintColor: "tomato",
-      inactiveTintColor: "gray"
+      activeTintColor: colors.action,
+      inactiveTintColor: colors.background
     }
   }
 );

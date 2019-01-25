@@ -5,13 +5,10 @@ import { combineReducers } from "redux";
 
 //Define name and default value
 export const user = createReducer(
-  { username: "Anon", subs: [] },
+  { username: "Anon" },
   {
     [types.SET_USER_OBJECT](state, action) {
-      return { subs: state.subs, ...action.payload };
-    },
-    [types.SET_SUBS](state, action) {
-      return { ...state, subs: action.payload };
+      return { ...action.payload };
     }
   }
 );

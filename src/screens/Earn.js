@@ -8,7 +8,7 @@ export default class Earn extends Component {
   render() {
     return (
       <Wrapper>
-        <Header />
+        <Header title="Earn"/>
       </Wrapper>
     );
   }

@@ -8,7 +8,7 @@ export default class Settings extends Component {
   render() {
     return (
       <Wrapper>
-        <Header />
+        <Header title="Settings"/>
       </Wrapper>
     );
   }

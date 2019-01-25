@@ -8,7 +8,7 @@ export default class Play extends Component {
   render() {
     return (
       <Wrapper>
-        <Header />
+        <Header title="Play"/>
       </Wrapper>
     );
   }
