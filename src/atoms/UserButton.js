@@ -1,14 +1,41 @@
-import React, { PureComponent } from 'react'
-import { Text, View, TouchableOpacity } from 'react-native'
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
-import colors from '../colors';
-export default class UserButton extends PureComponent {
+import React, { PureComponent } from "react";
+import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from "../colors";
+
+import { connect } from "react-redux";
+import { ActionCreators } from "../redux/actions";
+import { bindActionCreators } from "redux";
+
+class UserButton extends PureComponent {
   render() {
-    return (
-      <TouchableOpacity style={{width:60, alignItems:'center', justifyContent:'center'}}>
-          <Icon name="coin" color={colors.action} size={25}/>
-        <Text style={{fontWeight:"bold"}}>50</Text>
+    let user = this.props.user.id ? this.props.user : null;
+    return user ? (
+      <TouchableOpacity
+        style={{ width: 60, alignItems: "center", justifyContent: "center" }}
+      >
+        <Icon name="coin" color={colors.action} size={25} />
+        <Text style={{ fontWeight: "bold" }}>{user.coins}</Text>
       </TouchableOpacity>
-    )
+    ) : (
+      <View
+        style={{ width: 60, alignItems: "center", justifyContent: "center" }}
+      >
+        <ActivityIndicator color={colors.background} />
+      </View>
+    );
   }
 }
+
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(UserButton);

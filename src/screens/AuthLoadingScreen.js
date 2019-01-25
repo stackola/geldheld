@@ -18,19 +18,15 @@ class AuthLoadingScreen extends Component {
       .auth()
       .signInAnonymously()
       .then(() => {
-
         this.props.userSubscribe();
         this.props.navigation.navigate("App");
       });
   }
 
   render() {
-    return (
-      <LoadingScreen/>
-    );
+    return <LoadingScreen />;
   }
 }
-
 
 function mapStateToProps(state) {
   return {};
