@@ -3,22 +3,16 @@ import { Text, View } from "react-native";
 import {
   createSwitchNavigator,
   createStackNavigator,
+  createBottomTabNavigator,
   createAppContainer
 } from "react-navigation";
 import Home from "./screens/Home";
-/*
-import Details from "./screens/Details";
-import Chats from "./screens/Chats";
-import Chat from "./screens/Chat";
-import Report from "./screens/Report";
-import MyPosts from "./screens/MyPosts";
-import Profile from "./screens/Profile";
-import { OverlayProvider } from "./components/overlay/";
-*/
-
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
-
-import SignInScreen from "./screens/SignInScreen";
+import Earn from "./screens/Earn";
+import Play from "./screens/Play";
+import Shop from "./screens/Shop";
+import Settings from "./screens/Settings";
+//import Icon from "react-native-vector-icons/MaterialCommunityIcons"
 import store from "./redux/store";
 import { Provider } from "react-redux";
 class OtherScreen extends React.Component {
@@ -31,9 +25,13 @@ class OtherScreen extends React.Component {
   }
 }
 
-const AppStack = createStackNavigator(
+const AppStack = createBottomTabNavigator(
   {
-    Home: Home
+    Home: Home,
+    Earn: Earn,
+    Play,
+    Shop,
+    Settings
     //Details: Details,
     //Report: Report,
     //Profile: Profile,
@@ -51,19 +49,35 @@ const AppStack = createStackNavigator(
   Messages: Messages,
   Message: Message,*/
   },
-  { defaultNavigationOptions: { header: null } }
-);
-const AuthStack = createStackNavigator(
-  { SignIn: SignInScreen },
-  { defaultNavigationOptions: { header: null } }
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
+      /*tabBarIcon: ({ focused, horizontal, tintColor }) => {
+        const { routeName } = navigation.state;
+        let iconName="plus";
+        if (routeName === "Home") {
+          iconName = 'home';
+          
+        } else if (routeName === "Settings") {
+          iconName = `gear`;
+        }
+
+        // You can return any component that you like here!
+        return <Icon name={iconName} size={25} color={tintColor} />;
+      }*/
+    }),
+    tabBarOptions: {
+      activeTintColor: "tomato",
+      inactiveTintColor: "gray"
+    }
+  }
 );
 
 let Navigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack,
-      Auth: AuthStack
+      App: AppStack
     },
     {
       initialRouteName: "AuthLoading"
