@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "258289884279",
+    "firebase_url": "https://geldheld-746c9.firebaseio.com",
+    "project_id": "geldheld-746c9",
+    "storage_bucket": "geldheld-746c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258289884279:android:a41c9106a1acf0af",
+        "android_client_info": {
+          "package_name": "com.stackola.geldheld"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "258289884279-mn9alref0m3r0mi5avin8j9splo473tg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUmgkjf9kAN9JC_8lY-qRwwv99TbH86b0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
