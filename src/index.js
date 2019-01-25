@@ -11,7 +11,7 @@ import Earn from "./screens/Earn";
 import Play from "./screens/Play";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons"
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import store from "./redux/store";
 import { Provider } from "react-redux";
 import colors from "./colors";
@@ -25,10 +25,38 @@ class OtherScreen extends React.Component {
   }
 }
 
+const PlayStack = createStackNavigator(
+  {
+    Play
+    //Details: Details,
+    //Report: Report,
+    //Profile: Profile,
+    //MyPosts: MyPosts,
+    //Chat: Chat,
+    //Chats: Chats
+    /*
+  SingleComment: SingleComment,
+  Events: Events,
+  EditProfile: EditProfile,
+  Group: Group,
+  ImageView: ImageView,
+  Profile: Profile,
+  CreateGroup: CreateGroup,
+  Messages: Messages,
+  Message: Message,*/
+  },
+  {
+    initialRouteName: "Play",
+    defaultNavigationOptions: {
+      header: null
+    }
+  }
+);
+
 const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
-    Play,
+    Play: PlayStack,
     Shop,
     Settings
     //Details: Details,
@@ -50,13 +78,13 @@ const AppStack = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
+      initialRouteName: "Earn",
       header: null,
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
-        let iconName="plus";
+        let iconName = "plus";
         if (routeName === "Home") {
-          iconName = 'home-outline';
-          
+          iconName = "home-outline";
         }
         if (routeName === "Settings") {
           iconName = `settings`;
@@ -69,7 +97,6 @@ const AppStack = createBottomTabNavigator(
         if (routeName === "Shop") {
           iconName = `cart-outline`;
         }
-
 
         if (routeName === "Play") {
           iconName = `cards-playing-outline`;

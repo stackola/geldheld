@@ -6,5 +6,8 @@ service cloud.firestore {
     match /users/{user} {
       allow read: if user == request.auth.uid; 
     }
+    match /offers/{offer}{
+      allow read: if true;
+    }
   }
 }

@@ -15,9 +15,9 @@ export default class Header extends Component {
           flexDirection: "row"
         }}
       >
-        <View style={{ width: 12 }} />
+        <View style={{ width: 8 }} />
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ color: colors.background, fontSize: 15 }}>
+          <Text style={{ color: colors.background, fontSize: 17, fontWeight:"bold" }}>
             {this.props.title}
           </Text>
         </View>

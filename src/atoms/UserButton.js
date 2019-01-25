@@ -12,14 +12,24 @@ class UserButton extends PureComponent {
     let user = this.props.user.id ? this.props.user : null;
     return user ? (
       <TouchableOpacity
-        style={{ width: 60, alignItems: "center", justifyContent: "center" }}
+        style={{
+          width: 60,
+          alignItems: "center",
+          justifyContent: "center",
+          marginRight: 8
+        }}
       >
         <Icon name="coin" color={colors.action} size={25} />
         <Text style={{ fontWeight: "bold" }}>{user.coins}</Text>
       </TouchableOpacity>
     ) : (
       <View
-        style={{ width: 60, alignItems: "center", justifyContent: "center" }}
+        style={{
+          width: 60,
+          alignItems: "center",
+          justifyContent: "center",
+          marginRight: 8
+        }}
       >
         <ActivityIndicator color={colors.background} />
       </View>
