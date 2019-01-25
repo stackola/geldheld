@@ -15,15 +15,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import store from "./redux/store";
 import { Provider } from "react-redux";
 import colors from "./colors";
-class OtherScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Other!</Text>
-      </View>
-    );
-  }
-}
+
 
 const PlayStack = createStackNavigator(
   {
@@ -56,7 +48,7 @@ const PlayStack = createStackNavigator(
 const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
-    Play: PlayStack,
+    Play: Play,
     Shop,
     Settings
     //Details: Details,
