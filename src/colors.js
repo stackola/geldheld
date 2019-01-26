@@ -1,6 +1,6 @@
 var colors = {
   background: "#00051f",
-  action: "orangered",
+  action: "#ff801f",
   text: "white",
   indicatorColor: "white",
   headerBorder: "white",

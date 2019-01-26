@@ -4,38 +4,91 @@ import Wrapper from "../components/Wrapper";
 import Header from "../components/Header";
 import Confetti from "react-native-confetti";
 
+import { flip } from "../lib";
+import SizePicker from "../components/SizePicker";
+import colors from "../colors";
+import CoinSelect from "../components/CoinSelect";
+
 export default class CoinGame extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       side: "heads",
-      status: "start"
+      status: "start",
+      bet: 15,
+      selected: null
     };
   }
-
+  getOtherSide(side) {
+    if (side == "heads") {
+      return "tails";
+    }
+    return "heads";
+  }
   componentDidMount() {}
   reset() {
-    this.setState({ side: "heads", status: "start" });
+    this.setState({ side: "heads", status: "start", win: 0, selected: null });
   }
-  spin() {
-    this.setState({ side: "tails", status: "running" }, () => {
+  spin(side) {
+    console.log("bet on ", side);
+    this.setState({ selected: side, status: "loading" }, () => {
+      flip(this.state.bet)
+        .then(r => {
+          console.log(r);
+          if (r.data.error) {
+            //bet failed
+            this.setState({ status: "error", side: "heads" });
+            return;
+          }
+          if (r.data.win) {
+            this.setState({ side: side, status: "running" }, () => {
+              setTimeout(() => {
+                this.setState({ status: "finished", win: r.data.amount });
+                if (this._confettiView) {
+                  this._confettiView.startConfetti();
+                }
+              }, 5000);
+            });
+          } else {
+            this.setState(
+              { side: this.getOtherSide(side), status: "running" },
+              () => {
+                setTimeout(() => {
+                  this.setState({ status: "finished", win: 0 });
+                }, 5000);
+              }
+            );
+          }
+        })
+        .catch(e => {
+          console.error(e);
+        });
+    });
+    /*this.setState({ side: "tails", status: "running" }, () => {
       setTimeout(() => {
         this.setState({ status: "finished" });
         if (this._confettiView) {
           this._confettiView.startConfetti();
         }
       }, 5000);
-    });
+    });*/
   }
 
   render() {
     return (
       <Wrapper>
-        <Header title="Coin flip" />
+        <Header
+          title="Coin flip"
+          hideBalance={
+            this.state.status == "loading" || this.state.status == "running"
+          }
+        />
 
         <View style={{ flex: 1, flexDirection: "row" }}>
-          {this.state.status == "start" && (
+          {(this.state.status == "start" ||
+            this.state.status == "loading" ||
+            this.state.status == "error") && (
             <Image
               source={{ uri: "heads_static" }}
               style={{ flex: 1 }}
@@ -51,26 +104,115 @@ export default class CoinGame extends Component {
             />
           )}
         </View>
-        <View style={{ height: 100 }}>
+        <View style={{ height: 60 + 96 }}>
           {this.state.status == "start" && (
-            <TouchableOpacity
-              style={{ height: 100, backgroundColor: "red" }}
-              onPress={() => {
-                this.spin();
-              }}
-            >
-              <Text>Spin!</Text>
-            </TouchableOpacity>
+            <View>
+              <Text style={{ color: colors.action, textAlign: "center" }}>
+                Bet size
+              </Text>
+              <SizePicker
+                bet={this.state.bet}
+                onChange={v => {
+                  this.setState({ bet: v });
+                }}
+              />
+              <CoinSelect
+                onSpin={side => {
+                  this.spin(side);
+                }}
+              />
+            </View>
           )}
-          {this.state.status == "finished" && (
-            <TouchableOpacity
-              style={{ height: 100, backgroundColor: "red" }}
-              onPress={() => {
-                this.reset();
+          {this.state.status == "error" && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center"
               }}
             >
-              <Text>Play again!</Text>
-            </TouchableOpacity>
+              <Text
+                style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
+              >
+                Are you sure you have enough coins for that?
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  this.reset();
+                }}
+                style={{
+                  backgroundColor: "white",
+                  height: 40,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 150,
+                  borderRadius: 4,
+                  marginTop: 12
+                }}
+              >
+                <Text>Try again</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {this.state.status == "finished" && (
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              {this.state.win > 0 ? (
+                <React.Fragment>
+                  <Text
+                    style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
+                  >
+                    You won {this.state.win} coins!
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.reset();
+                    }}
+                    style={{
+                      backgroundColor: "white",
+                      height: 40,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 150,
+                      borderRadius: 4,
+                      marginTop: 12
+                    }}
+                  >
+                    <Text>Play again</Text>
+                  </TouchableOpacity>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <Text
+                    style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
+                  >
+                    You did not win this time.
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.reset();
+                    }}
+                    style={{
+                      backgroundColor: "white",
+                      height: 40,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      width: 150,
+                      borderRadius: 4,
+                      marginTop: 12
+                    }}
+                  >
+                    <Text>Play again</Text>
+                  </TouchableOpacity>
+                </React.Fragment>
+              )}
+            </View>
           )}
         </View>
         <Confetti

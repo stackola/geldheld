@@ -17,11 +17,17 @@ export default class Header extends Component {
       >
         <View style={{ width: 8 }} />
         <View style={{ flex: 1, justifyContent: "center" }}>
-          <Text style={{ color: colors.background, fontSize: 17, fontWeight:"bold" }}>
+          <Text
+            style={{
+              color: colors.background,
+              fontSize: 17,
+              fontWeight: "bold"
+            }}
+          >
             {this.props.title}
           </Text>
         </View>
-        <UserButton/>
+        <UserButton hide={this.props.hideBalance} />
       </View>
     );
   }

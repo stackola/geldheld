@@ -10,7 +10,7 @@ import { bindActionCreators } from "redux";
 class UserButton extends PureComponent {
   render() {
     let user = this.props.user.id ? this.props.user : null;
-    return user ? (
+    return user && this.props.hide !== true ? (
       <TouchableOpacity
         style={{
           width: 60,
