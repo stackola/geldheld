@@ -1,5 +1,5 @@
 var colors = {
-  background: "#000d24",
+  background: "#00051f",
   action: "orangered",
   text: "white",
   indicatorColor: "white",

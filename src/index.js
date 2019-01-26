@@ -8,6 +8,7 @@ import {
 } from "react-navigation";
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import Earn from "./screens/Earn";
+import CoinGame from "./screens/CoinGame";
 import Play from "./screens/Play";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
@@ -18,7 +19,8 @@ import colors from "./colors";
 
 const PlayStack = createStackNavigator(
   {
-    Play
+    Play,
+    CoinGame
   },
   {
     initialRouteName: "Play",

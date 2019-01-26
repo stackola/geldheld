@@ -154,6 +154,11 @@ android {
 }
 
 dependencies {
+  compile 'com.facebook.fresco:animated-gif:1.10.0'
+
+  // For WebP support, including animated WebP
+  compile 'com.facebook.fresco:animated-webp:1.10.0'
+  compile 'com.facebook.fresco:webpsupport:1.10.0'
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
   //noinspection GradleDynamicVersion
