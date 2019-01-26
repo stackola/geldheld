@@ -17,3 +17,9 @@ exports.makeUser = functions.auth.user().onCreate(user => {
       time: admin.firestore.FieldValue.serverTimestamp()
     });
 });
+
+
+
+function userHasCoins(uid, coins){
+  
+}

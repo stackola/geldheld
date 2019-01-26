@@ -19,7 +19,7 @@ export default class CoinGame extends Component {
     this.setState({ side: "heads", status: "start" });
   }
   spin() {
-    this.setState({ side: "heads", status: "running" }, () => {
+    this.setState({ side: "tails", status: "running" }, () => {
       setTimeout(() => {
         this.setState({ status: "finished" });
         if (this._confettiView) {

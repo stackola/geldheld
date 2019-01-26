@@ -23,12 +23,26 @@ const PlayStack = createStackNavigator(
     CoinGame
   },
   {
-    initialRouteName: "Play",
-    defaultNavigationOptions: {
-      header: null
-    }
+    defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
+      initialRouteName: "Play",
+      tabBarVisible: () => {
+        return navigation.state.routeName != "CoinGame";
+      }
+    })
   }
 );
+
+PlayStack.navigationOptions = ({ navigation }) => {
+  let tabBarVisible = true;
+  if (navigation.state.index > 0) {
+    tabBarVisible = false;
+  }
+
+  return {
+    tabBarVisible,
+  };
+};
 
 const AppStack = createBottomTabNavigator(
   {
@@ -39,6 +53,9 @@ const AppStack = createBottomTabNavigator(
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
+      tabBarVisible: () => {
+        return navigation.state.routeName != "CoinGame";
+      },
       initialRouteName: "Earn",
       header: null,
       tabBarIcon: ({ focused, horizontal, tintColor }) => {
