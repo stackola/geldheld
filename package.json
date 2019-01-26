@@ -28,6 +28,7 @@
     "react-native-confetti": "^0.1.0",
     "react-native-firebase": "^5.2.0",
     "react-native-gesture-handler": "^1.0.15",
+    "react-native-slot-machine": "^0.3.2",
     "react-native-vector-icons": "^6.2.0",
     "react-navigation": "^3.0.9",
     "react-redux": "^6.0.0",

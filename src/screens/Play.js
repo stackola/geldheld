@@ -13,6 +13,7 @@ export default class Play extends Component {
 
         <ScrollView>
           <Game path={"CoinGame"} title="Coin flip!" />
+          <Game path={"Slot"} title="Slot!" />
           <Game />
           <Game />
         </ScrollView>

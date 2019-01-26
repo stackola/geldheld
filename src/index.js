@@ -9,6 +9,7 @@ import {
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import Earn from "./screens/Earn";
 import CoinGame from "./screens/CoinGame";
+import Slot from "./screens/Slot";
 import Play from "./screens/Play";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
@@ -20,15 +21,13 @@ import colors from "./colors";
 const PlayStack = createStackNavigator(
   {
     Play,
-    CoinGame
+    CoinGame,
+    Slot
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
-      initialRouteName: "Play",
-      tabBarVisible: () => {
-        return navigation.state.routeName != "CoinGame";
-      }
+      initialRouteName: "Play"
     })
   }
 );
@@ -40,7 +39,7 @@ PlayStack.navigationOptions = ({ navigation }) => {
   }
 
   return {
-    tabBarVisible,
+    tabBarVisible
   };
 };
 
