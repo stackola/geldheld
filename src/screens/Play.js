@@ -12,9 +12,9 @@ export default class Play extends Component {
         <Header title="Play" />
 
         <ScrollView>
-          <Game path={"CoinGame"} title="Coin flip!"/>
-          <Game/>
-          <Game/>
+          <Game path={"CoinGame"} title="Coin flip!" />
+          <Game />
+          <Game />
         </ScrollView>
       </Wrapper>
     );
