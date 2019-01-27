@@ -107,9 +107,6 @@ export default class CoinGame extends Component {
         <View style={{ height: 60 + 96 }}>
           {this.state.status == "start" && (
             <View>
-              <Text style={{ color: colors.action, textAlign: "center" }}>
-                Bet size
-              </Text>
               <SizePicker
                 bet={this.state.bet}
                 onChange={v => {
