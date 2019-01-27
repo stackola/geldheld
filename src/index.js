@@ -11,6 +11,7 @@ import Earn from "./screens/Earn";
 import CoinGame from "./screens/CoinGame";
 import Slot from "./screens/Slot";
 import Play from "./screens/Play";
+import Crates from "./screens/Crates";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -47,6 +48,7 @@ const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
     Play: PlayStack,
+    Crates,
     Shop,
     Settings
   },
@@ -69,6 +71,10 @@ const AppStack = createBottomTabNavigator(
 
         if (routeName === "Earn") {
           iconName = `coin`;
+        }
+
+        if (routeName === "Crates") {
+          iconName = `gift`;
         }
 
         if (routeName === "Shop") {

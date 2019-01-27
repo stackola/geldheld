@@ -18,7 +18,7 @@ export default class Slot extends Component {
     super(props);
     this.state = {
       bet: 10,
-      symbol: "0",
+      symbol: "5",
       status: "start"
     };
   }
@@ -56,7 +56,8 @@ export default class Slot extends Component {
           this.slot.spinTo(this.winToSymbol(r.data.win));
           setTimeout(() => {
             this.setState({
-              status: "start",
+              status: "finished",
+              winAmount: r.data.amount,
               symbol: this.winToSymbol(r.data.win)
             });
           }, 5000);
@@ -73,7 +74,9 @@ export default class Slot extends Component {
       <Wrapper>
         <Header title="Slot" hideBalance={this.state.status == "loading"} />
         <View style={{ alignItems: "center", flex: 1 }}>
-          <SlotPayouts highlight={this.state.symbol} />
+          <SlotPayouts
+            highlight={this.state.status == "finished" ? this.state.symbol : -1}
+          />
 
           <View style={{ flex: 1, justifyContent: "center" }}>
             <SlotMachine
@@ -100,37 +103,137 @@ export default class Slot extends Component {
                 text: { color: "white" }
               }}
               initialAnimation={false}
-              range="012345012345012345012345012345"
+              range="544321000032103210210100"
             />
           </View>
         </View>
-        <View style={{ height: 155 }}>
-          <SizePicker
-            bet={this.state.bet}
-            onChange={b => {
-              this.setState({ bet: b });
-            }}
-          />
+        <View style={{ height: 155, justifyContent: "center" }}>
           {this.state.status == "start" && (
-            <TouchableOpacity
-              onPress={() => {
-                this.spin();
-              }}
-              style={{
-                margin: 8,
-                backgroundColor: colors.action,
-                borderRadius: 4,
-                alignItems: "center",
-                justifyContent: "center",
-                height: 60
-              }}
-            >
-              <Text
-                style={{ fontWeight: "bold", fontSize: 18, color: "white" }}
+            <React.Fragment>
+              <SizePicker
+                bet={this.state.bet}
+                onChange={b => {
+                  this.setState({ bet: b });
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  this.spin();
+                }}
+                style={{
+                  margin: 8,
+                  backgroundColor: colors.action,
+                  borderRadius: 4,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  height: 60
+                }}
               >
-                Spin!
+                <Text
+                  style={{ fontWeight: "bold", fontSize: 18, color: "white" }}
+                >
+                  Go!
+                </Text>
+              </TouchableOpacity>
+            </React.Fragment>
+          )}
+          {this.state.status == "finished" && (
+            <View style={{ marginLeft: 8, marginRight: 8 }}>
+              {this.state.winAmount > 0 ? (
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginBottom: 8,
+                    fontSize: 18
+                  }}
+                >
+                  You won {this.state.winAmount} coins!
+                </Text>
+              ) : (
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginBottom: 8,
+                    fontSize: 18
+                  }}
+                >
+                  You did not win this time.
+                </Text>
+              )}
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({ status: "start" });
+                  }}
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderRadius: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "white"
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold" }}>Go Back</Text>
+                </TouchableOpacity>
+                <View style={{ width: 8 }} />
+                <TouchableOpacity
+                  onPress={() => {
+                    this.spin();
+                  }}
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderRadius: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colors.action
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Bet {this.state.bet} again
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {this.state.status == "error" && (
+            <View style={{ marginLeft: 8, marginRight: 8 }}>
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  marginBottom: 8,
+                  fontSize: 18
+                }}
+              >
+                Are you sure you have enough coins for that?
               </Text>
-            </TouchableOpacity>
+
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.setState({ status: "start" });
+                  }}
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderRadius: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "white"
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold" }}>Go Back</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           )}
         </View>
       </Wrapper>

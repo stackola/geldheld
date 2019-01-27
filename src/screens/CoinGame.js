@@ -86,6 +86,17 @@ export default class CoinGame extends Component {
         />
 
         <View style={{ flex: 1, flexDirection: "row" }}>
+          <Image
+            source={{ uri: "heads_static" }}
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              right: 0,
+              left: 0
+            }}
+            resizeMode="contain"
+          />
           {(this.state.status == "start" ||
             this.state.status == "loading" ||
             this.state.status == "error") && (
@@ -104,7 +115,7 @@ export default class CoinGame extends Component {
             />
           )}
         </View>
-        <View style={{ height: 60 + 96 }}>
+        <View style={{ height: 60 + 96, justifyContent: "center" }}>
           {this.state.status == "start" && (
             <View>
               <SizePicker
@@ -153,62 +164,67 @@ export default class CoinGame extends Component {
           )}
 
           {this.state.status == "finished" && (
-            <View
-              style={{
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
+            <View style={{ marginLeft: 8, marginRight: 8 }}>
               {this.state.win > 0 ? (
-                <React.Fragment>
-                  <Text
-                    style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
-                  >
-                    You won {this.state.win} coins!
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.reset();
-                    }}
-                    style={{
-                      backgroundColor: "white",
-                      height: 40,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 150,
-                      borderRadius: 4,
-                      marginTop: 12
-                    }}
-                  >
-                    <Text>Play again</Text>
-                  </TouchableOpacity>
-                </React.Fragment>
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginBottom: 8,
+                    fontSize: 18
+                  }}
+                >
+                  You won {this.state.win} coins!
+                </Text>
               ) : (
-                <React.Fragment>
-                  <Text
-                    style={{ color: "white", fontWeight: "bold", fontSize: 18 }}
-                  >
-                    You did not win this time.
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.reset();
-                    }}
-                    style={{
-                      backgroundColor: "white",
-                      height: 40,
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: 150,
-                      borderRadius: 4,
-                      marginTop: 12
-                    }}
-                  >
-                    <Text>Play again</Text>
-                  </TouchableOpacity>
-                </React.Fragment>
+                <Text
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    marginBottom: 8,
+                    fontSize: 18
+                  }}
+                >
+                  You did not win this time.
+                </Text>
               )}
+              <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.reset();
+                  }}
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderRadius: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "white"
+                  }}
+                >
+                  <Text style={{ fontWeight: "bold" }}>Go Back</Text>
+                </TouchableOpacity>
+                <View style={{ width: 8 }} />
+                <TouchableOpacity
+                  onPress={() => {
+                    this.spin(this.state.selected);
+                  }}
+                  style={{
+                    flex: 1,
+                    height: 40,
+                    borderRadius: 4,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: colors.action
+                  }}
+                >
+                  <Text style={{ color: "white", fontWeight: "bold" }}>
+                    Bet {this.state.bet} on {this.state.selected} again!
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         </View>

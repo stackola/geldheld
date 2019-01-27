@@ -12,7 +12,7 @@ export default class CoinSelect extends Component {
           }}
           style={{
             flex: 1,
-            backgroundColor: "white",
+            backgroundColor: colors.action,
             borderRadius: 4,
             padding: 4,
             flexDirection: "row",
@@ -20,7 +20,9 @@ export default class CoinSelect extends Component {
             justifyContent: "center"
           }}
         >
-          <Text style={{ fontWeight: "bold" }}>Bet on heads</Text>
+          <Text style={{ fontWeight: "bold", color: "white" }}>
+            Bet on heads
+          </Text>
           <Image
             source={{ uri: "heads_icon" }}
             style={{ marginLeft: 4, marginRight: 4, height: 60, width: 60 }}
@@ -37,7 +39,7 @@ export default class CoinSelect extends Component {
             flexDirection: "row",
             padding: 4,
             borderRadius: 4,
-            backgroundColor: "white",
+            backgroundColor: colors.action,
             alignItems: "center",
             justifyContent: "center"
           }}
@@ -47,7 +49,9 @@ export default class CoinSelect extends Component {
             style={{ marginLeft: 4, marginRight: 4, height: 60, width: 60 }}
             resizeMode={"contain"}
           />
-          <Text style={{ fontWeight: "bold" }}>Bet on tails</Text>
+          <Text style={{ fontWeight: "bold", color: "white" }}>
+            Bet on tails
+          </Text>
         </TouchableOpacity>
       </View>
     );
