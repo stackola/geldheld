@@ -1,11 +1,19 @@
 import React from "react";
-import { Text, View } from "react-native";
+
 import {
   createSwitchNavigator,
   createStackNavigator,
   createBottomTabNavigator,
   createAppContainer
 } from "react-navigation";
+
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
+import colors from "./colors";
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import AuthLoadingScreen from "./screens/AuthLoadingScreen";
 import Earn from "./screens/Earn";
 import CoinGame from "./screens/CoinGame";
@@ -16,10 +24,6 @@ import CratePage from "./screens/CratePage";
 import MyCrate from "./screens/MyCrate";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import store from "./redux/store";
-import { Provider } from "react-redux";
-import colors from "./colors";
 
 const PlayStack = createStackNavigator(
   {

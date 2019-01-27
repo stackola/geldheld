@@ -26,16 +26,3 @@ export function userSubscribe(cb) {
       });
   };
 }
-
-/*
-Example of an async function
-export function click(id){
-	return (dispatch, getState) => {
-		let state=getState();		
-		state.socket.socket.get('/user/click/14', function(body, jwr){
-			//Dispatch redux action.
-			dispatch(setUsername(body.username));
-		} );
-	}
-}
-*/
