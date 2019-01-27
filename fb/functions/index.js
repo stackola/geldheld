@@ -18,6 +18,79 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     });
 });
 
+function getSlotWin() {
+  let randomValue = Math.random();
+  //console.log(randomValue);
+  randomValue -= 0.25;
+  if (randomValue < 0) {
+    return 1;
+  }
+
+  randomValue -= 0.1;
+  if (randomValue < 0) {
+    return 2;
+  }
+
+  randomValue -= 0.024;
+  if (randomValue < 0) {
+    return 5;
+  }
+  randomValue -= 0.018;
+  if (randomValue < 0) {
+    return 10;
+  }
+  randomValue -= 0.004;
+  if (randomValue < 0) {
+    return 50;
+  }
+
+  return 0;
+}
+
+exports.slot = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+
+  let bet = data.bet;
+
+  let win = getSlotWin();
+  let addCoins = -bet;
+  let winAmount = win * bet;
+  addCoins += winAmount;
+  //console.log({ bet, win, addCoins });
+
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  return db
+    .runTransaction(function(transaction) {
+      return transaction.get(userRef).then(function(userdoc) {
+        if (userdoc.data().coins < bet) {
+          throw "Not enough coins";
+        }
+        var newCoins = userdoc.data().coins + addCoins;
+        transaction.update(userRef, { coins: newCoins });
+      });
+    })
+    .then(function() {
+      console.log("Transaction successfully committed!");
+      logTransaction(uid, "Slot bet", -bet);
+      if (win > 0) {
+        logTransaction(uid, "Slot win!", winAmount);
+      }
+
+      return { win: win, amount: win > 0 ? winAmount : -bet };
+    })
+    .catch(function(error) {
+      return { error: true, text: error };
+      console.log("Transaction failed: ", error);
+    });
+});
+
 exports.coinflip = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
   if (!context.auth) {
