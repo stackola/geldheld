@@ -12,10 +12,13 @@ export default class Play extends Component {
         <Header title="Play" />
 
         <ScrollView>
-          <Game path={"CoinGame"} title="Coin flip!" />
-          <Game path={"Slot"} title="Slot!" />
-          <Game />
-          <Game />
+          <Game path={"CoinGame"} title="Coin flip" image={"heads_icon"} />
+          <Game
+            path={"Slot"}
+            title="Emoji spin"
+            image="https://i.imgur.com/lfdgT9u.png"
+          />
+          <Game path={"Play"} title="Fortune wheel" />
         </ScrollView>
       </Wrapper>
     );
