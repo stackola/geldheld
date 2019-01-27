@@ -1,12 +1,31 @@
 import React, { PureComponent } from "react";
-import { Text, View } from "react-native";
+import { Text, View, TouchableOpacity } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../colors";
-export default class Crate extends PureComponent {
+import { withNavigation } from "react-navigation";
+class Crate extends PureComponent {
+  pressed() {
+    if (this.props.linkToSelf) {
+      return this.props.navigation.navigate({
+        routeName: "CratePage",
+        params: { id: "a crate id" }
+      });
+    }
+
+    if (this.props.myCrateId) {
+      return this.props.navigation.navigate({
+        routeName: "MyCrate",
+        params: { id: this.props.myCrateId }
+      });
+    }
+  }
   render() {
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          this.pressed();
+        }}
         style={{
           flex: 1,
           borderColor: this.props.color,
@@ -60,7 +79,9 @@ export default class Crate extends PureComponent {
         >
           {this.props.name || "noname"}
         </Text>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
+
+export default withNavigation(Crate);

@@ -6,7 +6,13 @@ service cloud.firestore {
     match /users/{user} {
       allow read: if user == request.auth.uid; 
     }
+    match /users/{user}/crates/{any} {
+      allow read: if user == request.auth.uid; 
+    }
     match /offers/{offer}{
+      allow read: if true;
+    }
+    match /crates/{crate}{
       allow read: if true;
     }
   }

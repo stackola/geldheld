@@ -1,16 +1,80 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, RefreshControl } from "react-native";
 import Wrapper from "../components/Wrapper";
 import Header from "../components/Header";
 import Title from "../atoms/Title";
 import Crate from "../atoms/Crate";
-
+import firebase from "react-native-firebase";
+import { getUID } from "../lib";
+import ItemLoader from "../components/ItemLoader";
 export default class Crates extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      crates: [],
+      userCrates: [],
+      loading: true
+    };
+  }
+  fetchCrates() {
+    firebase
+      .firestore()
+      .collection("crates")
+      .get()
+      .then(r => {
+        console.log("got res", r);
+        this.setState(
+          { loading: false, crates: r._docs.map(d => d._data) },
+          () => {
+            console.log(this.state);
+          }
+        );
+      });
+
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(getUID())
+      .collection("crates")
+      .get()
+      .then(r => {
+        console.log("got res", r);
+        this.setState(
+          {
+            loading: false,
+            refreshing: false,
+            userCrates: r._docs.map(d => d._data)
+          },
+          () => {
+            console.log(this.state);
+          }
+        );
+      });
+  }
+  componentDidMount() {
+    this.fetchCrates();
+  }
+  refresh() {
+    this.setState({ refreshing: true }, () => {
+      this.fetchCrates();
+    });
+  }
+
   render() {
     return (
       <Wrapper>
         <Header title="Crates" />
-        <ScrollView>
+        <ScrollView
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={() => {
+                this.fetchCrates();
+              }}
+            />
+          }
+        >
           <Title text="Your crates" />
           <View
             style={{
@@ -20,9 +84,16 @@ export default class Crates extends Component {
               paddingTop: 8
             }}
           >
-            <Crate name={"Fashion crate"} color={"#1abc9c"} />
-            <Crate name={"Fashion crate"} color={"#1abc9c"} />
-            <Crate name={"Gadget Crate"} color={"#f1c40f"} />
+            {this.state.userCrates.map(c => {
+              console.log(c);
+              return (
+                <ItemLoader key={c.id} path={"crates/" + c.crateId}>
+                  {cObj => {
+                    return <Crate {...cObj} price={null} myCrateId={c.id} />;
+                  }}
+                </ItemLoader>
+              );
+            })}
           </View>
           <Title text="Store" />
           <View
@@ -33,10 +104,9 @@ export default class Crates extends Component {
               paddingTop: 8
             }}
           >
-            <Crate name={"Gadget crate"} price={100} color={"#f1c40f"} />
-            <Crate name={"iPhone crate"} price={2000} color={"#2980b9"} />
-            <Crate name={"Fortnite crate"} price={5000} color={"#e74c3c"} />
-            <Crate name={"Fashion crate"} price={200} color={"#1abc9c"} />
+            {this.state.crates.map(c => {
+              return <Crate key={c.id} linkToSelf={true} {...c} />;
+            })}
           </View>
         </ScrollView>
       </Wrapper>

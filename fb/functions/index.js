@@ -47,6 +47,60 @@ function getSlotWin() {
   return 0;
 }
 
+exports.buyCrate = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+
+  let crateId = data.crateId;
+
+  let db = admin.firestore();
+  let userRef = db.collection("users").doc(uid);
+  let newUserCrate = userRef.collection("crates").doc();
+  return db
+    .collection("crates")
+    .doc(crateId)
+    .get()
+    .then(snap => {
+      let crate = snap.data();
+      if (crate) {
+        let price = crate.price;
+        return db
+          .runTransaction(function(transaction) {
+            return transaction.get(userRef).then(function(userdoc) {
+              if (userdoc.data().coins < price) {
+                throw "Not enough coins";
+              }
+              var newCoins = userdoc.data().coins - price;
+
+              transaction.update(userRef, { coins: newCoins });
+              transaction.create(newUserCrate, {
+                crateId: crateId,
+                time: admin.firestore.FieldValue.serverTimestamp(),
+                price: price,
+                id: newUserCrate.id
+              });
+            });
+          })
+          .then(function() {
+            console.log("Transaction successfully committed!");
+            return { status: "ok", userCrate: newUserCrate.id };
+          })
+          .catch(function(error) {
+            console.log("Transaction failed: ", error);
+            return { error: true, text: error };
+          });
+      } else {
+        return { error: true, text: "Crate does not exist." };
+      }
+    });
+  //check if user has enough coins
+  // determine & credit win!
+});
 exports.slot = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
   if (!context.auth) {

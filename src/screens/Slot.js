@@ -74,7 +74,7 @@ export default class Slot extends Component {
       <Wrapper>
         <Header
           showBack={true}
-          title="Slot"
+          title="Emoji spin"
           hideBalance={this.state.status == "loading"}
         />
         <View style={{ alignItems: "center", flex: 1 }}>

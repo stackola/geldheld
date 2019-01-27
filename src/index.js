@@ -12,6 +12,8 @@ import CoinGame from "./screens/CoinGame";
 import Slot from "./screens/Slot";
 import Play from "./screens/Play";
 import Crates from "./screens/Crates";
+import CratePage from "./screens/CratePage";
+import MyCrate from "./screens/MyCrate";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -21,19 +23,33 @@ import colors from "./colors";
 
 const PlayStack = createStackNavigator(
   {
-    Play,
+    PlayHome: Play,
     CoinGame,
     Slot
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
-      initialRouteName: "Play"
+      initialRouteName: "PlayHome"
     })
   }
 );
 
-PlayStack.navigationOptions = ({ navigation }) => {
+const CrateStack = createStackNavigator(
+  {
+    CratesHome: Crates,
+    CratePage,
+    MyCrate
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
+      initialRouteName: "CratesHome"
+    })
+  }
+);
+
+let v = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
     tabBarVisible = false;
@@ -44,11 +60,14 @@ PlayStack.navigationOptions = ({ navigation }) => {
   };
 };
 
+PlayStack.navigationOptions = v;
+CrateStack.navigationOptions = v;
+
 const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
     Play: PlayStack,
-    Crates,
+    Crates: CrateStack,
     Shop,
     Settings
   },
