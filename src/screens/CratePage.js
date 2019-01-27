@@ -78,7 +78,7 @@ class CratePage extends Component {
                   {!!crate.items &&
                     crate.items
                       .sort((a, b) => {
-                        return b.chance - a.chance;
+                        return a.order - b.order;
                       })
                       .map(c => {
                         return <CrateContent key={c.name} {...c} />;
