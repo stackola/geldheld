@@ -72,7 +72,11 @@ export default class Slot extends Component {
     const symbols = ["☹️", "🤔", "🙂", "😀", "😲", "🤑"];
     return (
       <Wrapper>
-        <Header title="Slot" hideBalance={this.state.status == "loading"} />
+        <Header
+          showBack={true}
+          title="Slot"
+          hideBalance={this.state.status == "loading"}
+        />
         <View style={{ alignItems: "center", flex: 1 }}>
           <SlotPayouts
             highlight={this.state.status == "finished" ? this.state.symbol : -1}

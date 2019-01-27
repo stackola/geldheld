@@ -79,6 +79,7 @@ export default class CoinGame extends Component {
     return (
       <Wrapper>
         <Header
+          showBack={true}
           title="Coin flip"
           hideBalance={
             this.state.status == "loading" || this.state.status == "running"
