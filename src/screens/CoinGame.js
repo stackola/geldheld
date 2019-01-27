@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import Wrapper from "../components/Wrapper";
 import Header from "../components/Header";
-import Confetti from "react-native-confetti";
 
 import { flip } from "../lib";
 import SizePicker from "../components/SizePicker";
@@ -45,9 +44,6 @@ export default class CoinGame extends Component {
             this.setState({ side: side, status: "running" }, () => {
               setTimeout(() => {
                 this.setState({ status: "finished", win: r.data.amount });
-                if (this._confettiView) {
-                  this._confettiView.startConfetti();
-                }
               }, 5000);
             });
           } else {
@@ -65,14 +61,6 @@ export default class CoinGame extends Component {
           console.error(e);
         });
     });
-    /*this.setState({ side: "tails", status: "running" }, () => {
-      setTimeout(() => {
-        this.setState({ status: "finished" });
-        if (this._confettiView) {
-          this._confettiView.startConfetti();
-        }
-      }, 5000);
-    });*/
   }
 
   render() {
@@ -229,12 +217,6 @@ export default class CoinGame extends Component {
             </View>
           )}
         </View>
-        <Confetti
-          ref={node => (this._confettiView = node)}
-          timeout={5}
-          duration={3000}
-          confettiCount={20}
-        />
       </Wrapper>
     );
   }

@@ -1,14 +1,14 @@
 let items = [
-  { chance: 20, name: "500", order: 0 },
-  { chance: 20, name: "LED", order: 1 },
   { chance: 20, name: "1500", order: 2 },
   { chance: 20, name: "2500", order: 3 },
-  { chance: 20, name: "5000", order: 4 }
+  { chance: 20, name: "LED", order: 1 },
+  { chance: 20, name: "5000", order: 4 },
+  { chance: 20, name: "500", order: 0 }
 ];
 
 let convertedItems = items
   .map(i => {
-    return { ...i, chance: i.chance / 100 };
+    return Object.assign({}, i, { chance: i.chance / 100 });
   })
   .sort((a, b) => a.order - b.order);
 

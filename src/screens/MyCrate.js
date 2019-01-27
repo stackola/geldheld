@@ -17,7 +17,7 @@ import CrateSlotItem from "../atoms/CrateSlotItem";
 import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
-import { getUID } from "../lib";
+import { getUID, openCrate } from "../lib";
 import ItemLoader from "../components/ItemLoader";
 
 export default class OpenCrate extends Component {
@@ -25,13 +25,35 @@ export default class OpenCrate extends Component {
     super(props);
 
     this.state = {
-      opening: false
+      opening: false,
+      slotItem: 0,
+      status: "start"
     };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
-
+  open() {
+    let userCrateId = this.props.navigation.getParam("id", null);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    this.setState({ opening: true }, () => {
+      openCrate(userCrateId)
+        .then(resp => {
+          console.log(resp);
+          if (resp.data.status == "ok") {
+            this.setState({
+              droppedItem: resp.data.data,
+              status: "finished",
+              slotItem: resp.data.data.item.order
+            });
+            this.slot.spinTo(resp.data.data.item.order);
+          }
+        })
+        .catch(err => {
+          this.setState({ status: "error" });
+        });
+    });
+  }
   render() {
     let userCrateId = this.props.navigation.getParam("id", null);
 
@@ -74,7 +96,7 @@ export default class OpenCrate extends Component {
                               <CrateSlotItem {...crateItems[c]} />
                             )}
                             useNativeDriver={true}
-                            text={0}
+                            text={this.state.slotItem}
                             duration={8000}
                             padding={1}
                             styles={{
@@ -102,12 +124,7 @@ export default class OpenCrate extends Component {
                       {!this.state.opening && (
                         <TouchableOpacity
                           onPress={() => {
-                            LayoutAnimation.configureNext(
-                              LayoutAnimation.Presets.easeInEaseOut
-                            );
-                            this.setState({ opening: true }, () => {
-                              this.slot.spinTo(4);
-                            });
+                            this.open();
                           }}
                           style={{
                             alignItems: "center",

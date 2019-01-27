@@ -46,6 +46,151 @@ function getSlotWin() {
 
   return 0;
 }
+function drawItem(items) {
+  let convertedItems = items
+    .map(i => {
+      return Object.assign({}, i, { chance: i.chance / 100 });
+    })
+    .sort((a, b) => a.order - b.order);
+
+  //console.log(convertedItems);
+
+  // ohne ober ende!
+  let winValue = Math.random();
+  let origWinValue = winValue;
+  let winningItem = null;
+  for (let x = 0; x < convertedItems.length; x++) {
+    let i = convertedItems[x];
+    winValue -= i.chance;
+    if (winValue < 0) {
+      //console.log("found winner!");
+      winningItem = i;
+      break;
+    }
+  }
+
+  if (!winningItem) {
+    winningItem = convertedItems[convertedItems.length - 1];
+  }
+
+  return winningItem;
+}
+exports.openCrate = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+  let userCrateId = data.crateId;
+  let db = admin.firestore();
+
+  var userRef = db.collection("users").doc(uid);
+  return db
+    .runTransaction(transaction => {
+      return transaction
+        .get(userRef)
+        .then(userDoc => {
+          let userCrateRef = userRef.collection("crates").doc(userCrateId);
+          return transaction
+            .get(userCrateRef)
+            .then(userCrate => {
+              let userData = userDoc.data();
+              let userCrateData = userCrate.data();
+              if (!userData || !userCrateData) {
+                console.log("crate not found");
+                throw "Crate not found.";
+              }
+
+              if (userCrateData.opened == true) {
+                throw "Crate already opened";
+              }
+              let crateRef = db.collection("crates").doc(userCrateData.crateId);
+              return transaction
+                .get(crateRef)
+                .then(crateSnap => {
+                  let crateData = crateSnap.data();
+                  if (!crateData) {
+                    throw "Corresponding crate not found.";
+                  }
+                  //got all data! determine the win.
+                  let itemWon = drawItem(crateData.items);
+                  console.log(itemWon);
+                  if (itemWon.type == "coins") {
+                    //give coins to user.
+                    var newCoins = userData.coins + parseInt(itemWon.value);
+                    transaction.update(userRef, { coins: newCoins });
+                    transaction.update(userCrateRef, {
+                      opened: true,
+                      content: itemWon
+                    });
+                    logTransaction(uid, "Crate win", itemWon.value);
+                    return { item: itemWon };
+                  } else if (itemWon.type == "crate") {
+                    let newUserCrate = userRef.collection("crates").doc();
+                    transaction.create(newUserCrate, {
+                      crateId: itemWon.crateId,
+                      time: admin.firestore.FieldValue.serverTimestamp(),
+                      price: 0,
+                      opened: false,
+                      id: newUserCrate.id
+                    });
+                    transaction.update(userCrateRef, {
+                      opened: true,
+                      content: itemWon
+                    });
+                    return { item: itemWon, newCrateId: newUserCrate.id };
+                    //give crate to user
+                  } else if (itemWon.type == "product") {
+                    //give product. to user
+                    let newUserVoucher = userRef.collection("vouchers").doc();
+                    transaction.create(newUserVoucher, {
+                      productId: itemWon.productId,
+                      time: admin.firestore.FieldValue.serverTimestamp(),
+                      price: itemWon.resellValue,
+                      id: newUserVoucher.id
+                    });
+                    transaction.update(userCrateRef, {
+                      opened: true,
+                      content: itemWon
+                    });
+                    return { item: itemWon, voucherId: newUserVoucher.id };
+                  }
+                  //done.
+                })
+                .catch(err => {
+                  throw err;
+                });
+            })
+            .catch(err => {
+              console.log("error!!");
+              throw err;
+            });
+        })
+        .catch(err => {
+          throw err;
+        });
+    })
+    .then(r => {
+      console.log("transaction done!!!", r);
+      return { status: "ok", data: r };
+    })
+    .catch(err => {
+      console.log("errorrr!!");
+      return { error: true, text: err };
+    });
+
+  return db
+    .collection("users")
+    .doc(uid)
+    .collection("crates")
+    .doc(userCrateId)
+    .get()
+    .then(userCrate => {
+      console.log(userCrate.data());
+    });
+});
 
 exports.buyCrate = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
@@ -70,24 +215,26 @@ exports.buyCrate = functions.https.onCall((data, context) => {
       if (crate) {
         let price = crate.price;
         return db
-          .runTransaction(function(transaction) {
-            return transaction.get(userRef).then(function(userdoc) {
-              if (userdoc.data().coins < price) {
+          .runTransaction(transaction => {
+            return transaction.get(userRef).then(userDoc => {
+              if (userDoc.data().coins < price) {
                 throw "Not enough coins";
               }
-              var newCoins = userdoc.data().coins - price;
+              var newCoins = userDoc.data().coins - price;
 
               transaction.update(userRef, { coins: newCoins });
               transaction.create(newUserCrate, {
                 crateId: crateId,
+                opened: false,
                 time: admin.firestore.FieldValue.serverTimestamp(),
                 price: price,
                 id: newUserCrate.id
               });
             });
           })
-          .then(function() {
+          .then(() => {
             console.log("Transaction successfully committed!");
+            logTransaction(uid, "Crate purchase", -price);
             return { status: "ok", userCrate: newUserCrate.id };
           })
           .catch(function(error) {
@@ -121,16 +268,16 @@ exports.slot = functions.https.onCall((data, context) => {
   let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return db
-    .runTransaction(function(transaction) {
-      return transaction.get(userRef).then(function(userdoc) {
-        if (userdoc.data().coins < bet) {
+    .runTransaction(transaction => {
+      return transaction.get(userRef).then(userDoc => {
+        if (userDoc.data().coins < bet) {
           throw "Not enough coins";
         }
-        var newCoins = userdoc.data().coins + addCoins;
+        var newCoins = userDoc.data().coins + addCoins;
         transaction.update(userRef, { coins: newCoins });
       });
     })
-    .then(function() {
+    .then(() => {
       console.log("Transaction successfully committed!");
       logTransaction(uid, "Slot bet", -bet);
       if (win > 0) {
@@ -162,16 +309,16 @@ exports.coinflip = functions.https.onCall((data, context) => {
   let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return db
-    .runTransaction(function(transaction) {
-      return transaction.get(userRef).then(function(userdoc) {
-        if (userdoc.data().coins < data.bet) {
+    .runTransaction(transaction => {
+      return transaction.get(userRef).then(userDoc => {
+        if (userDoc.data().coins < data.bet) {
           throw "Not enough coins";
         }
-        var newCoins = userdoc.data().coins + addCoins;
+        var newCoins = userDoc.data().coins + addCoins;
         transaction.update(userRef, { coins: newCoins });
       });
     })
-    .then(function() {
+    .then(() => {
       console.log("Transaction successfully committed!");
       logTransaction(uid, "Coin flip bet", -data.bet);
       if (outcome) {
@@ -180,7 +327,7 @@ exports.coinflip = functions.https.onCall((data, context) => {
 
       return { win: outcome, amount: outcome ? data.bet * 2 : -data.bet };
     })
-    .catch(function(error) {
+    .catch(error => {
       return { error: true, text: error };
       console.log("Transaction failed: ", error);
     });

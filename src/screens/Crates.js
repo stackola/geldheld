@@ -37,6 +37,7 @@ export default class Crates extends Component {
       .collection("users")
       .doc(getUID())
       .collection("crates")
+      .where("opened", "==", false)
       .get()
       .then(r => {
         console.log("got res", r);
