@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import colors from "../colors";
 
+
 export default class CoinSelect extends Component {
   render() {
     return (

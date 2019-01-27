@@ -33,7 +33,7 @@ export default class OpenCrate extends Component {
   }
 
   render() {
-    let userCrateId = "5Wqauh3i8wCinEy5k32o";
+    let userCrateId = this.props.navigation.getParam("id", null);
 
     return (
       <Wrapper>

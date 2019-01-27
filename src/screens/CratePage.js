@@ -28,7 +28,7 @@ class CratePage extends Component {
   }
 
   buy() {
-    let crateId = "Kqj3VndmeVfYmfb8tNXl";
+    let crateId = this.props.navigation.getParam("crateId", null);
     this.setState({ status: "loading" }, () => {
       buyCrate(crateId).then(r => {
         console.log(r);
@@ -44,7 +44,7 @@ class CratePage extends Component {
     });
   }
   render() {
-    let crateId = "Kqj3VndmeVfYmfb8tNXl";
+    let crateId = this.props.navigation.getParam("crateId", null);
     return (
       <Wrapper>
         <ItemLoader

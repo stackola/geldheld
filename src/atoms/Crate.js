@@ -9,7 +9,7 @@ class Crate extends PureComponent {
     if (this.props.linkToSelf) {
       return this.props.navigation.navigate({
         routeName: "CratePage",
-        params: { id: "a crate id" }
+        params: { crateId: this.props.id }
       });
     }
 
