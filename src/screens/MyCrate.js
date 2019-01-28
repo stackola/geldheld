@@ -18,7 +18,7 @@ import CrateSlotItem from "../atoms/CrateSlotItem";
 import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
-import { getUID, openCrate, buyCrate } from "../lib";
+import { getUID, openCrate, buyCrate, quickSell } from "../lib";
 import ItemLoader from "../components/ItemLoader";
 
 export default class OpenCrate extends Component {
@@ -29,6 +29,9 @@ export default class OpenCrate extends Component {
       opening: false,
       buyCrateLoading: false,
       buyCrateError: false,
+      itemSold: false,
+      sellItemLoading: false,
+      sellItemError: false,
       slotItem: 0,
       status: "start",
       openCrateLoading: false
@@ -36,6 +39,32 @@ export default class OpenCrate extends Component {
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
+  }
+  doSell(id) {
+    if (this.state.sellItemLoading || this.state.itemSold) {
+      return;
+    }
+    this.setState({ sellItemError: false, sellItemLoading: true }, () => {
+      quickSell(id)
+        .then(r => {
+          console.log(r);
+          if (r.data.status !== "ok") {
+            throw "error";
+          }
+
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          this.setState({
+            sellItemError: false,
+            sellItemLoading: false,
+            itemSold: true
+          });
+          console.log(r);
+        })
+        .catch(e => {
+          this.setState({ sellItemError: true, sellItemLoading: false });
+          console.log("error!");
+        });
+    });
   }
   buyCrateAgain(id) {
     this.setState({ buyCrateLoading: true, buyCrateError: false }, () => {
@@ -154,7 +183,13 @@ export default class OpenCrate extends Component {
                             ref={ref => {
                               this.slot = ref;
                             }}
-                            height={this.state.opening ? 240 : 0}
+                            height={
+                              this.state.opening
+                                ? this.state.itemSold
+                                  ? 0
+                                  : 240
+                                : 0
+                            }
                             width={160}
                             renderContent={c => (
                               <CrateSlotItem {...crateItems[c]} />
@@ -249,16 +284,18 @@ export default class OpenCrate extends Component {
                         {this.state.status == "finished" &&
                           this.state.droppedItem.item.type == "product" && (
                             <View style={{ alignItems: "center" }}>
-                              <Text
-                                style={{
-                                  color: "white",
-                                  textAlign: "center",
-                                  marginBottom: 8
-                                }}
-                              >
-                                Congratulations!{"\n"}Your price:{" "}
-                                {this.state.droppedItem.item.name}!
-                              </Text>
+                              {!this.state.itemSold && (
+                                <Text
+                                  style={{
+                                    color: "white",
+                                    textAlign: "center",
+                                    marginBottom: 8
+                                  }}
+                                >
+                                  Congratulations!{"\n"}Your price:{" "}
+                                  {this.state.droppedItem.item.name}!
+                                </Text>
+                              )}
 
                               <View
                                 style={{
@@ -270,6 +307,11 @@ export default class OpenCrate extends Component {
                                 {buyAgain}
                                 <View style={{ width: 8 }} />
                                 <TouchableOpacity
+                                  onPress={() => {
+                                    this.doSell(
+                                      this.state.droppedItem.voucherId
+                                    );
+                                  }}
                                   style={{
                                     backgroundColor: colors.action,
                                     height: 50,
@@ -279,16 +321,45 @@ export default class OpenCrate extends Component {
                                     borderRadius: 4
                                   }}
                                 >
-                                  <Text
-                                    style={{
-                                      color: "white",
-                                      fontWeight: "bold"
-                                    }}
-                                  >
-                                    Quick sell for{" "}
-                                    {this.state.droppedItem.item.resellValue}{" "}
-                                    <Icon name="coin" />
-                                  </Text>
+                                  {!this.state.sellItemLoading &&
+                                    !this.state.itemSold && (
+                                      <Text
+                                        style={{
+                                          color: "white",
+                                          fontWeight: "bold"
+                                        }}
+                                      >
+                                        Quick sell for{" "}
+                                        {
+                                          this.state.droppedItem.item
+                                            .resellValue
+                                        }{" "}
+                                        <Icon name="coin" />
+                                      </Text>
+                                    )}
+                                  {this.state.itemSold && (
+                                    <Text
+                                      style={{
+                                        color: "white",
+                                        fontWeight: "bold"
+                                      }}
+                                    >
+                                      Sold!
+                                    </Text>
+                                  )}
+                                  {this.state.sellItemError && (
+                                    <Text
+                                      style={{
+                                        color: "white",
+                                        fontWeight: "bold"
+                                      }}
+                                    >
+                                      Error
+                                    </Text>
+                                  )}
+                                  {this.state.sellItemLoading && (
+                                    <ActivityIndicator />
+                                  )}
                                 </TouchableOpacity>
                               </View>
                             </View>

@@ -22,6 +22,7 @@ import Play from "./screens/Play";
 import Crates from "./screens/Crates";
 import CratePage from "./screens/CratePage";
 import MyCrate from "./screens/MyCrate";
+import MyCrates from "./screens/MyCrates";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
 
@@ -53,6 +54,19 @@ const CrateStack = createStackNavigator(
   }
 );
 
+const SettingsStack = createStackNavigator(
+  {
+    SettingsHome: Settings,
+    MyCrates
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
+      initialRouteName: "SettingsHome"
+    })
+  }
+);
+
 let v = ({ navigation }) => {
   let tabBarVisible = true;
   if (navigation.state.index > 0) {
@@ -66,6 +80,7 @@ let v = ({ navigation }) => {
 
 PlayStack.navigationOptions = v;
 CrateStack.navigationOptions = v;
+SettingsStack.navigationOptions = v;
 
 const AppStack = createBottomTabNavigator(
   {
@@ -73,7 +88,7 @@ const AppStack = createBottomTabNavigator(
     Play: PlayStack,
     Crates: CrateStack,
     Shop,
-    Settings
+    Account: SettingsStack
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -88,8 +103,8 @@ const AppStack = createBottomTabNavigator(
         if (routeName === "Home") {
           iconName = "home-outline";
         }
-        if (routeName === "Settings") {
-          iconName = `settings`;
+        if (routeName === "Account") {
+          iconName = `account`;
         }
 
         if (routeName === "Earn") {

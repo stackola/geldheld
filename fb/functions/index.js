@@ -82,7 +82,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
     return { error: true, uid, text: "Not authenticated" };
   }
 
-  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+  //let uid = "8UuBdgKlpmUUitTImczv9iLSre72";
   let userCrateId = data.crateId;
   let db = admin.firestore();
 
@@ -147,6 +147,8 @@ exports.openCrate = functions.https.onCall((data, context) => {
                     let newUserVoucher = userRef.collection("vouchers").doc();
                     transaction.create(newUserVoucher, {
                       productId: itemWon.productId,
+                      used: false,
+                      sold: false,
                       time: admin.firestore.FieldValue.serverTimestamp(),
                       price: itemWon.resellValue,
                       id: newUserVoucher.id
@@ -199,7 +201,7 @@ exports.buyCrate = functions.https.onCall((data, context) => {
     return { error: true, uid, text: "Not authenticated" };
   }
 
-  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+  //let uid = "8UuBdgKlpmUUitTImczv9iLSre72";
 
   let crateId = data.crateId;
 
@@ -255,7 +257,7 @@ exports.slot = functions.https.onCall((data, context) => {
     return { error: true, uid, text: "Not authenticated" };
   }
 
-  //let uid = "wmfVWOinweOLYiKpvQ65bnb3cVg1";
+  //let uid = "8UuBdgKlpmUUitTImczv9iLSre72";
 
   let bet = data.bet;
 
@@ -349,3 +351,55 @@ function logTransaction(user, text, amount) {
       user
     });
 }
+
+exports.quickSell = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "8UuBdgKlpmUUitTImczv9iLSre72";
+
+  let voucherId = data.voucherId;
+
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  var voucherRef = db
+    .collection("users")
+    .doc(uid)
+    .collection("vouchers")
+    .doc(voucherId);
+  return db.runTransaction(transaction => {
+    return transaction
+      .get(voucherRef)
+      .then(voucherDoc => {
+        return transaction.get(userRef).then(userDoc => {
+          let userData = userDoc.data();
+          let voucherData = voucherDoc.data();
+          if (
+            !voucherData ||
+            voucherData.used ||
+            voucherData.sold ||
+            !voucherData.price
+          ) {
+            throw "Can not sell this!";
+          }
+          console.log("is valid to sell!");
+          transaction.update(userRef, {
+            coins: userData.coins + voucherData.price
+          });
+          transaction.update(voucherRef, { sold: true });
+          return;
+        });
+      })
+      .then(r => {
+        console.log("TX finished!");
+        return { status: "ok" };
+      })
+      .catch(e => {
+        console.log("Error!", e);
+        return { error: true, text: e };
+      });
+  });
+});
