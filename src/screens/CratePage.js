@@ -16,6 +16,7 @@ import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
 import ItemLoader from "../components/ItemLoader";
 import { buyCrate } from "../lib";
+import { StackActions, NavigationActions } from "react-navigation";
 
 import { withNavigation } from "react-navigation";
 class CratePage extends Component {
@@ -33,10 +34,21 @@ class CratePage extends Component {
       buyCrate(crateId).then(r => {
         console.log(r);
         if (r.data.status == "ok") {
-          return this.props.navigation.replace({
-            routeName: "MyCrate",
-            params: { id: r.data.userCrate },
-            newKey: r.data.userCrate
+          this.setState({ status: "start" }, () => {
+            const resetAction = StackActions.reset({
+              index: 0,
+              actions: [
+                NavigationActions.navigate({
+                  routeName: "CratesHome"
+                })
+              ]
+            });
+            this.props.navigation.dispatch(resetAction);
+            this.props.navigation.navigate({
+              routeName: "SettingsMyCrate",
+              params: { id: r.data.userCrate },
+              newKey: r.data.userCrate
+            });
           });
         } else {
           this.setState({ status: "error" }, () => {});

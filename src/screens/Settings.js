@@ -9,7 +9,7 @@ export default class Settings extends Component {
   render() {
     return (
       <Wrapper>
-        <Header title="Settings" />
+        <Header title="My Account" />
         <Button title="My Crates" path="MyCrates" />
         <Button />
         <Button />

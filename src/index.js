@@ -43,8 +43,7 @@ const PlayStack = createStackNavigator(
 const CrateStack = createStackNavigator(
   {
     CratesHome: Crates,
-    CratePage,
-    MyCrate
+    CratePage
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -57,7 +56,8 @@ const CrateStack = createStackNavigator(
 const SettingsStack = createStackNavigator(
   {
     SettingsHome: Settings,
-    MyCrates
+    MyCrates,
+    SettingsMyCrate: MyCrate
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

@@ -7,13 +7,13 @@ import Crate from "../atoms/Crate";
 import firebase from "react-native-firebase";
 import { getUID } from "../lib";
 import ItemLoader from "../components/ItemLoader";
+import Button from "../atoms/Button";
 export default class Crates extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
       crates: [],
-      userCrates: [],
       loading: true
     };
   }
@@ -25,27 +25,10 @@ export default class Crates extends Component {
       .then(r => {
         console.log("got res", r);
         this.setState(
-          { loading: false, crates: r._docs.map(d => d._data) },
-          () => {
-            console.log(this.state);
-          }
-        );
-      });
-
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(getUID())
-      .collection("crates")
-      .where("opened", "==", false)
-      .get()
-      .then(r => {
-        console.log("got res", r);
-        this.setState(
           {
             loading: false,
             refreshing: false,
-            userCrates: r._docs.map(d => d._data)
+            crates: r._docs.map(d => d._data)
           },
           () => {
             console.log(this.state);
@@ -76,27 +59,7 @@ export default class Crates extends Component {
             />
           }
         >
-          <Title text="Your crates" />
-          <View
-            style={{
-              flexDirection: "row",
-              flexWrap: "wrap",
-              paddingLeft: 8,
-              paddingTop: 8
-            }}
-          >
-            {this.state.userCrates.map(c => {
-              console.log(c);
-              return (
-                <ItemLoader key={c.id} path={"crates/" + c.crateId}>
-                  {cObj => {
-                    return <Crate {...cObj} price={null} myCrateId={c.id} />;
-                  }}
-                </ItemLoader>
-              );
-            })}
-          </View>
-          <Title text="Store" />
+          <Button title="My Crates" path={"MyCrates"} />
           <View
             style={{
               flexDirection: "row",

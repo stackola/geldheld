@@ -72,7 +72,7 @@ export default class OpenCrate extends Component {
         console.log(r);
         if (r.data.status == "ok") {
           return this.props.navigation.replace({
-            routeName: "MyCrate",
+            routeName: "SettingsMyCrate",
             params: { id: r.data.userCrate },
             newKey: r.data.userCrate
           });
@@ -134,7 +134,11 @@ export default class OpenCrate extends Component {
           {r => {
             console.log("usercrate", r);
             return (
-              <ItemLoader path={"crates/" + r.crateId} realtime={false}>
+              <ItemLoader
+                path={"crates/" + r.crateId}
+                cache={true}
+                realtime={false}
+              >
                 {crateObj => {
                   let crateItems = crateObj.items.sort(
                     (a, b) => a.order - b.order
@@ -229,6 +233,20 @@ export default class OpenCrate extends Component {
                               {buyAgain}
                             </View>
                           )}
+                        {r.opened && (
+                          <View style={{ alignItems: "center" }}>
+                            <Text
+                              style={{
+                                color: "white",
+                                marginBottom: 8,
+                                fontSize: 18
+                              }}
+                            >
+                              This crate contained:
+                            </Text>
+                            <CrateSlotItem {...r.content} />
+                          </View>
+                        )}
                         {this.state.status == "finished" &&
                           this.state.droppedItem.item.type == "crate" && (
                             <View style={{}}>
@@ -254,7 +272,7 @@ export default class OpenCrate extends Component {
                                 <TouchableOpacity
                                   onPress={() => {
                                     this.props.navigation.replace({
-                                      routeName: "MyCrate",
+                                      routeName: "SettingsMyCrate",
                                       params: {
                                         id: this.state.droppedItem.newCrateId
                                       },
@@ -364,14 +382,14 @@ export default class OpenCrate extends Component {
                               </View>
                             </View>
                           )}
-                        <Title text="Contents:" />
+                        <Title text="Possible prizes:" />
                         <View style={{ height: 8 }} />
                         {!!crateItems &&
                           crateItems.map(c => {
                             return <CrateContent key={c.name} {...c} />;
                           })}
                       </ScrollView>
-                      {!this.state.opening && (
+                      {!this.state.opening && !r.opened && (
                         <TouchableOpacity
                           onPress={() => {
                             this.open();
