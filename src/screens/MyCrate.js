@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Platform,
   UIManager,
+  ActivityIndicator,
   LayoutAnimation
 } from "react-native";
 import SlotMachine from "react-native-slot-machine";
@@ -17,7 +18,7 @@ import CrateSlotItem from "../atoms/CrateSlotItem";
 import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
-import { getUID, openCrate } from "../lib";
+import { getUID, openCrate, buyCrate } from "../lib";
 import ItemLoader from "../components/ItemLoader";
 
 export default class OpenCrate extends Component {
@@ -26,31 +27,61 @@ export default class OpenCrate extends Component {
 
     this.state = {
       opening: false,
+      buyCrateLoading: false,
+      buyCrateError: false,
       slotItem: 0,
-      status: "start"
+      status: "start",
+      openCrateLoading: false
     };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
+  buyCrateAgain(id) {
+    this.setState({ buyCrateLoading: true, buyCrateError: false }, () => {
+      buyCrate(id).then(r => {
+        console.log(r);
+        if (r.data.status == "ok") {
+          return this.props.navigation.replace({
+            routeName: "MyCrate",
+            params: { id: r.data.userCrate },
+            newKey: r.data.userCrate
+          });
+        } else {
+          this.setState(
+            { buyCrateError: true, buyCrateLoading: false },
+            () => {}
+          );
+        }
+      });
+    });
+  }
   open() {
-    let userCrateId = this.props.navigation.getParam("id", null);
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState({ opening: true }, () => {
+    this.setState({ openCrateLoading: true }, () => {
+      let userCrateId = this.props.navigation.getParam("id", null);
       openCrate(userCrateId)
         .then(resp => {
-          console.log(resp);
-          if (resp.data.status == "ok") {
-            this.setState({
-              droppedItem: resp.data.data,
-              status: "finished",
-              slotItem: resp.data.data.item.order
-            });
-            this.slot.spinTo(resp.data.data.item.order);
-          }
+          LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+          this.setState({ opening: true, openCrateLoading: false }, () => {
+            console.log(resp);
+            if (resp.data.status == "ok") {
+              setTimeout(() => {
+                LayoutAnimation.configureNext(
+                  LayoutAnimation.Presets.easeInEaseOut
+                );
+                this.setState({
+                  droppedItem: resp.data.data,
+                  status: "finished",
+                  openCrateLoading: false,
+                  slotItem: resp.data.data.item.order
+                });
+              }, 8000);
+              this.slot.spinTo(resp.data.data.item.order);
+            }
+          });
         })
         .catch(err => {
-          this.setState({ status: "error" });
+          this.setState({ status: "error", openCrateLoading: false });
         });
     });
   }
@@ -59,7 +90,14 @@ export default class OpenCrate extends Component {
 
     return (
       <Wrapper>
-        <Header title="Your crate" showBack={true} />
+        <Header
+          title="Your crate"
+          showBack={true}
+          hideBalance={
+            (this.state.opening && this.state.status != "finished") ||
+            this.state.openCrateLoading
+          }
+        />
         <ItemLoader
           path={"users/" + getUID() + "/crates/" + userCrateId}
           realtime={false}
@@ -71,6 +109,32 @@ export default class OpenCrate extends Component {
                 {crateObj => {
                   let crateItems = crateObj.items.sort(
                     (a, b) => a.order - b.order
+                  );
+                  let buyAgain = (
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: colors.action,
+                        height: 50,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 4,
+                        flex: 1
+                      }}
+                      onPress={() => this.buyCrateAgain(crateObj.id)}
+                    >
+                      {this.state.buyCrateLoading == false &&
+                        this.state.buyCrateError == false && (
+                          <Text style={{ color: "white", fontWeight: "bold" }}>
+                            Buy same crate again!
+                          </Text>
+                        )}
+                      {this.state.buyCrateLoading && <ActivityIndicator />}
+                      {this.state.buyCrateError && (
+                        <Text style={{ color: "white", fontWeight: "bold" }}>
+                          Error!
+                        </Text>
+                      )}
+                    </TouchableOpacity>
                   );
                   return (
                     <React.Fragment>
@@ -114,6 +178,121 @@ export default class OpenCrate extends Component {
                             range="012340123401234"
                           />
                         </View>
+                        {this.state.status == "finished" &&
+                          this.state.droppedItem.item.type == "coins" && (
+                            <View style={{ marginLeft: 8, marginRight: 8 }}>
+                              <Text
+                                style={{
+                                  color: "white",
+                                  textAlign: "center",
+                                  marginBottom: 8
+                                }}
+                              >
+                                Congratulations! You won{" "}
+                                {this.state.droppedItem.item.value} coins!
+                              </Text>
+                              {buyAgain}
+                            </View>
+                          )}
+                        {this.state.status == "finished" &&
+                          this.state.droppedItem.item.type == "crate" && (
+                            <View style={{}}>
+                              <Text
+                                style={{
+                                  color: "white",
+                                  textAlign: "center",
+                                  marginBottom: 8
+                                }}
+                              >
+                                Congratulations!{"\n"}You won a{" "}
+                                {this.state.droppedItem.item.name}!
+                              </Text>
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  marginLeft: 8,
+                                  marginRight: 8
+                                }}
+                              >
+                                {buyAgain}
+                                <View style={{ width: 8 }} />
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    this.props.navigation.replace({
+                                      routeName: "MyCrate",
+                                      params: {
+                                        id: this.state.droppedItem.newCrateId
+                                      },
+                                      newKey: this.state.droppedItem.newCrateId
+                                    });
+                                  }}
+                                  style={{
+                                    flex: 1,
+                                    backgroundColor: colors.action,
+                                    borderRadius: 4,
+                                    alignItems: "center",
+                                    justifyContent: "center"
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      color: "white",
+                                      fontWeight: "bold"
+                                    }}
+                                  >
+                                    View crate
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          )}
+                        {this.state.status == "finished" &&
+                          this.state.droppedItem.item.type == "product" && (
+                            <View style={{ alignItems: "center" }}>
+                              <Text
+                                style={{
+                                  color: "white",
+                                  textAlign: "center",
+                                  marginBottom: 8
+                                }}
+                              >
+                                Congratulations!{"\n"}Your price:{" "}
+                                {this.state.droppedItem.item.name}!
+                              </Text>
+
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  marginLeft: 8,
+                                  marginRight: 8
+                                }}
+                              >
+                                {buyAgain}
+                                <View style={{ width: 8 }} />
+                                <TouchableOpacity
+                                  style={{
+                                    backgroundColor: colors.action,
+                                    height: 50,
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    width: 180,
+                                    borderRadius: 4
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      color: "white",
+                                      fontWeight: "bold"
+                                    }}
+                                  >
+                                    Quick sell for{" "}
+                                    {this.state.droppedItem.item.resellValue}{" "}
+                                    <Icon name="coin" />
+                                  </Text>
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          )}
                         <Title text="Contents:" />
                         <View style={{ height: 8 }} />
                         {!!crateItems &&
@@ -135,15 +314,18 @@ export default class OpenCrate extends Component {
                             borderTopLeftRadius: 8
                           }}
                         >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontWeight: "bold",
-                              fontSize: 15
-                            }}
-                          >
-                            Open crate!
-                          </Text>
+                          {!this.state.openCrateLoading && (
+                            <Text
+                              style={{
+                                color: "white",
+                                fontWeight: "bold",
+                                fontSize: 15
+                              }}
+                            >
+                              Open crate!
+                            </Text>
+                          )}
+                          {this.state.openCrateLoading && <ActivityIndicator />}
                         </TouchableOpacity>
                       )}
                     </React.Fragment>

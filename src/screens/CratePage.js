@@ -35,7 +35,8 @@ class CratePage extends Component {
         if (r.data.status == "ok") {
           return this.props.navigation.replace({
             routeName: "MyCrate",
-            params: { id: r.data.userCrate }
+            params: { id: r.data.userCrate },
+            newKey: r.data.userCrate
           });
         } else {
           this.setState({ status: "error" }, () => {});

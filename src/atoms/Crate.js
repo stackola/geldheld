@@ -9,14 +9,16 @@ class Crate extends PureComponent {
     if (this.props.linkToSelf) {
       return this.props.navigation.navigate({
         routeName: "CratePage",
-        params: { crateId: this.props.id }
+        params: { crateId: this.props.id },
+        key: this.props.id
       });
     }
 
     if (this.props.myCrateId) {
       return this.props.navigation.navigate({
         routeName: "MyCrate",
-        params: { id: this.props.myCrateId }
+        params: { id: this.props.myCrateId },
+        key: this.props.myCrateId
       });
     }
   }
