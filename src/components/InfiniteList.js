@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import { Text, View, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  FlatList,
+  RefreshControl,
+  ActivityIndicator
+} from "react-native";
 import firebase from "react-native-firebase";
 export default class InfiniteList extends Component {
   constructor(props) {
@@ -7,6 +13,7 @@ export default class InfiniteList extends Component {
     this.pageSize = 10;
     this.state = {
       items: [],
+      refreshing: false,
       fetching: true,
       endReached: false
     };
@@ -15,10 +22,11 @@ export default class InfiniteList extends Component {
     let path = this.props.path;
     let collection = this.props.collection;
     let order = this.props.orderBy || "time";
-    firebase
-      .firestore()
-      .doc(path)
-      .collection(collection)
+    let f = firebase.firestore();
+    if (path) {
+      f = f.doc(path);
+    }
+    f.collection(collection)
       .orderBy(order, "DESC")
       .limit(this.pageSize)
       .get()
@@ -28,6 +36,7 @@ export default class InfiniteList extends Component {
           {
             items: snap._docs,
             fetching: false,
+            refreshing: false,
             endReached: snap._docs.length != this.pageSize
           },
           () => {
@@ -39,6 +48,11 @@ export default class InfiniteList extends Component {
   componentDidMount() {
     this.fetchInitial();
   }
+  refresh() {
+    this.setState({ refreshing: true }, () => {
+      this.fetchInitial();
+    });
+  }
   shouldFetchMore() {
     return this.state.fetching == false && this.state.endReached == false;
   }
@@ -49,10 +63,11 @@ export default class InfiniteList extends Component {
       let collection = this.props.collection;
       let order = this.props.orderBy || "time";
       this.setState({ fetching: true }, () => {
-        firebase
-          .firestore()
-          .doc(path)
-          .collection(collection)
+        let f = firebase.firestore();
+        if (path) {
+          f = f.doc(path);
+        }
+        f.collection(collection)
           .orderBy(order, "DESC")
           .startAfter(this.state.items[this.state.items.length - 1])
           .limit(this.pageSize)
@@ -78,7 +93,17 @@ export default class InfiniteList extends Component {
   render() {
     return (
       <FlatList
+        horizontal={this.props.horizontal}
         style={{ flex: 1 }}
+        refreshControl={
+          <RefreshControl
+            enabled={!this.props.noRefresh}
+            refreshing={this.state.refreshing}
+            onRefresh={() => {
+              this.refresh();
+            }}
+          />
+        }
         onEndReached={() => {
           this.fetchMore();
         }}
@@ -86,6 +111,21 @@ export default class InfiniteList extends Component {
         keyExtractor={i => {
           return i.id;
         }}
+        ListFooterComponent={
+          <View
+            style={{
+              height: this.props.horizontal ? "auto" : 60,
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            {this.state.endReached && (
+              <Text style={{ color: "white", fontSize: 12 }}>The end.</Text>
+            )}
+            {!this.state.endReached && <ActivityIndicator color={"white"} />}
+          </View>
+        }
         data={this.state.items}
         renderItem={i => {
           //console.log(i.item._data);

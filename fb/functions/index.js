@@ -125,7 +125,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
                       opened: true,
                       content: itemWon
                     });
-                    logTransaction(uid, "Crate win", itemWon.value);
+                    logTransaction(uid, "Crate prize", itemWon.value);
                     return { item: itemWon };
                   } else if (itemWon.type == "crate") {
                     let newUserCrate = userRef.collection("crates").doc();
@@ -147,6 +147,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
                     let newUserVoucher = userRef.collection("vouchers").doc();
                     transaction.create(newUserVoucher, {
                       productId: itemWon.productId,
+                      item: itemWon,
                       used: false,
                       sold: false,
                       time: admin.firestore.FieldValue.serverTimestamp(),
@@ -281,9 +282,9 @@ exports.slot = functions.https.onCall((data, context) => {
     })
     .then(() => {
       console.log("Transaction successfully committed!");
-      logTransaction(uid, "Slot bet", -bet);
+      logTransaction(uid, "Emoji spin bet", -bet);
       if (win > 0) {
-        logTransaction(uid, "Slot win!", winAmount);
+        logTransaction(uid, "Emoji spin prize", winAmount);
       }
 
       return { win: win, amount: win > 0 ? winAmount : -bet };
@@ -324,7 +325,7 @@ exports.coinflip = functions.https.onCall((data, context) => {
       console.log("Transaction successfully committed!");
       logTransaction(uid, "Coin flip bet", -data.bet);
       if (outcome) {
-        logTransaction(uid, "Coin flip win!", data.bet * 2);
+        logTransaction(uid, "Coin flip prize", data.bet * 2);
       }
 
       return { win: outcome, amount: outcome ? data.bet * 2 : -data.bet };
@@ -390,6 +391,7 @@ exports.quickSell = functions.https.onCall((data, context) => {
             coins: userData.coins + voucherData.price
           });
           transaction.update(voucherRef, { sold: true });
+          logTransaction(uid, "Quick sell voucher", voucherData.price);
           return;
         });
       })

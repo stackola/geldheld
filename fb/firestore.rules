@@ -9,10 +9,19 @@ service cloud.firestore {
     match /users/{user}/crates/{any} {
       allow read: if user == request.auth.uid; 
     }
+    match /users/{user}/vouchers/{any} {
+      allow read: if user == request.auth.uid; 
+    }
+    match /users/{user}/transactions/{any} {
+      allow read: if user == request.auth.uid; 
+    }
     match /offers/{offer}{
       allow read: if true;
     }
     match /crates/{crate}{
+      allow read: if true;
+    }
+    match /products/{product}{
       allow read: if true;
     }
   }
