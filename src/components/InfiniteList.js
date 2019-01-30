@@ -124,6 +124,7 @@ export default class InfiniteList extends Component {
           <View
             style={{
               height: this.props.horizontal ? "auto" : 60,
+              width: this.props.horizontal ? 100 : "auto",
               flex: 1,
               alignItems: "center",
               justifyContent: "center"
