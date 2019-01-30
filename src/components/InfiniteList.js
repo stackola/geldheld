@@ -20,14 +20,18 @@ export default class InfiniteList extends Component {
   }
   fetchInitial() {
     let path = this.props.path;
+    let where = this.props.where;
     let collection = this.props.collection;
     let order = this.props.orderBy || "time";
     let f = firebase.firestore();
     if (path) {
       f = f.doc(path);
     }
-    f.collection(collection)
-      .orderBy(order, "DESC")
+    f = f.collection(collection);
+    if (where) {
+      f = f.where(where[0], where[1], where[2]);
+    }
+    f.orderBy(order, "DESC")
       .limit(this.pageSize)
       .get()
       .then(snap => {
@@ -60,6 +64,7 @@ export default class InfiniteList extends Component {
     if (this.shouldFetchMore()) {
       console.log("loading more!");
       let path = this.props.path;
+      let where = this.props.where;
       let collection = this.props.collection;
       let order = this.props.orderBy || "time";
       this.setState({ fetching: true }, () => {
@@ -67,8 +72,11 @@ export default class InfiniteList extends Component {
         if (path) {
           f = f.doc(path);
         }
-        f.collection(collection)
-          .orderBy(order, "DESC")
+        f = f.collection(collection);
+        if (where) {
+          f = f.where(where[0], where[1], where[2]);
+        }
+        f.orderBy(order, "DESC")
           .startAfter(this.state.items[this.state.items.length - 1])
           .limit(this.pageSize)
           .get()
@@ -94,7 +102,7 @@ export default class InfiniteList extends Component {
     return (
       <FlatList
         horizontal={this.props.horizontal}
-        style={{ flex: 1 }}
+        style={{ flex: 1, ...this.props.style }}
         refreshControl={
           <RefreshControl
             enabled={!this.props.noRefresh}
@@ -111,6 +119,7 @@ export default class InfiniteList extends Component {
         keyExtractor={i => {
           return i.id;
         }}
+        ListHeaderComponent={this.props.header || null}
         ListFooterComponent={
           <View
             style={{

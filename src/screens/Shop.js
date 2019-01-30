@@ -5,6 +5,7 @@ import Wrapper from "../components/Wrapper";
 import Header from "../components/Header";
 import ShopItemSquare from "../atoms/ShopItemSquare";
 import ShopCategory from "../components/ShopCategory";
+import Button from "../atoms/Button";
 
 export default class Shop extends Component {
   render() {
@@ -12,12 +13,10 @@ export default class Shop extends Component {
       <Wrapper>
         <Header title="Shop" />
         <ScrollView>
+          <Button path="CategoryPage" title="Category" />
           <View style={{ height: 8 }} />
           <ShopCategory category={"Gadgets"} />
-          <ShopCategory category={"Gadgets"} />
-          <ShopCategory category={"Gadgets"} />
-          <ShopCategory category={"Gadgets"} />
-          <ShopCategory category={"Gadgets"} />
+          <ShopCategory category={"Fashion"} />
         </ScrollView>
       </Wrapper>
     );

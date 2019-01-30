@@ -27,6 +27,7 @@ import MyVouchers from "./screens/MyVouchers";
 import MyTransactions from "./screens/MyTransactions";
 import Shop from "./screens/Shop";
 import Settings from "./screens/Settings";
+import CategoryPage from "./screens/CategoryPage";
 
 const PlayStack = createStackNavigator(
   {
@@ -38,6 +39,19 @@ const PlayStack = createStackNavigator(
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       initialRouteName: "PlayHome"
+    })
+  }
+);
+
+const ShopStack = createStackNavigator(
+  {
+    ShopHome: Shop,
+    CategoryPage: CategoryPage
+  },
+  {
+    defaultNavigationOptions: ({ navigation }) => ({
+      header: null,
+      initialRouteName: "ShopHome"
     })
   }
 );
@@ -60,8 +74,8 @@ const SettingsStack = createStackNavigator(
     SettingsHome: Settings,
     MyCrates,
     SettingsMyCrate: MyCrate,
-    MyVouchers:MyVouchers,
-    MyTransactions,
+    MyVouchers: MyVouchers,
+    MyTransactions
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
@@ -85,13 +99,14 @@ let v = ({ navigation }) => {
 PlayStack.navigationOptions = v;
 CrateStack.navigationOptions = v;
 SettingsStack.navigationOptions = v;
+ShopStack.navigationOptions = v;
 
 const AppStack = createBottomTabNavigator(
   {
     Earn: Earn,
     Play: PlayStack,
     Crates: CrateStack,
-    Shop,
+    Shop: ShopStack,
     Account: SettingsStack
   },
   {
