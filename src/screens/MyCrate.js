@@ -20,6 +20,7 @@ import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
 import { getUID, openCrate, buyCrate, quickSell } from "../lib";
 import ItemLoader from "../components/ItemLoader";
+import { format } from "date-fns";
 
 export default class OpenCrate extends Component {
   constructor(props) {
@@ -245,6 +246,14 @@ export default class OpenCrate extends Component {
                               This crate contained:
                             </Text>
                             <CrateSlotItem {...r.content} />
+                            <Text
+                              style={{ color: "white", textAlign: "center" }}
+                            >
+                              Opened:{"\n"}
+                              {format(r.openedTime, "YYYY/MM/DD")}
+                              {"\n"}
+                              {format(r.openedTime, "HH:mm")}
+                            </Text>
                           </View>
                         )}
                         {this.state.status == "finished" &&
