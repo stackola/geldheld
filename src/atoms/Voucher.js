@@ -9,6 +9,10 @@ import {
 import colors from "../colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { quickSell } from "../lib";
+
+import { navToProduct } from "../lib";
+import { withNavigation } from "react-navigation";
+
 export class Voucher extends PureComponent {
   constructor(props) {
     super(props);
@@ -103,7 +107,12 @@ export class Voucher extends PureComponent {
                 </Text>
               )}
             </TouchableOpacity>
-            <View
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate(
+                  navToProduct(this.props.item.productId)
+                );
+              }}
               style={{
                 justifyContent: "center",
                 alignItems: "center",
@@ -114,7 +123,7 @@ export class Voucher extends PureComponent {
               <Text>
                 <Icon name={"arrow-right-bold"} size={30} color="white" />
               </Text>
-            </View>
+            </TouchableOpacity>
           </React.Fragment>
         )}
         {(this.state.sellItemState == "done" || this.props.sold == true) && (
@@ -172,4 +181,4 @@ export class Voucher extends PureComponent {
   }
 }
 
-export default Voucher;
+export default withNavigation(Voucher);

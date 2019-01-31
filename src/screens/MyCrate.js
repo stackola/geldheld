@@ -22,7 +22,10 @@ import { getUID, openCrate, buyCrate, quickSell } from "../lib";
 import ItemLoader from "../components/ItemLoader";
 import { format } from "date-fns";
 
-export default class OpenCrate extends Component {
+import { navToProduct } from "../lib";
+import { withNavigation } from "react-navigation";
+
+class OpenCrate extends Component {
   constructor(props) {
     super(props);
 
@@ -310,7 +313,7 @@ export default class OpenCrate extends Component {
                           )}
                         {this.state.status == "finished" &&
                           this.state.droppedItem.item.type == "product" && (
-                            <View style={{ alignItems: "center" }}>
+                            <View style={{}}>
                               {!this.state.itemSold && (
                                 <Text
                                   style={{
@@ -323,7 +326,35 @@ export default class OpenCrate extends Component {
                                   {this.state.droppedItem.item.name}!
                                 </Text>
                               )}
-
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.props.navigation.navigate(
+                                    navToProduct(
+                                      this.state.droppedItem.item.productId
+                                    )
+                                  );
+                                }}
+                                style={{
+                                  backgroundColor: colors.action,
+                                  height: 50,
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  marginLeft: 8,
+                                  flex: 1,
+                                  marginRight: 8,
+                                  marginBottom: 4,
+                                  borderRadius: 4
+                                }}
+                              >
+                                <Text
+                                  style={{
+                                    color: "white",
+                                    fontWeight: "bold"
+                                  }}
+                                >
+                                  View product
+                                </Text>
+                              </TouchableOpacity>
                               <View
                                 style={{
                                   flexDirection: "row",
@@ -332,7 +363,8 @@ export default class OpenCrate extends Component {
                                 }}
                               >
                                 {buyAgain}
-                                <View style={{ width: 8 }} />
+
+                                <View style={{ width: 4 }} />
                                 <TouchableOpacity
                                   onPress={() => {
                                     this.doSell(
@@ -344,7 +376,7 @@ export default class OpenCrate extends Component {
                                     height: 50,
                                     alignItems: "center",
                                     justifyContent: "center",
-                                    width: 180,
+                                    flex: 1,
                                     borderRadius: 4
                                   }}
                                 >
@@ -437,3 +469,5 @@ export default class OpenCrate extends Component {
     );
   }
 }
+
+export default withNavigation(OpenCrate);

@@ -27,3 +27,7 @@ export function openCrate(id) {
 export function quickSell(id) {
   return sendQuickSell({ voucherId: id });
 }
+
+export function navToProduct(id) {
+  return { routeName: "Product", params: { productId: id }, key: id };
+}

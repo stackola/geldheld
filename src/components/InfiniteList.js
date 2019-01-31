@@ -131,7 +131,9 @@ export default class InfiniteList extends Component {
             }}
           >
             {this.state.endReached && (
-              <Text style={{ color: "white", fontSize: 12 }}>The end.</Text>
+              <Text style={{ color: "white", fontSize: 12 }}>
+                {this.state.items.length == 0 ? "Noting here." : "The end."}
+              </Text>
             )}
             {!this.state.endReached && <ActivityIndicator color={"white"} />}
           </View>

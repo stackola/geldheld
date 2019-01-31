@@ -26,6 +26,7 @@ import MyCrates from "./screens/MyCrates";
 import MyVouchers from "./screens/MyVouchers";
 import MyTransactions from "./screens/MyTransactions";
 import Shop from "./screens/Shop";
+import Product from "./screens/Product";
 import Settings from "./screens/Settings";
 import CategoryPage from "./screens/CategoryPage";
 
@@ -46,7 +47,8 @@ const PlayStack = createStackNavigator(
 const ShopStack = createStackNavigator(
   {
     ShopHome: Shop,
-    CategoryPage: CategoryPage
+    CategoryPage: CategoryPage,
+    Product: Product
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

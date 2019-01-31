@@ -13,7 +13,8 @@ class Header extends Component {
           height: 60,
           borderBottomLeftRadius: 8,
           borderBottomRightRadius: 8,
-          flexDirection: "row"
+          flexDirection: "row",
+          elevation: 2
         }}
       >
         {this.props.showBack ? (

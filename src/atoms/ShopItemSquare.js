@@ -1,13 +1,19 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, TouchableOpacity } from "react-native";
 import colors from "../colors";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { navToProduct } from "../lib";
+import { withNavigation } from "react-navigation";
+
 export class ShopItemSquare extends Component {
   render() {
     let props = this.props;
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => {
+          this.props.navigation.navigate(navToProduct(props.id));
+        }}
         style={{
           height: 150,
           width: 150,
@@ -40,9 +46,8 @@ export class ShopItemSquare extends Component {
             {props.price} <Icon name="coin" color={colors.action} size={14} />
           </Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }
-
-export default ShopItemSquare;
+export default withNavigation(ShopItemSquare);

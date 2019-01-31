@@ -2,3 +2,8 @@ products page:
   product (duh?)
   shipping options
   ratings/reviews!
+
+
+refactors:
+  componentize!!
+  navigation in lib

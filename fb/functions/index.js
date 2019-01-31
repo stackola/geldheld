@@ -157,7 +157,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
                     transaction.update(userCrateRef, {
                       opened: true,
                       content: itemWon,
-                      openedTime: admin.firestore.FieldValue.serverTimestamp(),
+                      openedTime: admin.firestore.FieldValue.serverTimestamp()
                     });
                     return { item: itemWon, voucherId: newUserVoucher.id };
                   }
