@@ -4,6 +4,7 @@ import ItemLoader from "../components/ItemLoader";
 import { withNavigation } from "react-navigation";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../colors";
+import { navToUserCrate } from "../lib";
 let style = {
   height: 80,
   backgroundColor: "white",
@@ -51,11 +52,7 @@ class ListElem extends PureComponent {
   pressed() {
     let crate = this.props.crate;
     let userCrate = this.props.userCrate;
-    this.props.navigation.navigate({
-      routeName: "SettingsMyCrate",
-      params: { id: userCrate.id },
-      key: userCrate.id
-    });
+    this.props.navigation.navigate(navToUserCrate(userCrate.id));
   }
   render() {
     let crate = this.props.crate;

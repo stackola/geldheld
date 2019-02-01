@@ -15,7 +15,7 @@ import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
 import ItemLoader from "../components/ItemLoader";
-import { buyCrate } from "../lib";
+import { buyCrate, navToUserCrate } from "../lib";
 import { StackActions, NavigationActions } from "react-navigation";
 
 import { withNavigation } from "react-navigation";
@@ -40,19 +40,11 @@ class CratePage extends Component {
               actions: [
                 NavigationActions.navigate({
                   routeName: "CratesHome"
-                },{}, NavigationActions.navigate({
-                  routeName: "Account"
-                })),
-                
+                })
               ]
             });
-            this.props.navigation.dispatch(resetAction, () => {
-              this.props.navigation.navigate({
-                routeName: "SettingsMyCrate",
-                params: { id: r.data.userCrate },
-                newKey: r.data.userCrate
-              });
-            });
+            this.props.navigation.dispatch(resetAction);
+            this.props.navigation.navigate(navToUserCrate(r.data.userCrate));
           });
         } else {
           this.setState({ status: "error" }, () => {});

@@ -29,5 +29,29 @@ export function quickSell(id) {
 }
 
 export function navToProduct(id) {
-  return { routeName: "Product", params: { productId: id }, key: id };
+  return { routeName: "Product", params: { productId: id }, key: "prod_" + id };
+}
+
+export function navToBuy(id) {
+  return {
+    routeName: "BuyProduct",
+    params: { productId: id },
+    key: "buy_" + id
+  };
+}
+
+export function navToCratePage(id) {
+  return {
+    routeName: "CratePage",
+    params: { crateId: id },
+    key: "cratePage_" + id
+  };
+}
+
+export function navToUserCrate(id) {
+  return {
+    routeName: "SettingsMyCrate",
+    params: { id: id },
+    key: "myCrate_" + id
+  };
 }

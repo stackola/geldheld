@@ -4,14 +4,11 @@ import { Text, View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../colors";
 import { withNavigation } from "react-navigation";
+import { navToCratePage } from "../lib";
 class Crate extends PureComponent {
   pressed() {
     if (this.props.linkToSelf) {
-      return this.props.navigation.navigate({
-        routeName: "CratePage",
-        params: { crateId: this.props.id },
-        key: this.props.id
-      });
+      return this.props.navigation.navigate(navToCratePage(this.props.id));
     }
   }
   render() {

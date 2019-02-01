@@ -18,7 +18,7 @@ import CrateSlotItem from "../atoms/CrateSlotItem";
 import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
-import { getUID, openCrate, buyCrate, quickSell } from "../lib";
+import { getUID, openCrate, buyCrate, quickSell, navToUserCrate } from "../lib";
 import ItemLoader from "../components/ItemLoader";
 import { format } from "date-fns";
 
@@ -75,11 +75,10 @@ class OpenCrate extends Component {
       buyCrate(id).then(r => {
         console.log(r);
         if (r.data.status == "ok") {
-          return this.props.navigation.replace({
-            routeName: "SettingsMyCrate",
-            params: { id: r.data.userCrate },
-            newKey: r.data.userCrate
-          });
+          let p = navToUserCrate(r.data.userCrate);
+          p = { ...p, key: null, newKey: p.key };
+          delete p.key;
+          return this.props.navigation.replace(p);
         } else {
           this.setState(
             { buyCrateError: true, buyCrateLoading: false },

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView } from "react-native";
+import { Text, View, ScrollView, TouchableOpacity } from "react-native";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Wrapper from "../components/Wrapper";
@@ -10,6 +10,7 @@ import colors from "../colors";
 import { Rating, AirbnbRating } from "react-native-ratings";
 import Review from "../components/Review";
 import InfiniteList from "../components/InfiniteList";
+import { navToBuy } from "../lib";
 export default class Settings extends Component {
   render() {
     let productId = this.props.navigation.getParam("productId", null);
@@ -113,6 +114,30 @@ export default class Settings extends Component {
                         );
                       })}
                     </View>
+                    <TouchableOpacity
+                      onPress={() => {
+                        console.log("navigating", navToBuy(product.id));
+                        this.props.navigation.navigate(navToBuy(product.id));
+                      }}
+                      style={{
+                        height: 50,
+                        backgroundColor: colors.action,
+                        borderRadius: 4,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        marginTop: 8
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontSize: 18,
+                          color: "white",
+                          fontWeight: "bold"
+                        }}
+                      >
+                        Buy!
+                      </Text>
+                    </TouchableOpacity>
                     <View
                       style={{
                         backgroundColor: "white",
