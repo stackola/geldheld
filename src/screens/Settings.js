@@ -13,6 +13,7 @@ export default class Settings extends Component {
         <Button title="My Crates" path="MyCrates" />
         <Button title="My Vouchers" path="MyVouchers" />
         <Button title="My Transactions" path="MyTransactions" />
+        <Button title="My Orders" path="MyOrders" />
         <Button />
         <Button />
       </Wrapper>

@@ -21,6 +21,9 @@ service cloud.firestore {
     match /crates/{crate}{
       allow read: if true;
     }
+    match /orders/{order}{
+      allow read: if resource.data.user == request.auth.uid;
+    }
     match /products/{product}{
       allow read: if true;
     }

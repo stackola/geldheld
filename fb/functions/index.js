@@ -506,7 +506,11 @@ exports.order = functions.https.onCall((data, context) => {
               usedVoucher: voucherDoc ? true : false,
               voucherId: voucherDoc ? voucherId : null,
               totalPrice: totalPrice,
-              address: address
+              address: address,
+              product: {
+                name: productData.name,
+                image: productData.image
+              }
             });
             transaction.update(userRef, {
               coins: newBalance,
