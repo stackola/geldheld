@@ -11,6 +11,7 @@ export class ShopItemSquare extends Component {
     let props = this.props;
     return (
       <TouchableOpacity
+        disabled={this.props.noLink}
         onPress={() => {
           this.props.navigation.navigate(navToProduct(props.id));
         }}

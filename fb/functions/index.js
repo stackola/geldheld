@@ -123,7 +123,8 @@ exports.openCrate = functions.https.onCall((data, context) => {
                     transaction.update(userRef, { coins: newCoins });
                     transaction.update(userCrateRef, {
                       opened: true,
-                      content: itemWon
+                      content: itemWon,
+                      openedTime: admin.firestore.FieldValue.serverTimestamp()
                     });
                     logTransaction(uid, "Crate prize", itemWon.value);
                     return { item: itemWon };
@@ -138,7 +139,8 @@ exports.openCrate = functions.https.onCall((data, context) => {
                     });
                     transaction.update(userCrateRef, {
                       opened: true,
-                      content: itemWon
+                      content: itemWon,
+                      openedTime: admin.firestore.FieldValue.serverTimestamp()
                     });
                     return { item: itemWon, newCrateId: newUserCrate.id };
                     //give crate to user
@@ -403,6 +405,130 @@ exports.quickSell = functions.https.onCall((data, context) => {
       .catch(e => {
         console.log("Error!", e);
         return { error: true, text: e };
+      });
+  });
+});
+
+exports.order = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4OZYYoopltey2";
+
+  let db = admin.firestore();
+  let productId = data.productId;
+  let voucherRef = null;
+
+  let address = data.address;
+  let saveAddress = data.saveAddress;
+  let shippingOption = data.shippingOption;
+  let voucherId = data.voucherId || null;
+  if (!productId || !address || address.length < 10) {
+    return { error: true, text: "Invalid request." };
+  }
+  let productRef = db.collection("products").doc(productId);
+  var userRef = db.collection("users").doc(uid);
+  if (data.useVoucher) {
+    voucherRef = db
+      .collection("users")
+      .doc(uid)
+      .collection("vouchers")
+      .doc(voucherId);
+  }
+  return db.runTransaction(transaction => {
+    return transaction
+      .get(userRef)
+      .then(userDoc => {
+        if (!userDoc.exists) {
+          throw "User not found!";
+        }
+        let userData = userDoc.data();
+        return transaction.get(productRef).then(productDoc => {
+          if (!productDoc.exists) {
+            throw "Product not found.";
+          }
+          let productData = productDoc.data();
+          let completeOrder = voucherDoc => {
+            console.log(
+              "completing order",
+              voucherDoc ? "with voucher" : "no voucher"
+            );
+
+            // validate voucher
+            if (voucherDoc) {
+              if (!voucherDoc.exists) {
+                throw "Voucher does not exist";
+              }
+              let voucherData = voucherDoc.data();
+              if (voucherData.productId != productId) {
+                throw "invalid voucher!";
+              }
+              if (voucherData.sold == true || voucherData.used == true) {
+                throw "Voucher already used!";
+              }
+            }
+
+            //validate shipping;
+            let selectedShipping = productData.shippingOptions[shippingOption];
+            if (!selectedShipping) {
+              throw "invalid shipping option";
+            }
+
+            //calculate price;
+            let totalPrice = 0;
+            if (voucherDoc) {
+              totalPrice = selectedShipping.price;
+            } else {
+              totalPrice = selectedShipping.price + productData.price;
+            }
+
+            if (userData.coins < totalPrice) {
+              throw "Not enough coins!";
+            }
+
+            let newBalance = userData.coins - totalPrice;
+
+            //product, user, and voucher exists, user has enough coins, voucher is valid for product and not used. Address appears OK.
+
+            //create order item.
+            //substract coins.
+            //mark voucher as used.
+            transaction.create(db.collection("orders").doc(), {
+              user: uid,
+              time: admin.firestore.FieldValue.serverTimestamp(),
+              productId: productId,
+              status: "new",
+              trackingId: null,
+              shippingOption: selectedShipping,
+              usedVoucher: voucherDoc ? true : false,
+              voucherId: voucherDoc ? voucherId : null,
+              totalPrice: totalPrice,
+              address: address
+            });
+            transaction.update(userRef, {
+              coins: newBalance,
+              address: saveAddress ? address : userData.address
+            });
+            if (voucherDoc) {
+              transaction.update(voucherRef, { used: true });
+            }
+
+            totalPrice > 0 && logTransaction(uid, "Buy product", -totalPrice);
+            return { status: "ok", totalPrice: totalPrice };
+          };
+          if (voucherRef) {
+            return transaction.get(voucherRef).then(v => completeOrder(v));
+          } else {
+            return completeOrder();
+          }
+        });
+      })
+      .catch(err => {
+        console.log("error!");
+        return { error: true, text: err };
       });
   });
 });

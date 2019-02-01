@@ -1,9 +1,7 @@
 products page:
-  product (duh?)
-  shipping options
-  ratings/reviews!
+  store bought products with user.
+  ratings/reviews!!
 
 
 refactors:
   componentize!!
-  navigation in lib

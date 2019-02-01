@@ -4,6 +4,7 @@ const sendSlot = firebase.functions().httpsCallable("slot");
 const sendBuyCrate = firebase.functions().httpsCallable("buyCrate");
 const sendOpenCrate = firebase.functions().httpsCallable("openCrate");
 const sendQuickSell = firebase.functions().httpsCallable("quickSell");
+const sendOrder = firebase.functions().httpsCallable("order");
 
 export function getUID() {
   return firebase.auth().currentUser.uid;
@@ -54,4 +55,23 @@ export function navToUserCrate(id) {
     params: { id: id },
     key: "myCrate_" + id
   };
+}
+
+export function order(payload){
+  return sendOrder(payload);
+}
+
+export function getVouchersForProduct(productId) {
+  return firebase
+    .firestore()
+    .collection("users")
+    .doc(getUID())
+    .collection("vouchers")
+    .where("used", "==", false)
+    .where("sold", "==", false)
+    .where("productId", "==", productId)
+    .get()
+    .then(snap => {
+      return snap._docs.map(d => d._data);
+    });
 }

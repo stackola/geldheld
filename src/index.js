@@ -114,29 +114,6 @@ const AppStack = createBottomTabNavigator(
     Account: SettingsStack
   },
   {
-    navigationOptions: ({ navigation }) => ({
-      tabBarOnPress: ({ previousScene, scene, jumpToIndex }) => {
-        const { route, focused, index } = scene;
-        if (!focused) {
-          if (route.index > 0) {
-            const tabRoute = route.routeName;
-            const { routeName, key } = route.routes[0];
-            navigation.dispatch(
-              NavigationActions.navigate({ routeName: tabRoute })
-            );
-            navigation.dispatch(
-              NavigationActions.reset({
-                index: 0,
-                key,
-                actions: [NavigationActions.navigate({ routeName })]
-              })
-            );
-          } else {
-            jumpToIndex(index);
-          }
-        }
-      }
-    }),
     defaultNavigationOptions: ({ navigation }) => ({
       tabBarVisible: () => {
         return navigation.state.routeName != "CoinGame";

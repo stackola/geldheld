@@ -20,7 +20,9 @@ class Header extends Component {
         {this.props.showBack ? (
           <TouchableOpacity
             onPress={() => {
-              this.props.navigation.goBack();
+              this.props.customBack
+                ? this.props.customBack()
+                : this.props.navigation.goBack();
             }}
             style={{
               width: 50,
