@@ -12,6 +12,9 @@ service cloud.firestore {
     match /users/{user}/vouchers/{any} {
       allow read: if user == request.auth.uid; 
     }
+    match /users/{user}/friends/{any} {
+      allow read: if user == request.auth.uid; 
+    }
     match /users/{user}/transactions/{any} {
       allow read: if user == request.auth.uid; 
     }

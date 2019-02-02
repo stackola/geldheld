@@ -24,6 +24,58 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     );
 });
 
+exports.setFriend = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+  //let uid = "1SXMEoviHiPEXx44TXm7yWhj15F3";
+
+  let friendId = data.friendId;
+  if (uid == friendId) {
+    return { error: true, text: "Can't invite yourself." };
+  }
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  var friendRef = db.collection("users").doc(friendId);
+  return db.runTransaction(transaction => {
+    return transaction
+      .get(userRef)
+      .then(userDoc => {
+        let userData = userDoc.data();
+        if (userData.friend || userData.friend === false) {
+          return { result: "user already has a friend" };
+        }
+        if (friendId == "no") {
+          transaction.set(userRef, { friend: false }, { merge: true });
+          return { status: "ok" };
+        }
+        // find friend;
+        return transaction.get(friendRef).then(friendDoc => {
+          if (!friendDoc.exists) {
+            transaction.set(userRef, { friend: false }, { merge: true });
+            throw "User does not exist";
+          }
+          transaction.set(userRef, { friend: friendId }, { merge: true });
+          transaction.create(friendRef.collection("friends").doc(uid), {
+            user: uid,
+            id: uid,
+            time: admin.firestore.FieldValue.serverTimestamp(),
+            earned: 0
+          });
+          return { status: "ok" };
+        });
+      })
+      .then(r => {
+        return r;
+      })
+      .catch(e => {
+        console.error(e);
+        return { error: true, text: e };
+      });
+  });
+});
 exports.setToken = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
   if (!context.auth) {

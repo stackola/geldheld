@@ -7,7 +7,8 @@ import { bindActionCreators } from "redux";
 import firebase from "react-native-firebase";
 
 import LoadingScreen from "../components/LoadingScreen";
-import { setToken } from "../lib";
+import { setToken, setFriend } from "../lib";
+import queryString from "query-string";
 
 class AuthLoadingScreen extends Component {
   componentDidMount() {
@@ -36,6 +37,10 @@ class AuthLoadingScreen extends Component {
             if (url) {
               // app opened from a url
               console.log("opened with", url);
+              // set freidn!
+              console.log();
+              let friend = queryString.parseUrl(url).query.ref;
+              setFriend(friend).then(r => console.log(r));
             } else {
               console.log("normal open!");
               // app NOT opened from a url

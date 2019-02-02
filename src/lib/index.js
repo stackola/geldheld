@@ -8,6 +8,7 @@ const sendOrder = firebase.functions().httpsCallable("order");
 const sendReview = firebase.functions().httpsCallable("review");
 const sendUpdateAddress = firebase.functions().httpsCallable("updateAddress");
 const sendSetToken = firebase.functions().httpsCallable("setToken");
+const sendSetFriend = firebase.functions().httpsCallable("setFriend");
 const sendEnableNotifications = firebase
   .functions()
   .httpsCallable("enableNotifications");
@@ -24,6 +25,10 @@ export function flip(amount) {
 
 export function slot(amount) {
   return sendSlot({ bet: amount });
+}
+
+export function setFriend(friendId) {
+  return sendSetFriend({ friendId: friendId });
 }
 
 export function updateAddress(address) {
