@@ -21,6 +21,9 @@ service cloud.firestore {
     match /offers/{offer}{
       allow read: if true;
     }
+     match /lists/{list}{
+      allow read: if true;
+    }
     match /crates/{crate}{
       allow read: if true;
     }

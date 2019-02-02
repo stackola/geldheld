@@ -1,8 +1,6 @@
-features/p-lists?
-invite friends :()
-payout refererr?!
-
+IAP crates
 callbacks (from ads)
+payout refererr?!
 send notifications on events / on gift?
 
 
@@ -11,11 +9,13 @@ fixes:
   fix navigation (own tab?!)
   make sure transaction functions are pure!
   loadnig styles
-
+  Links: web version 
 
 refactors:
   componentize!!
 
 
 nice to have:
+  webiste
+  admin
   find box for product in product page
