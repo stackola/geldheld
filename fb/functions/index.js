@@ -23,7 +23,9 @@ exports.makeUser = functions.auth.user().onCreate(user => {
       { merge: true }
     );
 });
-
+exports.iapNotification = functions.pubsub.topic("iap").onPublish(message => {
+  console.log("got that in app push", message);
+});
 exports.setFriend = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
   if (!context.auth) {
