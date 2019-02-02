@@ -108,3 +108,14 @@ export function getVouchersForProduct(productId) {
       return snap._docs.map(d => d._data);
     });
 }
+
+export function getInviteLink() {
+  const link = new firebase.links.DynamicLink(
+    "https://example.com?ref=" + getUID(),
+    "geldheld.page.link"
+  ).android
+    .setPackageName("com.stackola.geldheld")
+    .ios.setBundleId("com.example.ios");
+
+  return firebase.links().createShortDynamicLink(link, "SHORT");
+}

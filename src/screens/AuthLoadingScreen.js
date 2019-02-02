@@ -28,6 +28,19 @@ class AuthLoadingScreen extends Component {
               setToken(t);
             }
           });
+        //set referrer if we have a link, otherwise set ref to false or something.!
+        firebase
+          .links()
+          .getInitialLink()
+          .then(url => {
+            if (url) {
+              // app opened from a url
+              console.log("opened with", url);
+            } else {
+              console.log("normal open!");
+              // app NOT opened from a url
+            }
+          });
         this.props.userSubscribe();
         this.props.configSubscribe();
         this.props.navigation.navigate("App");

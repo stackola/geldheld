@@ -5,7 +5,10 @@ import {
   ScrollView,
   ActivityIndicator,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  Keyboard,
+  ToastAndroid,
+  Clipboard
 } from "react-native";
 
 import Wrapper from "../components/Wrapper";
@@ -19,7 +22,8 @@ import colors from "../colors";
 import {
   disableNotifications,
   enableNotifications,
-  updateAddress
+  updateAddress,
+  getInviteLink
 } from "../lib";
 
 class MyProfile extends Component {
@@ -28,8 +32,19 @@ class MyProfile extends Component {
 
     this.state = {
       input: "",
-      notiLoading: false
+      notiLoading: false,
+      url: "loading..."
     };
+  }
+  copyToClip() {
+    if (this.state.url != "loading...") {
+      Clipboard.setString(this.state.url);
+      ToastAndroid.showWithGravity(
+        "Copied to clip board",
+        ToastAndroid.SHORT,
+        ToastAndroid.TOP
+      );
+    }
   }
   doEnableNotifications() {
     this.setState({ notiLoading: true }, () => {
@@ -67,6 +82,9 @@ class MyProfile extends Component {
   }
   componentDidMount() {
     this.setState({ input: this.props.user.address });
+    getInviteLink().then(url => {
+      this.setState({ url: url });
+    });
   }
   render() {
     let notsOn =
@@ -75,6 +93,33 @@ class MyProfile extends Component {
       <Wrapper>
         <Header title="My Profile" showBack />
         <ScrollView style={{ flex: 1 }}>
+          <TouchableOpacity
+            onPress={() => {
+              this.copyToClip();
+            }}
+            style={{
+              margin: 8,
+              backgroundColor: "white",
+              borderRadius: 4,
+              padding: 8
+            }}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+              Invite Link
+            </Text>
+            <Text
+              selectable
+              selectTextOnFocus={true}
+              style={{
+                margin: 4,
+                marginTop: 0,
+                borderBottomWidth: 2,
+                borderColor: "#ddd"
+              }}
+            >
+              {this.state.url}
+            </Text>
+          </TouchableOpacity>
           <View
             style={{
               margin: 8,
