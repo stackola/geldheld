@@ -26,6 +26,7 @@ import MyCrates from "./screens/MyCrates";
 import MyVouchers from "./screens/MyVouchers";
 import MyTransactions from "./screens/MyTransactions";
 import MyOrders from "./screens/MyOrders";
+import MyProfile from "./screens/MyProfile";
 import Shop from "./screens/Shop";
 import Product from "./screens/Product";
 import BuyProduct from "./screens/BuyProduct";
@@ -81,7 +82,8 @@ const SettingsStack = createStackNavigator(
     SettingsMyCrate: MyCrate,
     MyVouchers: MyVouchers,
     MyTransactions,
-    MyOrders
+    MyOrders,
+    MyProfile
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

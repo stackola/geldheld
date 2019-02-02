@@ -46,6 +46,28 @@ exports.setToken = functions.https.onCall((data, context) => {
     });
 });
 
+exports.updateAddress = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
+
+  let db = admin.firestore();
+  let address = data.address;
+  var userRef = db.collection("users").doc(uid);
+  return userRef
+    .set({ address: address }, { merge: true })
+    .then(() => {
+      return { status: "ok" };
+    })
+    .catch(e => {
+      return { error: true };
+    });
+});
+
 exports.enableNotifications = functions.https.onCall((data, context) => {
   const uid = context.auth.uid;
   if (!context.auth) {

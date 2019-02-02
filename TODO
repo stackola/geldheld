@@ -1,15 +1,16 @@
-profile settings
-  change stored address
-  notifications!
-  
-callbacks usw
-notifications!
-fix navigation (own tab?!)
-
 store page / categories / features?
-
-
 invite friends :()
+payout refererr?!
+
+callbacks (from ads)
+send notifications on events / on gift?
+
+
+
+fixes:
+  fix navigation (own tab?!)
+  make sure transaction functions are pure!
+
 
 refactors:
   componentize!!

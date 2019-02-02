@@ -6,6 +6,7 @@ const sendOpenCrate = firebase.functions().httpsCallable("openCrate");
 const sendQuickSell = firebase.functions().httpsCallable("quickSell");
 const sendOrder = firebase.functions().httpsCallable("order");
 const sendReview = firebase.functions().httpsCallable("review");
+const sendUpdateAddress = firebase.functions().httpsCallable("updateAddress");
 const sendSetToken = firebase.functions().httpsCallable("setToken");
 const sendEnableNotifications = firebase
   .functions()
@@ -23,6 +24,10 @@ export function flip(amount) {
 
 export function slot(amount) {
   return sendSlot({ bet: amount });
+}
+
+export function updateAddress(address) {
+  return sendUpdateAddress({ address: address });
 }
 
 export function buyCrate(id) {
@@ -57,8 +62,13 @@ export function disableNotifications() {
   return sendDisableNotifications();
 }
 
-export function enableNotifications(token) {
-  return sendEnableNotifications({ token: token });
+export function enableNotifications() {
+  return firebase
+    .messaging()
+    .getToken()
+    .then(t => {
+      return sendEnableNotifications({ token: t });
+    });
 }
 export function navToBuy(id) {
   return {
