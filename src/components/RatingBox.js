@@ -81,11 +81,11 @@ export default class RatingBox extends Component {
                 fontSize: 20
               }}
             >
-              {this.props.rating}
+              {this.props.rating || ""}
             </Text>
             <Rating
               style={{ flex: 1 }}
-              startingValue={this.props.rating}
+              startingValue={this.props.rating || 0}
               readonly={true}
             />
             <Text
@@ -96,7 +96,7 @@ export default class RatingBox extends Component {
                 fontSize: 20
               }}
             >
-              {this.props.ratingCount}
+              {this.props.ratingCount > 0 && this.props.ratingCount}
             </Text>
           </View>
         )}

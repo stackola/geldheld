@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Text, View, Image, TouchableOpacity } from "react-native";
 import colors from "../colors";
 
+import { Rating, AirbnbRating } from "react-native-ratings";
 import { navToProduct } from "../lib";
 import { withNavigation } from "react-navigation";
 
@@ -39,8 +40,20 @@ export class ShopItemSquare extends Component {
             </Text>
             <Text style={{}}>{props.text}</Text>
           </View>
-          <View>
-            <Text style={{ textAlign: "right", fontWeight: "bold" }}>
+          <View style={{ flexDirection: "row", jusifyContent: "center" }}>
+            {props.ratingCount > 0 && (
+              <Rating
+                readonly={true}
+                startingValue={props.rating}
+                imageSize={20}
+              />
+            )}
+            {props.ratingCount > 0 && (
+              <Text style={{ fontSize: 12, marginLeft: 4 }}>
+                ({props.ratingCount})
+              </Text>
+            )}
+            <Text style={{ flex: 1, textAlign: "right", fontWeight: "bold" }}>
               {props.price} <Icon name="coin" color={colors.action} size={14} />
             </Text>
           </View>

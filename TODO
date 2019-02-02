@@ -1,13 +1,11 @@
-products page:
-  calculate review averages 
-  profile settings
-    change stored address
-    notifications!
-  
-  callbacks usw
+profile settings
+  change stored address
   notifications!
-  fix navigation (own tab?!)
-
+  
+callbacks usw
+notifications!
+fix navigation (own tab?!)
+store page / categories / features?
 
 refactors:
   componentize!!
