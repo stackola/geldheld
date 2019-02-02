@@ -13,6 +13,7 @@ export default class InfiniteList extends Component {
     this.pageSize = 10;
     this.state = {
       items: [],
+      refreshKey: 0,
       refreshing: false,
       fetching: true,
       endReached: false
@@ -53,9 +54,12 @@ export default class InfiniteList extends Component {
     this.fetchInitial();
   }
   refresh() {
-    this.setState({ refreshing: true }, () => {
-      this.fetchInitial();
-    });
+    this.setState(
+      { refreshing: true, refreshKey: this.state.refreshKey + 1 },
+      () => {
+        this.fetchInitial();
+      }
+    );
   }
   shouldFetchMore() {
     return this.state.fetching == false && this.state.endReached == false;
@@ -119,7 +123,13 @@ export default class InfiniteList extends Component {
         keyExtractor={i => {
           return i.id;
         }}
-        ListHeaderComponent={this.props.header || null}
+        ListHeaderComponent={
+          (
+            <View key={this.state.refreshKey.toString()}>
+              {this.props.header}
+            </View>
+          ) || null
+        }
         ListFooterComponent={
           <View
             style={{

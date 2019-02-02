@@ -6,15 +6,16 @@ import { format } from "date-fns";
 
 export default class Review extends PureComponent {
   render() {
+    let ns = this.props.noSpace;
     return (
       <View
         style={{
           backgroundColor: "white",
-          marginBottom: 4,
-          padding: 8,
+          marginBottom: ns ? 0 : 4,
+          padding: ns ? 0 : 8,
           borderRadius: 4,
-          marginLeft: 8,
-          marginRight: 8
+          marginLeft: ns ? 0 : 8,
+          marginRight: ns ? 0 : 8
         }}
       >
         <View style={{ flexDirection: "row" }}>
@@ -34,13 +35,16 @@ export default class Review extends PureComponent {
         </View>
 
         <View style={{ marginTop: 4 }}>
-          <Text style={{ fontSize: 12 }}>
-            Shipping time: {this.props.shippingTime}
-          </Text>
-          <Text style={{ paddingTop: 4, fontSize: 14 }}>
-            Eigentlich nicht so übel, aber ging nach 2 Wochen kaputt. 5/7 Würde
-            ich nochmal kaufen.
-          </Text>
+          {!!this.props.shippingTime && (
+            <Text style={{ fontSize: 12 }}>
+              Shipping time: {this.props.shippingTime}
+            </Text>
+          )}
+          {!!this.props.text && (
+            <Text style={{ paddingTop: 4, fontSize: 14 }}>
+              {this.props.text}
+            </Text>
+          )}
         </View>
       </View>
     );

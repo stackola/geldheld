@@ -7,13 +7,32 @@ import Header from "../components/Header";
 import ItemLoader from "../components/ItemLoader";
 import ProductHead from "../atoms/ProductHead";
 import colors from "../colors";
-import { Rating, AirbnbRating } from "react-native-ratings";
 import Review from "../components/Review";
 import InfiniteList from "../components/InfiniteList";
 import { navToBuy } from "../lib";
-export default class Settings extends Component {
+import { connect } from "react-redux";
+import { ActionCreators } from "../redux/actions";
+import { bindActionCreators } from "redux";
+import RatingBox from "../components/RatingBox";
+
+class Product extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      reviewStatus: "start"
+    };
+  }
+
   render() {
     let productId = this.props.navigation.getParam("productId", null);
+    let hasBought =
+      this.props.user.boughtProducts &&
+      this.props.user.boughtProducts.includes(productId);
+
+    let hasReviewed =
+      this.props.user.reviewedProducts &&
+      this.props.user.reviewedProducts.includes(productId);
     return (
       <Wrapper>
         <Header title="Product!" showBack={true} />
@@ -138,57 +157,13 @@ export default class Settings extends Component {
                         Buy!
                       </Text>
                     </TouchableOpacity>
-                    <View
-                      style={{
-                        backgroundColor: "white",
-                        marginTop: 8,
-                        padding: 8,
-                        borderRadius: 4
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center"
-                        }}
-                      >
-                        <Text
-                          style={{
-                            width: 50,
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            fontSize: 20
-                          }}
-                        >
-                          3.6
-                        </Text>
-                        <Rating style={{ flex: 1 }} startingValue={3.6} />
-                        <Text
-                          style={{
-                            width: 50,
-                            textAlign: "center",
-                            fontWeight: "bold",
-                            fontSize: 20
-                          }}
-                        >
-                          25
-                        </Text>
-                      </View>
-                      <View
-                        style={{
-                          height: 40,
-                          backgroundColor: colors.action,
-                          borderRadius: 4,
-                          alignItems: "center",
-                          justifyContent: "center",
-                          marginTop: 8
-                        }}
-                      >
-                        <Text style={{ color: "white", fontWeight: "bold" }}>
-                          Leave a review
-                        </Text>
-                      </View>
-                    </View>
+                    <RatingBox
+                      ratingCount={product.ratingCount || 0}
+                      rating={Math.floor(product.rating * 10) / 10}
+                      hasBought={hasBought}
+                      hasReviewed={hasReviewed}
+                      productId={product.id}
+                    />
                     <View style={{ height: 4 }} />
                   </View>
                 );
@@ -205,3 +180,16 @@ export default class Settings extends Component {
     );
   }
 }
+
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Product);

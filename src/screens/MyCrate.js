@@ -4,9 +4,9 @@ import {
   Text,
   View,
   TouchableOpacity,
+  ActivityIndicator,
   Platform,
   UIManager,
-  ActivityIndicator,
   LayoutAnimation
 } from "react-native";
 import SlotMachine from "react-native-slot-machine";

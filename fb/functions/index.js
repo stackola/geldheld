@@ -14,7 +14,9 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     .create({
       id: uid,
       coins: defaultBalance,
-      time: admin.firestore.FieldValue.serverTimestamp()
+      time: admin.firestore.FieldValue.serverTimestamp(),
+      boughtProducts: [],
+      reviewedProducts: []
     });
 });
 
@@ -514,7 +516,12 @@ exports.order = functions.https.onCall((data, context) => {
             });
             transaction.update(userRef, {
               coins: newBalance,
-              address: saveAddress ? address : userData.address
+              address: saveAddress ? address : userData.address,
+              boughtProducts: (userData.boughtProducts || [])
+                .filter(c => {
+                  return c != productId;
+                })
+                .concat([productId])
             });
             if (voucherDoc) {
               transaction.update(voucherRef, { used: true });
@@ -536,3 +543,104 @@ exports.order = functions.https.onCall((data, context) => {
       });
   });
 });
+
+exports.review = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4OZYYoopltey2";
+
+  let db = admin.firestore();
+  let rating = data.rating;
+  let text = data.text;
+  let shippingTime = data.shippingTime;
+  let productId = data.productId;
+  console.log(rating, text, shippingTime, productId);
+
+  if (rating < 0 || rating > 5) {
+    return { error: true, text: "Invalid rating." };
+  }
+
+  if (text.length > 500) {
+    return { error: true, text: "Too long." };
+  }
+
+  if (shippingTime.length > 140) {
+    return { error: true, text: "Too long." };
+  }
+
+  //get user, check if he bought product, and has not yet reviewed it.
+  let productRef = db.collection("products").doc(productId);
+  var userRef = db.collection("users").doc(uid);
+
+  return db.runTransaction(transaction => {
+    return transaction
+      .get(userRef)
+      .then(userDoc => {
+        if (!userDoc.exists) {
+          throw "User not found!";
+        }
+        let userData = userDoc.data();
+        let hasBought =
+          userData.boughtProducts.filter(bp => bp == productId).length > 0;
+        let hasReviewed = userData.reviewedProducts
+          ? userData.reviewedProducts.filter(rp => rp == productId).length > 0
+          : false;
+
+        console.log({ hasBought, hasReviewed });
+        if (!hasBought) {
+          throw "Product not owned.";
+        }
+        if (hasReviewed) {
+          throw "Already reviewed.";
+        }
+        return transaction.get(productRef).then(productDoc => {
+          if (!productDoc.exists) {
+            throw "Product not found!";
+          }
+          let productData = productDoc.data();
+          console.log("product found");
+
+          //create review in product, update user reviewed products.
+          let nr = productRef.collection("reviews").doc();
+          transaction.create(nr, {
+            user: uid,
+            id: nr.id,
+            rating: rating,
+            shippingTime: shippingTime,
+            text: text,
+            time: admin.firestore.FieldValue.serverTimestamp()
+          });
+          transaction.update(productRef, {
+            rating: updateRatings(productData, rating),
+            ratingCount: productData.ratingCount
+              ? productData.ratingCount + 1
+              : 1
+          });
+          transaction.update(userRef, {
+            reviewedProducts: (userData.reviewedProducts || [])
+              .filter(c => {
+                return c != productId;
+              })
+              .concat([productId])
+          });
+
+          return { status: "ok" };
+        });
+      })
+      .catch(err => {
+        console.error("Error", err);
+        return { error: true, text: err };
+      });
+  });
+});
+
+function updateRatings(p, r) {
+  let oldRating = p.rating || 0;
+  let oldCount = parseInt(p.ratingCount) || 0;
+  let newRating = (oldRating * oldCount + r) / (oldCount + 1);
+  return newRating;
+}

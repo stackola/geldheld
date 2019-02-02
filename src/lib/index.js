@@ -5,6 +5,7 @@ const sendBuyCrate = firebase.functions().httpsCallable("buyCrate");
 const sendOpenCrate = firebase.functions().httpsCallable("openCrate");
 const sendQuickSell = firebase.functions().httpsCallable("quickSell");
 const sendOrder = firebase.functions().httpsCallable("order");
+const sendReview = firebase.functions().httpsCallable("review");
 
 export function getUID() {
   return firebase.auth().currentUser.uid;
@@ -27,6 +28,14 @@ export function openCrate(id) {
 
 export function quickSell(id) {
   return sendQuickSell({ voucherId: id });
+}
+
+export function order(payload) {
+  return sendOrder(payload);
+}
+
+export function review(payload) {
+  return sendReview(payload);
 }
 
 export function navToProduct(id) {
@@ -55,10 +64,6 @@ export function navToUserCrate(id) {
     params: { id: id },
     key: "myCrate_" + id
   };
-}
-
-export function order(payload){
-  return sendOrder(payload);
 }
 
 export function getVouchersForProduct(productId) {

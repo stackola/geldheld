@@ -1,7 +1,17 @@
 products page:
-  store bought products with user.
-  ratings/reviews!!
+  calculate review averages 
+  profile settings
+    change stored address
+    notifications!
+  
+  callbacks usw
+  notifications!
+  fix navigation (own tab?!)
 
 
 refactors:
   componentize!!
+
+
+nice to have:
+  find box for product in product page
