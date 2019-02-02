@@ -27,6 +27,9 @@ service cloud.firestore {
     match /products/{product}{
       allow read: if true;
     }
+    match /config/{product}{
+      allow read: if true;
+    }
     match /products/{product}/reviews/{review}{
       allow read: if true;
     }

@@ -9,10 +9,10 @@ import ShopItem from "../atoms/ShopItem";
 
 export default class CategoryPage extends Component {
   render() {
-    let category = this.props.category || "Gadgets";
+    let category = this.props.navigation.getParam("category", null);
     return (
       <Wrapper>
-        <Header title="Category" showBack={true} />
+        <Header title={category} showBack={true} />
         <InfiniteList
           where={["category", "==", category]}
           collection="products"

@@ -4,7 +4,15 @@ import { withNavigation } from "react-navigation";
 import colors from "../colors";
 class Button extends Component {
   pressed() {
-    this.props.navigation.navigate(this.props.path);
+    if (!this.props.theKey && !this.props.params) {
+      this.props.navigation.navigate(this.props.path);
+    } else {
+      this.props.navigation.navigate({
+        routeName: this.props.path,
+        params: this.props.params,
+        key: this.props.theKey
+      });
+    }
   }
   render() {
     return (

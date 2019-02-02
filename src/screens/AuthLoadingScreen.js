@@ -29,6 +29,7 @@ class AuthLoadingScreen extends Component {
             }
           });
         this.props.userSubscribe();
+        this.props.configSubscribe();
         this.props.navigation.navigate("App");
       });
   }
