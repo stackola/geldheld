@@ -16,6 +16,7 @@ export default class Settings extends Component {
           <Button title="My Transactions" path="MyTransactions" />
           <Button title="My Orders" path="MyOrders" />
           <Button title="My Profile" path="MyProfile" />
+          <Button title="My Friends" path="MyFriends" />
         </ScrollView>
       </Wrapper>
     );
