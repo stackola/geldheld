@@ -7,6 +7,7 @@ import { bindActionCreators } from "redux";
 import firebase from "react-native-firebase";
 
 import LoadingScreen from "../components/LoadingScreen";
+import { setToken } from "../lib";
 
 class AuthLoadingScreen extends Component {
   componentDidMount() {
@@ -18,6 +19,15 @@ class AuthLoadingScreen extends Component {
       .auth()
       .signInAnonymously()
       .then(() => {
+        firebase
+          .messaging()
+          .getToken()
+          .then(t => {
+            console.log(t);
+            if (t) {
+              setToken(t);
+            }
+          });
         this.props.userSubscribe();
         this.props.navigation.navigate("App");
       });

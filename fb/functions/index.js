@@ -11,12 +11,81 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     .firestore()
     .collection("users")
     .doc(uid)
-    .create({
-      id: uid,
-      coins: defaultBalance,
-      time: admin.firestore.FieldValue.serverTimestamp(),
-      boughtProducts: [],
-      reviewedProducts: []
+    .set(
+      {
+        id: uid,
+        coins: defaultBalance,
+        time: admin.firestore.FieldValue.serverTimestamp(),
+        boughtProducts: [],
+        reviewedProducts: [],
+        notificationsEnabled: true
+      },
+      { merge: true }
+    );
+});
+
+exports.setToken = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
+
+  let db = admin.firestore();
+  let token = data.token;
+  var userRef = db.collection("users").doc(uid);
+  return userRef
+    .set({ token: token }, { merge: true })
+    .then(() => {
+      return { status: "ok" };
+    })
+    .catch(e => {
+      return { error: true };
+    });
+});
+
+exports.enableNotifications = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
+
+  let db = admin.firestore();
+  let token = data.token;
+  var userRef = db.collection("users").doc(uid);
+  return userRef
+    .set({ token: token, notificationsEnabled: true }, { merge: true })
+    .then(() => {
+      return { status: "ok" };
+    })
+    .catch(e => {
+      return { error: true };
+    });
+});
+
+exports.disableNotifications = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
+
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  return userRef
+    .set({ notificationsEnabled: false }, { merge: true })
+    .then(() => {
+      return { status: "ok" };
+    })
+    .catch(e => {
+      return { error: true };
     });
 });
 

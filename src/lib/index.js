@@ -6,6 +6,13 @@ const sendOpenCrate = firebase.functions().httpsCallable("openCrate");
 const sendQuickSell = firebase.functions().httpsCallable("quickSell");
 const sendOrder = firebase.functions().httpsCallable("order");
 const sendReview = firebase.functions().httpsCallable("review");
+const sendSetToken = firebase.functions().httpsCallable("setToken");
+const sendEnableNotifications = firebase
+  .functions()
+  .httpsCallable("enableNotifications");
+const sendDisableNotifications = firebase
+  .functions()
+  .httpsCallable("disableNotifications");
 
 export function getUID() {
   return firebase.auth().currentUser.uid;
@@ -38,10 +45,21 @@ export function review(payload) {
   return sendReview(payload);
 }
 
+export function setToken(token) {
+  return sendSetToken({ token: token });
+}
+
 export function navToProduct(id) {
   return { routeName: "Product", params: { productId: id }, key: "prod_" + id };
 }
 
+export function disableNotifications() {
+  return sendDisableNotifications();
+}
+
+export function enableNotifications(token) {
+  return sendEnableNotifications({ token: token });
+}
 export function navToBuy(id) {
   return {
     routeName: "BuyProduct",

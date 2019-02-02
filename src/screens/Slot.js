@@ -55,7 +55,7 @@ export default class Slot extends Component {
               winAmount: r.data.amount,
               symbol: this.winToSymbol(r.data.win)
             });
-          }, 5000);
+          }, 2000);
         })
         .catch(e => {
           console.error(e);
@@ -91,7 +91,7 @@ export default class Slot extends Component {
               )}
               useNativeDriver={true}
               text={this.state.symbol}
-              duration={5000}
+              duration={2000}
               padding={1}
               styles={{
                 overlay: { backgroundColor: "none" },
