@@ -800,77 +800,96 @@ const authClient = new google.auth.JWT({
 });
 
 exports.validate = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+  //let uid = "ZxPwCFAISgOrCxImh6RXafu1Bxb2";
+
+  let db = admin.firestore();
   const orderId = data.transactionId;
   const package_name = "com.stackola.geldheld"; //TODO
   const sku = data.productId;
   const my_token = data.purchaseToken;
 
-  console.log({ orderId, package_name, sku, my_token });
+  //check db for orderId. if exists, just return consume.
 
-  authClient.authorize((err, result) => {
-    if (err) {
-      return console.log(err);
-    }
-    console.log("logged in", result);
-    publisher.purchases.products.get(
-      {
-        auth: authClient,
-        packageName: package_name,
-        productId: sku,
-        token: my_token
-      },
-      (err, response, body) => {
-        if (err) {
-          return console.log(err);
-          //throw("could not validate");
-        }
-        // Result Status must be equals to 200 so that the purchase is valid
-        if (response.status === 200) {
-          console.log(response);
-          console.log(body);
-          //return event.ref.child('is_validated').set(true);
-          console.log("ayy legit!");
-        } else {
-          console.log("not found that!!");
-          //return event.ref.child('is_validated').set(false);
-        }
-      }
-    );
-  });
-});
+  //if not exists, check with playstore. if orderId match, status=0, write to db. return consume.
 
-/*
-        const purchase = event.val();
-        if (purchase.is_processed === true) {
-            console.log('Purchase already processed!, exiting');
-            return null;
-        }
-        const orderId = context.params.orderId;
-        const dbRoot = event.ref.root;
-        const package_name = purchase.package_name;
-        const sku = purchase.sku;
-        const my_token = purchase.token;
+  var userRef = db.collection("users").doc(uid);
+  return db
+    .collection("iaps")
+    .where("orderId", "==", orderId)
+    .get()
+    .then(snap => {
+      if (snap.size > 0) {
+        return { status: "ok", text: "Purchase already tracked." };
+      } //validate with playstore
+      return authClient.authorize().then(result => {
+        console.log("logged in", result);
+        return publisher.purchases.products
+          .get({
+            auth: authClient,
+            packageName: package_name,
+            productId: sku,
+            token: my_token
+          })
+          .then((response, body) => {
+            // Result Status must be equals to 200 so that the purchase is valid
+            if (response.status === 200) {
+              console.log(response);
+              //return event.ref.child('is_validated').set(true);
+              console.log("ayy legit!");
+              //get contents of the IAP.
+              //in TX: give content to user, store purchase.
+              //return consume.
+              return db
+                .collection("iapItems")
+                .doc(sku)
+                .get()
+                .then(itemDoc => {
+                  if (!itemDoc.exists) {
+                    throw "Item not found.";
+                  }
+                  let itemData = itemDoc.data();
+                  console.log("got item", itemData);
 
-        authClient.authorize((err, result) => {
-            if (err) {
-                console.log(err);
+                  return db.runTransaction(transaction => {
+                    return transaction.get(userRef).then(userDoc => {
+                      let userData = userDoc.data(); //?
+                      itemData.contents.map(i => {
+                        let newUserCrate = userRef.collection("crates").doc();
+                        transaction.create(newUserCrate, {
+                          crateId: i.crateId,
+                          time: admin.firestore.FieldValue.serverTimestamp(),
+                          price: 0,
+                          opened: false,
+                          id: newUserCrate.id
+                        });
+                      });
+                      transaction.create(db.collection("iaps").doc(), {
+                        orderId: orderId,
+                        sku: sku,
+                        token: my_token,
+                        user: uid
+                      });
+                      return { status: "ok" };
+                    });
+                  });
+                });
+            } else {
+              console.log("not found that!!");
+              throw "not found!";
+              //return event.ref.child('is_validated').set(false);
             }
-            publisher.purchases.products.get({
-                auth: authClient,
-                packageName: package_name,
-                productId: sku,
-                token: my_token
-            }, (err, response) => {
-                if (err) {
-                    console.log(err);
-                }
-                // Result Status must be equals to 200 so that the purchase is valid
-                if (response.status === 200) {
-                    return event.ref.child('is_validated').set(true);
-                } else {
-                    return event.ref.child('is_validated').set(false);
-                }
-            });
-        });
-        return null;
-    });*/
+          });
+      });
+    })
+    .catch(e => {
+      console.log("error with IAP", e);
+      return { error: true };
+    });
+
+  console.log({ orderId, package_name, sku, my_token });
+});

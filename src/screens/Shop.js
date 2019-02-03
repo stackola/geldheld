@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView,Platform } from "react-native";
+import { Text, View, ScrollView, Platform } from "react-native";
 
 import Wrapper from "../components/Wrapper";
 import Header from "../components/Header";
@@ -11,25 +11,9 @@ import Button from "../atoms/Button";
 import { connect } from "react-redux";
 import { ActionCreators } from "../redux/actions";
 import { bindActionCreators } from "redux";
-import * as RNIap from 'react-native-iap';
 
-const itemSkus = Platform.select({
-  ios: [
-    'as3ddd'
-  ],
-  android: [
-    'android.test.purchased'
-  ]
-});
 class Shop extends Component {
-  componentDidMount(){
-    RNIap.getProducts(itemSkus).then((p)=>{
-      console.log("prods",p);
-      RNIap.buyProduct(p[0].productId).then(r=>{
-        console.log(r);
-      });
-    })
-  }
+  componentDidMount() {}
   render() {
     return (
       <Wrapper>

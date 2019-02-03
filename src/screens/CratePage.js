@@ -15,10 +15,12 @@ import Title from "../atoms/Title";
 import CrateContent from "../atoms/CrateContent";
 import colors from "../colors";
 import ItemLoader from "../components/ItemLoader";
-import { buyCrate, navToUserCrate } from "../lib";
+import { buyCrate, navToUserCrate, validate } from "../lib";
 import { StackActions, NavigationActions } from "react-navigation";
 
+
 import { withNavigation } from "react-navigation";
+import IapCrateButton from "../atoms/IapCrateButton";
 class CratePage extends Component {
   constructor(props) {
     super(props);
@@ -27,7 +29,7 @@ class CratePage extends Component {
       status: "start"
     };
   }
-
+  componentDidMount() {}
   buy() {
     let crateId = this.props.navigation.getParam("crateId", null);
     this.setState({ status: "loading" }, () => {
@@ -52,6 +54,7 @@ class CratePage extends Component {
       });
     });
   }
+ 
   render() {
     let crateId = this.props.navigation.getParam("crateId", null);
     return (
@@ -81,6 +84,15 @@ class CratePage extends Component {
                     }}
                   >
                     <Crate name={crate.name} color={crate.color} />
+                  </View>
+                  <Title text="Buy with google play:" />
+                  <View style={{flexDirection:'row', padding:4}}>
+                    {crate.iaps &&
+                      crate.iaps.map((i, index) => {
+                        return (
+                          <IapCrateButton key={index} {...i}/>
+                        );
+                      })}
                   </View>
                   <Title text="Contents:" />
                   <View style={{ height: 8 }} />

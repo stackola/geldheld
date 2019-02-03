@@ -18,105 +18,50 @@ import { connect } from "react-redux";
 import { ActionCreators } from "../redux/actions";
 import { bindActionCreators } from "redux";
 import * as RNIap from "react-native-iap";
+import { validate } from "../lib";
 
 const itemSkus = Platform.select({
   ios: ["as3ddd"],
-  android: ["android.test.purchased", "case_1", "crate_2", "crate_3"]
+  android: ["gadget_crate_1"]
 });
 class Shop extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      products: [],
-      resp: "",
-      history:[],
+      products: []
     };
   }
 
   componentDidMount() {
-    RNIap.getPurchaseHistory().then(history => {
-      this.setState({ history }, () => {});
-
-      RNIap.consumeAllItems()
-        .then(() => {
-          RNIap.endConnection()
-            .then(() => {
-              RNIap.getProducts(itemSkus)
-                .then(p => {
-                  console.log("prods", p);
-                  this.setState({ products: p }, () => {
-                    RNIap.endConnection().catch(err => {
-                      console.log("IAP ERR", err);
-                    });
-                  });
-                })
-                .catch(err => {
-                  console.log("IAP ERR", err);
-                });
-            })
-            .catch(err => {
-              console.log("IAP ERR", err);
-            });
-        })
-        .catch(err => {
-          console.log("IAP ERR", err);
-        });
+    RNIap.getAvailablePurchases().then(p => {
+      console.log(p);
+      this.setState({ products: p });
     });
   }
-  buy(id) {
-    RNIap.buyProduct(id)
-      .then(r => {
-        console.log(r, JSON.stringify(r));
-        this.setState({ resp: r }, () => {
-          RNIap.endConnection().catch(err => {
-            console.log("IAP ERR", err);
-          });
-        });
-      })
-      .catch(e => {
-        this.setState({ resp: e }, () => {
-          RNIap.endConnection().catch(err => {
-            console.log("IAP ERR", err);
-          });
-        });
-      });
+  vali(p) {
+    validate(p).then(res => {
+      console.log("response from fb", res);
+      if (res.data.status == "ok") {
+        RNIap.consumePurchase(p.purchaseToken); 
+      }
+    });
   }
+
   render() {
     return (
       <Wrapper>
-        <Header title="Shop" />
+        <Header title="Purchases" />
         <ScrollView>
-          <View style={{ backgroundColor: "white", padding: 4, margin: 4 }}>
-            <Text>{JSON.stringify(this.state.resp)}</Text>
-          </View>
           {this.state.products.map(p => {
             return (
               <TouchableOpacity
-                style={{
-                  padding: 4,
-                  marginBottom: 8,
-                  backgroundColor: "white"
-                }}
                 onPress={() => {
-                  this.buy(p.productId);
+                  this.vali(p);
                 }}
+                style={{ height: 80, backgroundColor: "white" }}
               >
-                <Text>{JSON.stringify(p)}</Text>
-              </TouchableOpacity>
-            );
-          })}
-          {this.state.history.map(p => {
-            return (
-              <TouchableOpacity
-                style={{
-                  padding: 4,
-                  marginBottom: 8,
-                  backgroundColor: "grey"
-                }}
-             
-              >
-                <Text>{JSON.stringify(p)}</Text>
+                <Text>Click here to redeem.</Text>
               </TouchableOpacity>
             );
           })}

@@ -9,6 +9,7 @@ const sendReview = firebase.functions().httpsCallable("review");
 const sendUpdateAddress = firebase.functions().httpsCallable("updateAddress");
 const sendSetToken = firebase.functions().httpsCallable("setToken");
 const sendSetFriend = firebase.functions().httpsCallable("setFriend");
+const sendValidate = firebase.functions().httpsCallable("validate");
 const sendEnableNotifications = firebase
   .functions()
   .httpsCallable("enableNotifications");
@@ -21,6 +22,10 @@ export function getUID() {
 }
 export function flip(amount) {
   return sendCoinFlip({ bet: amount });
+}
+
+export function validate(payload) {
+  return sendValidate(payload);
 }
 
 export function slot(amount) {
