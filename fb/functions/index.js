@@ -789,3 +789,88 @@ function updateRatings(p, r) {
   let newRating = (oldRating * oldCount + r) / (oldCount + 1);
   return newRating;
 }
+
+const { google } = require("googleapis");
+const publisher = google.androidpublisher("v2");
+const authClient = new google.auth.JWT({
+  email: "diese-service-acct@geldheld-746c9.iam.gserviceaccount.com",
+  key:
+    "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrPdZX5BdwVyzU\nYN7IKgKdVc18m0o3tfla2mDK/+JOjHdHZPeiiQpxuMkCyS5Qk6u9P5b2x/Dc56c4\n5kLaafV8S2lUhoVUNg8GvzL6NLe60YIpgf+8HCwWPs0Pe9sq2EWYiCjswUMUQUCj\np3H0t8a6lGaSsn4Jdce4l2wo3HUInooejX0sks/tllXKiY8bLKU4NvXT8nW3OIrX\n/3t1dRjoSfZImkYvC0I5lvMmyH6DT9nHQbHwSNHlzfGRV49quYZmlK2ent+cTJof\nXExw73mMstlsaDgWccqh+9zyVcrih9D7GiglUOTwNdSQ5jgkg3T+wD6AwIraIM/J\nz0jJ53IPAgMBAAECggEAR2hs9o++GnGv1wxiOnQSTQvXuauEIoE272T7UgusknbO\n0q3O+i9NdKjK4eeE8cLyreNTj6tGzMepGvgiTrQ6008bKE1EUh6M25JlrqLHLxdo\nwOhd/VJ+K/SaTGeouFAhjX7SGhBpaYvgaZ5MzfDI5Us3Dttx5X4A///c8ZklEKdj\nof7A7yZLKRXYq5FyhdXrKF4DJmHYA6VKZ+QRnqZndDmWNvTxSl8mRKf0+Yo3TJ2g\nXsJk8E0KNOUTtiRTSjcr/DUQnYyfmGscFHhajzg59nnzwkfP1io4FTcSbmnZxLwm\nWbuoII7QytzCvukJpCCMZcp4bcOlRWJeYLW5UXs8EQKBgQDxuf7BPTn12SMAlXyh\n5Zrm/mJlw14z/TsSRmQSVAa/EeBeBSpLbqjdbh3hTXJNbjFw64JuYsWszmhntmOl\nJyczwnGOcQq8m68ZkKmOaUmjGy+e83qiV/erRfrKpN+VvNn4mKKt11QYKpvd41zV\nsTE6AaUexokbdayRM5H9VfKNJwKBgQC1Wl8jq3W4F3UWOgrMouj9kxSrAGR1+3lt\nsQx9B4odX/ZMJhHASXiimjLYo1KknIiipriIFktbjcAT1++ohNa/1SpWF86FoXbu\now8J1ZmhXIo5PjobCp+lTuqj2QXpBc/p2LEbX7+eV0u7MsebTJ96WwYtL6KsDhTL\nJJ89RztU2QKBgQC56to7+kFoC7fWLSOMybIYVDOOHXOI/Q3AAo/ZYPNHZhJxffuH\nxPbwSE+HCDAPyd8RALJzAFkVjjPTAP8m+TQ3pSf97IfbhMpqGU+wDt7qKnC4CoCZ\n+JqvCsXXsnOdEYF8qLkGiAVQCQWU5dhzKzO3b6h2QTEXA6zUiRuSA9boJQKBgG83\n/SDjBk7gE+6NqhHV1w2sJgC5POMeVlnvOrly5kEdmO8aaciDRnhyGLzDbOuHFESr\n+n97LLv5MtL4mwG+dfUvxccG0qEhZM71MUPWu2E6X4q7nub2nPHEdCIH9pfx+JBx\nVCx1jA6PeuJTQhb75tIjAKa1kA30lMwAqafrB3gBAoGATAl2oA1txlrO3LFiRqB0\n5OxeXG07Pt27ICSIPCehQAJRPM1XhT96LElEmC6B9YWpz0TIK4ckLS7/53Gz4zEq\nmSp2wr7Ru2adUJzAdc3d/vpGzbAYwwPF+dcbZOIeDS4xZYymWLksrm+DP53qKzaZ\nsgnh7U+caylXrCmFhxFsSTo=\n-----END PRIVATE KEY-----\n",
+  scopes: ["https://www.googleapis.com/auth/androidpublisher"]
+});
+
+exports.validate = functions.https.onCall((data, context) => {
+  const orderId = data.transactionId;
+  const package_name = "com.stackola.geldheld"; //TODO
+  const sku = data.productId;
+  const my_token = data.purchaseToken;
+
+  console.log({ orderId, package_name, sku, my_token });
+
+  authClient.authorize((err, result) => {
+    if (err) {
+      return console.log(err);
+    }
+    console.log("logged in", result);
+    publisher.purchases.products.get(
+      {
+        auth: authClient,
+        packageName: package_name,
+        productId: sku,
+        token: my_token
+      },
+      (err, response, body) => {
+        if (err) {
+          return console.log(err);
+          //throw("could not validate");
+        }
+        // Result Status must be equals to 200 so that the purchase is valid
+        if (response.status === 200) {
+          console.log(response);
+          console.log(body);
+          //return event.ref.child('is_validated').set(true);
+          console.log("ayy legit!");
+        } else {
+          console.log("not found that!!");
+          //return event.ref.child('is_validated').set(false);
+        }
+      }
+    );
+  });
+});
+
+/*
+        const purchase = event.val();
+        if (purchase.is_processed === true) {
+            console.log('Purchase already processed!, exiting');
+            return null;
+        }
+        const orderId = context.params.orderId;
+        const dbRoot = event.ref.root;
+        const package_name = purchase.package_name;
+        const sku = purchase.sku;
+        const my_token = purchase.token;
+
+        authClient.authorize((err, result) => {
+            if (err) {
+                console.log(err);
+            }
+            publisher.purchases.products.get({
+                auth: authClient,
+                packageName: package_name,
+                productId: sku,
+                token: my_token
+            }, (err, response) => {
+                if (err) {
+                    console.log(err);
+                }
+                // Result Status must be equals to 200 so that the purchase is valid
+                if (response.status === 200) {
+                    return event.ref.child('is_validated').set(true);
+                } else {
+                    return event.ref.child('is_validated').set(false);
+                }
+            });
+        });
+        return null;
+    });*/

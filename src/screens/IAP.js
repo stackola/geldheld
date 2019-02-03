@@ -29,33 +29,56 @@ class Shop extends Component {
 
     this.state = {
       products: [],
-      resp: ""
+      resp: "",
+      history:[],
     };
   }
 
   componentDidMount() {
-    RNIap.consumeAllItems().then(() => {
-      RNIap.endConnection().then(() => {
-        RNIap.getProducts(itemSkus).then(p => {
-          console.log("prods", p);
-          this.setState({ products: p }, () => {
-            RNIap.endConnection().catch((err)=>{console.log("IAP ERR",err);});
-          });
-        }).catch((err)=>{console.log("IAP ERR",err);});;
-      }).catch((err)=>{console.log("IAP ERR",err);});;
-    }).catch((err)=>{console.log("IAP ERR",err);});;
+    RNIap.getPurchaseHistory().then(history => {
+      this.setState({ history }, () => {});
+
+      RNIap.consumeAllItems()
+        .then(() => {
+          RNIap.endConnection()
+            .then(() => {
+              RNIap.getProducts(itemSkus)
+                .then(p => {
+                  console.log("prods", p);
+                  this.setState({ products: p }, () => {
+                    RNIap.endConnection().catch(err => {
+                      console.log("IAP ERR", err);
+                    });
+                  });
+                })
+                .catch(err => {
+                  console.log("IAP ERR", err);
+                });
+            })
+            .catch(err => {
+              console.log("IAP ERR", err);
+            });
+        })
+        .catch(err => {
+          console.log("IAP ERR", err);
+        });
+    });
   }
   buy(id) {
     RNIap.buyProduct(id)
       .then(r => {
-        console.log(r);
+        console.log(r, JSON.stringify(r));
         this.setState({ resp: r }, () => {
-          RNIap.endConnection().catch((err)=>{console.log("IAP ERR",err);});;
+          RNIap.endConnection().catch(err => {
+            console.log("IAP ERR", err);
+          });
         });
       })
       .catch(e => {
         this.setState({ resp: e }, () => {
-          RNIap.endConnection().catch((err)=>{console.log("IAP ERR",err);});;
+          RNIap.endConnection().catch(err => {
+            console.log("IAP ERR", err);
+          });
         });
       });
   }
@@ -78,6 +101,20 @@ class Shop extends Component {
                 onPress={() => {
                   this.buy(p.productId);
                 }}
+              >
+                <Text>{JSON.stringify(p)}</Text>
+              </TouchableOpacity>
+            );
+          })}
+          {this.state.history.map(p => {
+            return (
+              <TouchableOpacity
+                style={{
+                  padding: 4,
+                  marginBottom: 8,
+                  backgroundColor: "grey"
+                }}
+             
               >
                 <Text>{JSON.stringify(p)}</Text>
               </TouchableOpacity>
