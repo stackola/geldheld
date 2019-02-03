@@ -44,6 +44,7 @@ class AuthLoadingScreen extends Component {
             } else {
               console.log("normal open!");
               // app NOT opened from a url
+              setFriend("no").then(r => console.log(r));
             }
           });
         this.props.userSubscribe();
