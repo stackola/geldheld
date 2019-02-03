@@ -14,6 +14,7 @@ exports.makeUser = functions.auth.user().onCreate(user => {
     .set(
       {
         id: uid,
+        address: "",
         coins: defaultBalance,
         time: admin.firestore.FieldValue.serverTimestamp(),
         boughtProducts: [],
