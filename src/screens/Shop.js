@@ -13,7 +13,6 @@ import { ActionCreators } from "../redux/actions";
 import { bindActionCreators } from "redux";
 
 class Shop extends Component {
-  componentDidMount() {}
   render() {
     return (
       <Wrapper>
