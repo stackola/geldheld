@@ -26,6 +26,7 @@ import MyCrates from "./screens/MyCrates";
 import MyVouchers from "./screens/MyVouchers";
 import MyTransactions from "./screens/MyTransactions";
 import MyOrders from "./screens/MyOrders";
+import IAP from "./screens/IAP";
 import MyProfile from "./screens/MyProfile";
 import MyFriends from "./screens/MyFriends";
 import Shop from "./screens/Shop";
@@ -53,7 +54,8 @@ const ShopStack = createStackNavigator(
     ShopHome: Shop,
     CategoryPage: CategoryPage,
     Product: Product,
-    BuyProduct: BuyProduct
+    BuyProduct: BuyProduct,
+    IAP: IAP
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
