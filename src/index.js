@@ -34,6 +34,7 @@ import Product from "./screens/Product";
 import BuyProduct from "./screens/BuyProduct";
 import Settings from "./screens/Settings";
 import CategoryPage from "./screens/CategoryPage";
+import Screen from "./screens/refactor/Screen";
 
 const PlayStack = createStackNavigator(
   {
@@ -167,10 +168,11 @@ let Navigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
-      App: AppStack
+      App: AppStack,
+      Test: Screen,
     },
     {
-      initialRouteName: "AuthLoading"
+      initialRouteName: "Test"
     }
   )
 );
