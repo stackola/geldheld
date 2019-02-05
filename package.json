@@ -31,6 +31,7 @@
     "react-native-firebase": "^5.2.0",
     "react-native-gesture-handler": "^1.0.15",
     "react-native-iap": "^2.4.0-beta12",
+    "react-native-linear-gradient": "^2.5.3",
     "react-native-ratings": "^6.3.0",
     "react-native-slot-machine": "^0.3.2",
     "react-native-vector-icons": "^6.2.0",
