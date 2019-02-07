@@ -14,6 +14,9 @@ import Title from "../components/Title";
 import colors from "../../../colors";
 import ProgressBar from "../components/ProgressBar";
 import SText from "../components/SText";
+import Challenge from "../components/Challenge";
+import ProductRow from "../components/ProductRow";
+import Order from "../components/Order";
 export class Home extends Component {
   render() {
     return (
@@ -24,15 +27,27 @@ export class Home extends Component {
           <DeleteableMessage green />
           <Offer />
           <Well />
-          <StandardBox>
-            <Title text="5 Freunde werben" />
-            <SText text="Wenn sie 5 Freunde werben erhalten sie einen Preis!" />
-            <ProgressBar total={5} complete={3} />
-          </StandardBox>
+          <Challenge
+            complete={2}
+            total={5}
+            title={"5 Freunde werben"}
+            text={"Wenn sie 5 Freunde werben erhalten sie einen Preis!"}
+          />
+          <Challenge
+            continous
+            complete={80}
+            total={120}
+            title={"120 Coins verdienen"}
+            text={
+              "Verdienen Sie 120 Coins mit Aufgaben, um diese Belohnung zu erhalten."
+            }
+          />
           <Transaction amount={1040} />
           <Transaction amount={-100} />
           <Transaction amount={0} />
           <Button inLine green />
+          <ProductRow />
+          <Order />
         </ScrollView>
       </Wrapper>
     );

@@ -6,8 +6,7 @@ import colors from "../../../colors";
 export default class Button extends Component {
   render() {
     let props = this.props;
-    let o = "77";
-    let o2 = "99";
+    let o = "99";
     let color = "#dddddd";
     if (props.green) {
       color = colors.green;
@@ -38,7 +37,7 @@ export default class Button extends Component {
         }}
       >
         <LinearGradient
-          colors={[color + o2, color + o2, color + o, color + o]}
+          colors={[color, color, color + o, color + o]}
           locations={[0.87, 0.88, 0.89, 1]}
           style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
         >

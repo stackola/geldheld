@@ -11,6 +11,8 @@ let Tab = props => {
         flex: 1,
         alignItems: "center",
         paddingBottom: 4,
+        borderColor: "hsla(240, 35%, 11%, 1)",
+        borderTopWidth: 1,
         backgroundColor: props.active
           ? colors.darkTransparent
           : colors.lightTransparent

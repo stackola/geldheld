@@ -4,6 +4,16 @@ import style from "../../../style";
 
 export default class Title extends Component {
   render() {
-    return <Text style={style.containerHeadline}>{this.props.text}</Text>;
+    return (
+      <Text
+        style={[
+          style.containerHeadline,
+          { color: this.props.color || style.containerHeadline.color },
+          this.props.style || {}
+        ]}
+      >
+        {this.props.children || this.props.text}
+      </Text>
+    );
   }
 }

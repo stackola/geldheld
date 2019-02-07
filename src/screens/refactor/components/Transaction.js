@@ -9,8 +9,7 @@ import { format } from "date-fns";
 
 export default class Transaction extends Component {
   render() {
-    let o = "cc";
-    let color = this.props.amount >= 0 ? colors.green + o : colors.red + o;
+    let color = this.props.amount >= 0 ? colors.green : colors.red;
     return (
       <StandardBox
         noPadding

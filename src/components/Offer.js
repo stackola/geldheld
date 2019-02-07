@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { Text, View, Image } from "react-native";
 import colors from "../colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import style from "../style";
 export default class Offer extends PureComponent {
   render() {
     return (
@@ -23,13 +24,9 @@ export default class Offer extends PureComponent {
           style={{ width: 80 }}
           resizeMode="cover"
         />
-        <View style={{ flex: 1, paddingTop: 2, paddingLeft: 8 }}>
+        <View style={{ flex: 1, paddingLeft: 8 }}>
           <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 15,
-              color: colors.background
-            }}
+            style={style.containerHeadline}
           >
             {this.props.data.title}
           </Text>

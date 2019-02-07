@@ -1,27 +1,31 @@
 import React, { PureComponent } from "react";
 import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import colors from "../colors";
 
 import { connect } from "react-redux";
-import { ActionCreators } from "../redux/actions";
+import { ActionCreators } from "../../../redux/actions";
 import { bindActionCreators } from "redux";
+import colors from "../../../colors";
+import style from "../../../style";
+import { formatMoney } from "../../../lib";
 
 class UserButton extends PureComponent {
   render() {
     let user = this.props.user.id ? this.props.user : null;
-    user={coins:100}
+    user = { coins: formatMoney(100000) };
     return user && this.props.hide !== true ? (
       <TouchableOpacity
         style={{
           width: 60,
           alignItems: "center",
           justifyContent: "center",
-          marginRight: 8
+          marginRight: style.space / 2
         }}
       >
         <Icon name="coin" color={colors.action} size={25} />
-        <Text style={{ fontWeight: "bold" }}>{user.coins}</Text>
+        <Text style={{ fontWeight: "bold", color: colors.text }}>
+          {user.coins}
+        </Text>
       </TouchableOpacity>
     ) : (
       <View
@@ -32,7 +36,7 @@ class UserButton extends PureComponent {
           marginRight: 8
         }}
       >
-        <ActivityIndicator color={colors.background} />
+        <ActivityIndicator color={colors.text} />
       </View>
     );
   }

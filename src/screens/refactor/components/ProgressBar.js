@@ -29,7 +29,7 @@ let Item = p => {
   return (
     <View
       style={{
-        backgroundColor: p.completed ? colors.green + "aa" : "#7779",
+        backgroundColor: p.completed ? colors.green : "#7779",
         height: 15,
         marginRight: 2,
         marginLeft: 2,

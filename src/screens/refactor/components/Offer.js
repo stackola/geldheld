@@ -18,7 +18,7 @@ export default class Offer extends Component {
           style={{
             flex: 1,
             padding: style.containerPadding,
-            paddingTop: style.containerPadding / 2,
+            paddingTop: 0,
             paddingBottom: style.containerPadding
           }}
         >
