@@ -41,16 +41,18 @@ export default class Friend extends Component {
               fontSize: 11
             }}
           >
-            {format(new Date(), "YYYY/MM/DD")} {format(new Date(), "HH:mm")}
+            {format(new Date(), "YYYY/MM/DD")}
+            {"\n"}
+            {format(new Date(), "HH:mm")}
           </Text>
         </View>
         <View
           style={{
             alignItems: "center",
             justifyContent: "flex-end",
-            marginRight: style.space,
+            marginRight: style.containerPadding,
             flexDirection: "row",
-            minWidth: 80
+            minWidth: 70
           }}
         >
           <Text

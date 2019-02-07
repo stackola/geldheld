@@ -34,6 +34,7 @@ export default class Voucher extends Component {
   }
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
+    let used = false;
     return (
       <StandardBox noPadding style={{}}>
         <TouchableOpacity
@@ -95,6 +96,32 @@ export default class Voucher extends Component {
               <Icon name={"arrow-right"} color={"white"} size={25} />
               <SText style={{ fontSize: 10 }}>View product</SText>
             </View>
+          </View>
+        )}
+
+        {used && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: colors.darkTransparent,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: colors.text,
+                fontWeight: "bold",
+                fontSize: 30,
+                transform: [{ rotate: "-10deg" }]
+              }}
+            >
+              USED
+            </Text>
           </View>
         )}
       </StandardBox>

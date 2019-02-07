@@ -31,7 +31,7 @@ export default class Order extends Component {
   }
   render() {
     return (
-      <StandardBox>
+      <StandardBox style={{ paddingTop: 0 }}>
         <TouchableOpacity
           onPress={() => {
             this.toggleOpen();
@@ -60,7 +60,7 @@ export default class Order extends Component {
               marginBottom: style.space / 2
             }}
           >
-            <Title>Contains:</Title>
+            <SText>Contains:</SText>
             <View style={{ flex: 1 }} />
             <SText>LED Lighter</SText>
             {this.state.open && (
@@ -86,22 +86,24 @@ export default class Order extends Component {
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Title>Order status: </Title>
+            <SText>Order status: </SText>
             <View style={{ flex: 1 }} />
             <SText color={colors.green}>New</SText>
           </View>
         </TouchableOpacity>
         {this.state.open && (
           <React.Fragment>
+            <View style={{ height: 4 }} />
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Title>Tracking #: </Title>
+              <SText>Tracking #: </SText>
               <View style={{ flex: 1 }} />
               <SText>243j0fi39f99</SText>
             </View>
+            <View style={{ height: 4 }} />
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Title style={{ paddingRight: style.space / 2 }}>
+              <SText style={{ paddingRight: style.space / 2 }}>
                 Shipping method:
-              </Title>
+              </SText>
               <View style={{ flex: 1 }} />
               <SText style={{}}>Free Shipping</SText>
             </View>
@@ -111,13 +113,15 @@ export default class Order extends Component {
                 (4-5 Weeks)
               </SText>
             </View>
+            <View style={{ height: 4 }} />
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Title>Total Price: </Title>
+              <SText>Total Price: </SText>
               <View style={{ flex: 1 }} />
               <Coins amount={1000} />
             </View>
           </React.Fragment>
         )}
+        <View style={{ height: style.space / 2 }} />
       </StandardBox>
     );
   }
