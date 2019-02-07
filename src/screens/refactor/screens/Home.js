@@ -17,6 +17,8 @@ import SText from "../components/SText";
 import Challenge from "../components/Challenge";
 import ProductRow from "../components/ProductRow";
 import Order from "../components/Order";
+import Friend from "../components/Friend";
+import Voucher from "../components/Voucher";
 export class Home extends Component {
   render() {
     return (
@@ -24,6 +26,8 @@ export class Home extends Component {
         <Header />
         <ScrollView>
           <View style={{ height: style.space }} />
+          <Voucher />
+          <Friend amount={100} />
           <DeleteableMessage green />
           <Offer />
           <Well />
@@ -45,9 +49,9 @@ export class Home extends Component {
           <Transaction amount={1040} />
           <Transaction amount={-100} />
           <Transaction amount={0} />
-          <Button inLine green />
           <ProductRow />
           <Order />
+          <Button inLine green />
         </ScrollView>
       </Wrapper>
     );
