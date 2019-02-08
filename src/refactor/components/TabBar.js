@@ -15,7 +15,8 @@ let tabs = [
   { title: "Games", icon: "gamepad", routeName: "Games" },
   { title: "Crates", icon: "cube-outline", routeName: "Crates" },
   { title: "Shop", icon: "cart-outline", routeName: "Shop" },
-  { title: "Inventory", icon: "briefcase-outline", routeName: "Inventory" }
+  { title: "Challenges", icon: "target", routeName: "Challenges" },
+  { title: "Inventory", icon: "briefcase-outline", routeName: "Inventory" },
 ];
 
 let Tab = props => {

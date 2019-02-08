@@ -8,7 +8,7 @@ import {
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
-import AuthLoadingScreen from "./screens/AuthLoadingScreen";
+import AuthLoadingScreen from "./refactor/screens/AuthLoadingScreen";
 
 import Home from "./refactor/screens/Home";
 import Games from "./refactor/screens/Games";
