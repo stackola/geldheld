@@ -50,11 +50,16 @@ let Tab = props => {
 
 export class TabBar extends Component {
   navTo(t) {
+    let currentRoute = this.props.navigation.state.routeName;
+    if (currentRoute == t) {
+      return;
+    }
     const resetAction = StackActions.reset({
       index: 0,
       actions: [NavigationActions.navigate({ routeName: t })]
     });
-    this.props.navigation.dispatch(resetAction);
+    //this.props.navigation.dispatch(resetAction);
+    this.props.navigation.navigate(t);
   }
   render() {
     let Spacer = () => {

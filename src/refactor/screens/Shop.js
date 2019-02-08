@@ -16,7 +16,12 @@ export class Shop extends Component {
       <Wrapper>
         <Header title="Shop" />
         <ScrollView style={{}}>
-          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
+          <Title
+            style={{
+              paddingTop: 10,
+              paddingLeft: style.space + style.containerPadding
+            }}
+          >
             Featured
           </Title>
           <Well>
@@ -24,16 +29,26 @@ export class Shop extends Component {
             <ProductSquare />
             <ProductSquare />
           </Well>
-          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
-            Featured
+          <Title
+            style={{
+              paddingTop: 10,
+              paddingLeft: style.space + style.containerPadding
+            }}
+          >
+            Gadgets
           </Title>
           <Well>
             <View style={{ width: style.space }} />
             <ProductSquare />
             <ProductSquare />
           </Well>
-          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
-            Featured
+          <Title
+            style={{
+              paddingTop: 10,
+              paddingLeft: style.space + style.containerPadding
+            }}
+          >
+            Fashion
           </Title>
           <Well>
             <View style={{ width: style.space }} />
