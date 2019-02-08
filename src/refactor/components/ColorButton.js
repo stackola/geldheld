@@ -1,10 +1,7 @@
 import React, { PureComponent } from "react";
 import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 
-
-import {
-  withNavigation
-} from "react-navigation";
+import { withNavigation } from "react-navigation";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import style from "../../style";
@@ -18,21 +15,31 @@ class ColorButton extends PureComponent {
       pressedIn: false
     };
   }
-  pressed(){
+  pressed() {
     this.props.navigation.navigate(this.props.route);
   }
   render() {
     let props = this.props;
     let h = props.hue || Math.random() * 255;
-    let color1 = "hsla(" + h + ", 100%, 40%, 1)";
-    let color2 = "hsla(" + h + ", 100%, 25%, 1)";
+    let color1 =
+      "hsla(" +
+      h +
+      ", " +
+      (this.props.sat >= 0 ? this.props.sat : 100) +
+      "%, 40%, 1)";
+    let color2 =
+      "hsla(" +
+      h +
+      ", " +
+      (this.props.sat >= 0 ? this.props.sat : 100) +
+      "%, 25%, 1)";
     return (
       <TouchableOpacity
-      onPress={()=>{
-        this.pressed();
-      }}
+        onPress={() => {
+          this.pressed();
+        }}
         style={{
-          height: 80,
+          height: props.small ? 50 : 75,
           flex: props.noFlex || props.inLine ? 0 : 1,
           margin: style.space,
           marginTop: 0,
@@ -66,7 +73,7 @@ class ColorButton extends PureComponent {
                   fontWeight: "bold"
                 }}
               >
-                {props.text}
+                {props.text || props.title}
               </Text>
             </View>
           )}
@@ -79,6 +86,5 @@ class ColorButton extends PureComponent {
     );
   }
 }
-
 
 export default withNavigation(ColorButton);

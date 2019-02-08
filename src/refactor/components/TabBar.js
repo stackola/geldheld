@@ -58,8 +58,8 @@ export class TabBar extends Component {
       index: 0,
       actions: [NavigationActions.navigate({ routeName: t })]
     });
-    //this.props.navigation.dispatch(resetAction);
-    this.props.navigation.navigate(t);
+    this.props.navigation.dispatch(resetAction);
+    //this.props.navigation.navigate(t);
   }
   render() {
     let Spacer = () => {

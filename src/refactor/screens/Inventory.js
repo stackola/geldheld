@@ -22,33 +22,39 @@ export class Inventory extends Component {
           <ColorButton
             hue={11}
             route={"MyCrates"}
-            text="My Crates"
+            text="My crates"
             icon={<Icon name="cube-outline" color={colors.text} size={40} />}
           />
           <ColorButton
             route={"MyVouchers"}
-            text="My Voucers"
+            text="My vouchers"
             hue={90}
             icon={<Entypo name="ticket" color={colors.text} size={40} />}
           />
           <ColorButton
             route={"MyOrders"}
-            text="My Orders"
+            text="My orders"
             hue={198}
             icon={<Icon name="truck-fast" color={colors.text} size={40} />}
           />
           <ColorButton
             route={"MyFriends"}
-            text="My Friends"
+            text="My friends"
             hue={214}
             icon={<Icon name="account-plus" color={colors.text} size={40} />}
           />
 
           <ColorButton
             route={"MyTransactions"}
-            text="My Transactions"
+            text="My transactions"
             hue={40}
             icon={<Icon name="bank-transfer" color={colors.text} size={40} />}
+          />
+          <ColorButton
+            route={"Settings"}
+            text="Settings"
+            sat={0}
+            icon={<Icon name="settings" color={colors.text} size={40} />}
           />
         </ScrollView>
       </Wrapper>

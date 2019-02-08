@@ -9,6 +9,14 @@ import ProductSquare from "../components/ProductSquare";
 import Well from "../components/Well";
 import Title from "../components/Title";
 import StandardBox from "../components/StandardBox";
+import ShopCategory from "../components/ShotCategory";
+import ShopList from "../components/ShopList";
+
+import { connect } from "react-redux";
+import { ActionCreators } from "../../redux/actions";
+import { bindActionCreators } from "redux";
+import ColorButton from "../components/ColorButton";
+import Button from "../components/Button";
 
 export class Shop extends Component {
   render() {
@@ -16,49 +24,33 @@ export class Shop extends Component {
       <Wrapper>
         <Header title="Shop" />
         <ScrollView style={{}}>
-          <Title
-            style={{
-              paddingTop: 10,
-              paddingLeft: style.space + style.containerPadding
-            }}
-          >
-            Featured
+          {this.props.config.frontPageLists.map(s => {
+            return <ShopList listId={s} key={s} />;
+          })}
+          {this.props.config.frontPageCategories.map(s => {
+            return <ShopCategory category={s} key={s} />;
+          })}
+          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
+            All Categories
           </Title>
-          <Well>
-            <View style={{ width: style.space }} />
-            <ProductSquare />
-            <ProductSquare />
-          </Well>
-          <Title
-            style={{
-              paddingTop: 10,
-              paddingLeft: style.space + style.containerPadding
-            }}
-          >
-            Gadgets
-          </Title>
-          <Well>
-            <View style={{ width: style.space }} />
-            <ProductSquare />
-            <ProductSquare />
-          </Well>
-          <Title
-            style={{
-              paddingTop: 10,
-              paddingLeft: style.space + style.containerPadding
-            }}
-          >
-            Fashion
-          </Title>
-          <Well>
-            <View style={{ width: style.space }} />
-            <ProductSquare />
-            <ProductSquare />
-          </Well>
+          {this.props.config.storeCategories.map(s => {
+            return <ColorButton small route="CategoryPage" key={s} title={s} />;
+          })}
         </ScrollView>
       </Wrapper>
     );
   }
 }
 
-export default Shop;
+function mapStateToProps(state) {
+  return { config: state.config };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Shop);

@@ -10,7 +10,7 @@ export default class Button extends Component {
   render() {
     let props = this.props;
     let o = "99";
-    let color = "#dddddd";
+    let color = "#777777";
     if (props.green) {
       color = colors.green;
     }
@@ -51,7 +51,7 @@ export default class Button extends Component {
                 fontWeight: "bold"
               }}
             >
-              Send
+              {this.props.children || this.props.title}
             </Text>
           )}
           {props.error && <Icon name="alert" color="white" size={20} />}
