@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, ActivityIndicator } from "react-native";
 import StandardBox from "../components/StandardBox";
 
 import Coins from "./Coins";
@@ -12,15 +12,32 @@ import style from "../../style";
 export default class Friend extends Component {
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
-    return (
+    return this.props.loading ? (
+      <StandardBox noPadding style={{ flexDirection: "row" }}>
+        <View
+          style={{
+            flex: 1,
+            padding: style.containerPadding,
+            paddingTop: style.containerPadding,
+            paddingBottom: style.containerPadding,
+            justifyContent: "center",
+            flexDirection: "row",
+            height: 50
+          }}
+        >
+          <ActivityIndicator color={"white"} />
+        </View>
+      </StandardBox>
+    ) : (
       <StandardBox
         noPadding
-        style={{ flexDirection: "row", alignItems: "center" }}
+        style={{ flexDirection: "row", alignItems: "center", minHeight: 50 }}
       >
         <View
           style={{
             flex: 1,
             padding: style.containerPadding,
+            paddingLeft: style.space,
             paddingTop: style.containerPadding,
             paddingBottom: style.containerPadding
           }}

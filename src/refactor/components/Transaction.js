@@ -10,6 +10,9 @@ import { format } from "date-fns";
 export default class Transaction extends Component {
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
+    if (this.props.loading) {
+      return <StandardBox loading loadingHeight={35} />;
+    }
     return (
       <StandardBox
         noPadding

@@ -31,6 +31,9 @@ export default class Order extends Component {
     this.setState({ open: !this.state.open });
   }
   render() {
+    if (this.props.loading) {
+      return <StandardBox loading />;
+    }
     return (
       <StandardBox style={{ paddingTop: 0 }}>
         <TouchableOpacity

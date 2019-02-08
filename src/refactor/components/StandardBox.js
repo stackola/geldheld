@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View } from "react-native";
+import { Text, View, ActivityIndicator } from "react-native";
 import style from "../../style";
 import colors from "../../colors";
 export default class StandardBox extends Component {
@@ -37,7 +37,19 @@ export default class StandardBox extends Component {
           ...(this.props.style || {})
         }}
       >
-        {this.props.children}
+        {this.props.loading ? (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              height: this.props.loadingHeight || 80
+            }}
+          >
+            <ActivityIndicator color="white" />
+          </View>
+        ) : (
+          this.props.children
+        )}
       </View>
     );
   }

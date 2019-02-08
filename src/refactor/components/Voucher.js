@@ -3,6 +3,7 @@ import {
   Text,
   View,
   Image,
+  ActivityIndicator,
   Platform,
   UIManager,
   LayoutAnimation,
@@ -35,7 +36,19 @@ export default class Voucher extends Component {
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
     let used = false;
-    return (
+    return this.props.loading ? (
+      <StandardBox
+        noPadding
+        style={{
+          flex: 1,
+          minHeight: 60,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <ActivityIndicator color={colors.text} />
+      </StandardBox>
+    ) : (
       <StandardBox noPadding style={{}}>
         <TouchableOpacity
           onPress={() => {
