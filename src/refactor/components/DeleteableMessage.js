@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import style from "../../../style";
 import StandardBox from "./StandardBox";
-import colors from "../../../colors";
+
+import colors from "../../colors";
+import style from "../../style";
 
 export default class DeleteableMessage extends Component {
   render() {

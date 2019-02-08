@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import { Text, View, Image } from "react-native";
 import StandardBox from "../components/StandardBox";
 
-import style from "../../../style";
+import colors from "../../colors";
+import style from "../../style";
+
 import Coins from "./Coins";
 
 export default class Offer extends Component {

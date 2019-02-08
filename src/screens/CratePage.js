@@ -18,7 +18,6 @@ import ItemLoader from "../components/ItemLoader";
 import { buyCrate, navToUserCrate, validate } from "../lib";
 import { StackActions, NavigationActions } from "react-navigation";
 
-
 import { withNavigation } from "react-navigation";
 import IapCrateButton from "../atoms/IapCrateButton";
 class CratePage extends Component {
@@ -54,7 +53,7 @@ class CratePage extends Component {
       });
     });
   }
- 
+
   render() {
     let crateId = this.props.navigation.getParam("crateId", null);
     return (
@@ -86,12 +85,10 @@ class CratePage extends Component {
                     <Crate name={crate.name} color={crate.color} />
                   </View>
                   <Title text="Buy with google play:" />
-                  <View style={{flexDirection:'row', padding:4}}>
+                  <View style={{ flexDirection: "row", padding: 4 }}>
                     {crate.iaps &&
                       crate.iaps.map((i, index) => {
-                        return (
-                          <IapCrateButton key={index} {...i}/>
-                        );
+                        return <IapCrateButton key={index} {...i} />;
                       })}
                   </View>
                   <Title text="Contents:" />

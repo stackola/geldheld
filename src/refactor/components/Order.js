@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import StandardBox from "../components/StandardBox";
 
-import style from "../../../style";
+import colors from "../../colors";
+import style from "../../style";
+
 import Coins from "./Coins";
 import Title from "./Title";
 import { format } from "date-fns";
-import colors from "../../../colors";
 import SText from "./SText";
 
 export default class Order extends Component {

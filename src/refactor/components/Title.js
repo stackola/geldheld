@@ -1,15 +1,14 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import style from "../../../style";
-import colors from "../../../colors";
+import style from "../../style";
 
-export default class SText extends Component {
+export default class Title extends Component {
   render() {
     return (
       <Text
         style={[
-          style.text,
-          { color: this.props.color || colors.text },
+          style.containerHeadline,
+          { color: this.props.color || style.containerHeadline.color },
           this.props.style || {}
         ]}
       >

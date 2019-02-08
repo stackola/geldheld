@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Text, View } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 
-import style from "../../../style";
+import style from "../../style";
 export default class Well extends Component {
   render() {
     return (

@@ -3,16 +3,15 @@ import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { connect } from "react-redux";
-import { ActionCreators } from "../../../redux/actions";
+import { ActionCreators } from "../../redux/actions";
 import { bindActionCreators } from "redux";
-import colors from "../../../colors";
-import style from "../../../style";
-import { formatMoney } from "../../../lib";
+import colors from "../../colors";
+import style from "../../style";
+import { formatMoney } from "../../lib";
 
 class UserButton extends PureComponent {
   render() {
     let user = this.props.user.id ? this.props.user : null;
-    user = { coins: formatMoney(100000) };
     return user && this.props.hide !== true ? (
       <TouchableOpacity
         style={{

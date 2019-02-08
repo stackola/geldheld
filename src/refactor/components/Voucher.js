@@ -13,9 +13,9 @@ import StandardBox from "../components/StandardBox";
 import Entypo from "react-native-vector-icons/Entypo";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import style from "../../../style";
+import style from "../../style";
 import Coins from "./Coins";
-import colors from "../../../colors";
+import colors from "../../colors";
 import { format } from "date-fns";
 import Title from "./Title";
 import SText from "./SText";

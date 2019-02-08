@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import colors from "../../../colors";
-import style from "../../../style";
+import colors from "../../colors";
+import style from "../../style";
 
 export default class ContinousBar extends Component {
   render() {

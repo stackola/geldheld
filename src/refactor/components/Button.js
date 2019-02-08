@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
-import style from "../../../style";
-import colors from "../../../colors";
+import style from "../../style";
+import colors from "../../colors";
 export default class Button extends Component {
   render() {
     let props = this.props;

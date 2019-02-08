@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import { Text, View, StatusBar } from "react-native";
-import style from "../../../style";
-import colors from "../../../colors";
+
+import colors from "../../colors";
+import style from "../../style";
+
 import UserButton from "./UserButton";
 export default class Header extends Component {
   render() {
@@ -31,7 +33,7 @@ export default class Header extends Component {
             fontFamily: "sans-serif-light"
           }}
         >
-          Home
+          {this.props.title}
         </Text>
         <View style={{ flex: 1 }} />
         <UserButton hide={false} />

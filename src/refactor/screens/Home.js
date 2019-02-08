@@ -7,11 +7,11 @@ import Well from "../components/Well";
 import DeleteableMessage from "../components/DeleteableMessage";
 import StandardBox from "../components/StandardBox";
 
-import style from "../../../style";
+import style from "../../style";
 import Offer from "../components/Offer";
 import Transaction from "../components/Transaction";
 import Title from "../components/Title";
-import colors from "../../../colors";
+import colors from "../../colors";
 import ProgressBar from "../components/ProgressBar";
 import SText from "../components/SText";
 import Challenge from "../components/Challenge";
@@ -23,7 +23,7 @@ export class Home extends Component {
   render() {
     return (
       <Wrapper>
-        <Header />
+        <Header title={"Home"} />
         <ScrollView>
           <View style={{ height: style.space }} />
           <Voucher />

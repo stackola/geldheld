@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import { Text, View, Image } from "react-native";
 import StandardBox from "./StandardBox";
-import style from "../../../style";
+import style from "../../style";
 import Coins from "./Coins";
 import StarRating from "react-native-star-rating";
-import colors from "../../../colors";
+import colors from "../../colors";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 export class ProductRow extends Component {

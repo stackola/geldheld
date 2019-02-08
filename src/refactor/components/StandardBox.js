@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, View } from "react-native";
-import style from "../../../style";
-import colors from "../../../colors";
+import style from "../../style";
+import colors from "../../colors";
 export default class StandardBox extends Component {
   render() {
     let props = this.props;

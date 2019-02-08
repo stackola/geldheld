@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Text, View, ImageBackground } from "react-native";
 import TabBar from "./TabBar";
-
-export default class Wrapper extends Component {
+class Wrapper extends Component {
   render() {
     return (
       <ImageBackground
@@ -10,8 +9,10 @@ export default class Wrapper extends Component {
         style={{ flex: 1, width: "100%" }}
       >
         <View style={{ flex: 1 }}>{this.props.children}</View>
-        <TabBar />
+        <TabBar navigation={this.props.navigation} />
       </ImageBackground>
     );
   }
 }
+
+export default Wrapper;

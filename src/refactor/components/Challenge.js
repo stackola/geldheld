@@ -4,9 +4,9 @@ import StandardBox from "./StandardBox";
 import Title from "./Title";
 import SText from "./SText";
 import ProgressBar from "./ProgressBar";
-import colors from "../../../colors";
 import ContinousBar from "./ContinousBar";
-import style from "../../../style";
+import colors from "../../colors";
+import style from "../../style";
 
 export default class Challenge extends PureComponent {
   render() {
