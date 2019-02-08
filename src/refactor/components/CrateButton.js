@@ -3,8 +3,10 @@ import { Text, View, Image, TouchableOpacity } from "react-native";
 import colors from "../../colors";
 import style from "../../style";
 
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import LinearGradient from "react-native-linear-gradient";
 import Title from "./Title";
+import Coins from "./Coins";
 
 export class GameButton extends Component {
   render() {
@@ -32,14 +34,22 @@ export class GameButton extends Component {
               flex: 1,
               padding: style.containerPadding,
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              height: 80
             }}
           >
-            <Image
-              source={{ uri: this.props.image }}
-              style={{ height: 80, width: 80 }}
-              resizeMode={"contain"}
-            />
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                position: "absolute",
+                top: style.containerPadding,
+                right: style.containerPadding
+              }}
+            >
+              <Coins amount={this.props.price} />
+            </View>
+            <Icon name="cube-outline" color={"white"} size={50} />
           </View>
           <View
             style={{
@@ -49,7 +59,7 @@ export class GameButton extends Component {
               justifyContent: "center"
             }}
           >
-            <Title>{this.props.title}</Title>
+            <Title>{this.props.name}</Title>
           </View>
         </LinearGradient>
       </TouchableOpacity>

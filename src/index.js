@@ -12,16 +12,25 @@ import AuthLoadingScreen from "./refactor/screens/AuthLoadingScreen";
 
 import Home from "./refactor/screens/Home";
 import Games from "./refactor/screens/Games";
+import Crates from "./refactor/screens/Crates";
+import Challenges from "./refactor/screens/Challenges";
+import Shop from "./refactor/screens/Shop";
+import Inventory from "./refactor/screens/Inventory";
 
 const AppStack = createStackNavigator(
   {
     Home: Home,
-    Games: Games
+    Games: Games,
+    Crates: Crates,
+    Challenges: Challenges,
+    Shop: Shop,
+    Inventory: Inventory
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       initialRouteName: "Home"
+      
     })
   }
 );

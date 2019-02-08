@@ -13,20 +13,24 @@ export class Games extends Component {
         <ScrollView style={{ marginTop: style.space, marginLeft: style.space }}>
           <View style={{ width: "100%", flexDirection: "row" }}>
             <GameButton
-              hue={22}
+              hue={130}
               image="https://i.imgur.com/wss02as.png"
               title={"Emoji spin"}
             />
-            <GameButton hue={80} image="heads_icon" title={"Coin flip"} />
+            <GameButton
+              hue={10}
+              image="heads_icon"
+              title={"Coin flip"}
+            />
           </View>
           <View style={{ width: "100%", flexDirection: "row" }}>
             <GameButton
-              hue={160}
+              hue={60}
               title="Golden ticket"
               image="https://i.imgur.com/5P2ZQbg.png"
             />
             <GameButton
-              hue={200}
+              hue={185}
               title="Lucky wheel"
               image="https://i.imgur.com/2beknjX.png"
             />
