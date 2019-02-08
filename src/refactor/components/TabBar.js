@@ -16,7 +16,7 @@ let tabs = [
   { title: "Crates", icon: "cube-outline", routeName: "Crates" },
   { title: "Shop", icon: "cart-outline", routeName: "Shop" },
   { title: "Challenges", icon: "target", routeName: "Challenges" },
-  { title: "Inventory", icon: "briefcase-outline", routeName: "Inventory" },
+  { title: "Inventory", icon: "briefcase-outline", routeName: "Inventory" }
 ];
 
 let Tab = props => {
