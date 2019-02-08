@@ -38,6 +38,7 @@ export class GameButton extends Component {
             <Image
               source={{ uri: this.props.image }}
               style={{ height: 80, width: 80 }}
+              resizeMode={"contain"}
             />
           </View>
           <View

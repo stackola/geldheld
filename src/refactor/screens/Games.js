@@ -20,8 +20,16 @@ export class Games extends Component {
             <GameButton hue={80} image="heads_icon" title={"Coin flip"} />
           </View>
           <View style={{ width: "100%", flexDirection: "row" }}>
-            <GameButton hue={160} title="Lucky ticket" />
-            <GameButton hue={200} title="Lucky wheel" />
+            <GameButton
+              hue={160}
+              title="Golden ticket"
+              image="https://i.imgur.com/5P2ZQbg.png"
+            />
+            <GameButton
+              hue={200}
+              title="Lucky wheel"
+              image="https://i.imgur.com/2beknjX.png"
+            />
           </View>
         </ScrollView>
       </Wrapper>

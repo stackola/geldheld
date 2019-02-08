@@ -27,16 +27,8 @@ export class Home extends Component {
         <ScrollView>
           <View style={{ height: style.space }} />
           <Voucher />
+          <Voucher />
           <Friend amount={100} />
-          <DeleteableMessage green />
-          <Offer />
-          <Well />
-          <Challenge
-            complete={2}
-            total={5}
-            title={"5 Freunde werben"}
-            text={"Wenn sie 5 Freunde werben erhalten sie einen Preis!"}
-          />
           <Challenge
             continous
             complete={80}
@@ -46,12 +38,7 @@ export class Home extends Component {
               "Verdienen Sie 120 Coins mit Aufgaben, um diese Belohnung zu erhalten."
             }
           />
-          <Transaction amount={1040} />
-          <Transaction amount={-100} />
-          <Transaction amount={0} />
-          <ProductRow />
           <Order />
-          <Button inLine green />
         </ScrollView>
       </Wrapper>
     );
