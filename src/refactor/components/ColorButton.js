@@ -1,11 +1,16 @@
 import React, { PureComponent } from "react";
 import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 
+
+import {
+  withNavigation
+} from "react-navigation";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import style from "../../style";
 import colors from "../../colors";
 
-export default class ColorButton extends PureComponent {
+class ColorButton extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -13,7 +18,9 @@ export default class ColorButton extends PureComponent {
       pressedIn: false
     };
   }
-
+  pressed(){
+    this.props.navigation.navigate(this.props.route);
+  }
   render() {
     let props = this.props;
     let h = props.hue || Math.random() * 255;
@@ -21,6 +28,9 @@ export default class ColorButton extends PureComponent {
     let color2 = "hsla(" + h + ", 100%, 25%, 1)";
     return (
       <TouchableOpacity
+      onPress={()=>{
+        this.pressed();
+      }}
         style={{
           height: 80,
           flex: props.noFlex || props.inLine ? 0 : 1,
@@ -69,3 +79,6 @@ export default class ColorButton extends PureComponent {
     );
   }
 }
+
+
+export default withNavigation(ColorButton);

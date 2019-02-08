@@ -17,6 +17,12 @@ import Challenges from "./refactor/screens/Challenges";
 import Shop from "./refactor/screens/Shop";
 import Inventory from "./refactor/screens/Inventory";
 
+import MyCrates from "./refactor/screens/MyCrates";
+import MyTransactions from "./refactor/screens/MyTransactions";
+import MyFriends from "./refactor/screens/MyFriends";
+import MyOrders from "./refactor/screens/MyOrders";
+import MyVouchers from "./refactor/screens/MyVouchers";
+
 const AppStack = createStackNavigator(
   {
     Home: Home,
@@ -24,13 +30,17 @@ const AppStack = createStackNavigator(
     Crates: Crates,
     Challenges: Challenges,
     Shop: Shop,
-    Inventory: Inventory
+    Inventory: Inventory,
+    MyCrates: MyCrates,
+    MyTransactions,
+    MyFriends,
+    MyOrders,
+    MyVouchers
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
       header: null,
       initialRouteName: "Home"
-      
     })
   }
 );

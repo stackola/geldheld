@@ -21,26 +21,31 @@ export class Inventory extends Component {
           <View style={{ height: style.space }} />
           <ColorButton
             hue={11}
+            route={"MyCrates"}
             text="My Crates"
             icon={<Icon name="cube-outline" color={colors.text} size={40} />}
           />
           <ColorButton
+            route={"MyVouchers"}
             text="My Voucers"
             hue={90}
             icon={<Entypo name="ticket" color={colors.text} size={40} />}
           />
           <ColorButton
+            route={"MyOrders"}
             text="My Orders"
             hue={198}
             icon={<Icon name="truck-fast" color={colors.text} size={40} />}
           />
           <ColorButton
+            route={"MyFriends"}
             text="My Friends"
             hue={214}
             icon={<Icon name="account-plus" color={colors.text} size={40} />}
           />
 
           <ColorButton
+            route={"MyTransactions"}
             text="My Transactions"
             hue={40}
             icon={<Icon name="bank-transfer" color={colors.text} size={40} />}
