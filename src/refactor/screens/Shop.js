@@ -5,6 +5,10 @@ import Header from "../components/Header";
 import CrateButton from "../components/CrateButton";
 import style from "../../style";
 import Challenge from "../components/Challenge";
+import ProductSquare from "../components/ProductSquare";
+import Well from "../components/Well";
+import Title from "../components/Title";
+import StandardBox from "../components/StandardBox";
 
 export class Shop extends Component {
   render() {
@@ -12,7 +16,30 @@ export class Shop extends Component {
       <Wrapper>
         <Header title="Shop" />
         <ScrollView style={{}}>
-          <View style={{ height: style.space }} />
+          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
+            Featured
+          </Title>
+          <Well>
+            <View style={{ width: style.space }} />
+            <ProductSquare />
+            <ProductSquare />
+          </Well>
+          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
+            Featured
+          </Title>
+          <Well>
+            <View style={{ width: style.space }} />
+            <ProductSquare />
+            <ProductSquare />
+          </Well>
+          <Title style={{ paddingLeft: style.space + style.containerPadding }}>
+            Featured
+          </Title>
+          <Well>
+            <View style={{ width: style.space }} />
+            <ProductSquare />
+            <ProductSquare />
+          </Well>
         </ScrollView>
       </Wrapper>
     );
