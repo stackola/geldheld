@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, Image } from "react-native";
+import { Text, View, ScrollView, Image, TouchableOpacity } from "react-native";
 import style from "../../style";
 import colors from "../../colors";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import SText from "./SText";
-import { formatMoney } from "../../lib";
+import { formatMoney, navToProduct, navToCratePage } from "../../lib";
 
-export default class CrateItem extends Component {
+import { withNavigation } from "react-navigation";
+
+export class CrateItem extends Component {
   render() {
     let props = this.props;
     let rarity = props.rarity || 0;
@@ -24,7 +26,12 @@ export default class CrateItem extends Component {
         }}
       >
         {props.type == "crate" && (
-          <React.Fragment>
+          <TouchableOpacity
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+            onPress={() => {
+              this.props.navigation.navigate(navToCratePage("nope"));
+            }}
+          >
             <View
               style={{ flexDirection: "row", alignItems: "center", flex: 1 }}
             >
@@ -39,7 +46,7 @@ export default class CrateItem extends Component {
             >
               {props.name}
             </SText>
-          </React.Fragment>
+          </TouchableOpacity>
         )}
         {props.type == "coins" && (
           <React.Fragment>
@@ -56,7 +63,12 @@ export default class CrateItem extends Component {
           </React.Fragment>
         )}
         {props.type == "product" && (
-          <View style={{ flex: 1 }}>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => {
+              this.props.navigation.navigate(navToProduct("nope"));
+            }}
+          >
             <View
               style={{
                 flex: 1,
@@ -82,7 +94,7 @@ export default class CrateItem extends Component {
             >
               {props.name}
             </SText>
-          </View>
+          </TouchableOpacity>
         )}
         <View
           style={{
@@ -116,3 +128,5 @@ export default class CrateItem extends Component {
     );
   }
 }
+
+export default withNavigation(CrateItem);

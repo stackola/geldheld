@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import StandardBox from "../components/StandardBox";
 
+import { withNavigation } from "react-navigation";
 import Entypo from "react-native-vector-icons/Entypo";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
@@ -20,8 +21,9 @@ import colors from "../../colors";
 import { format } from "date-fns";
 import Title from "./Title";
 import SText from "./SText";
+import { navToProduct } from "../../lib";
 
-export default class Voucher extends Component {
+export class Voucher extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
@@ -98,7 +100,10 @@ export default class Voucher extends Component {
                 Sell for 80 <Icon name={"coin"} color={"white"} size={10} />
               </SText>
             </View>
-            <View
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate(navToProduct("id"));
+              }}
               style={{
                 flex: 1,
                 backgroundColor: colors.green,
@@ -108,7 +113,7 @@ export default class Voucher extends Component {
             >
               <Icon name={"arrow-right"} color={"white"} size={25} />
               <SText style={{ fontSize: 10 }}>View product</SText>
-            </View>
+            </TouchableOpacity>
           </View>
         )}
 
@@ -146,3 +151,5 @@ export default class Voucher extends Component {
 
 
 */
+
+export default withNavigation(Voucher);

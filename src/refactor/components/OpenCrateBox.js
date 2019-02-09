@@ -14,10 +14,14 @@ import CrateItem from "./CrateItem";
 import style from "../../style";
 import colors from "../../colors";
 import ColorButton from "./ColorButton";
+import BuyCrateBox from "./BuyCrateBox";
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 export class OpenCrateBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { open: false };
+    this.state = { open: false, opened: false };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
@@ -74,7 +78,10 @@ export class OpenCrateBox extends Component {
       duration: 12000,
       easing: Easing.inOut(Easing.cubic),
       useNativeDriver: true
-    }).start(() => {});
+    }).start(() => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      this.setState({ opened: true });
+    });
   }
   toggleOpen() {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -176,6 +183,15 @@ export class OpenCrateBox extends Component {
           >
             Open
           </ColorButton>
+        )}
+        {this.state.opened && (
+          <React.Fragment>
+            <ColorButton small center hue={40}>
+              Quick sell for 80{" "}
+              <Icon name="coin" size={20} color={colors.text} />
+            </ColorButton>
+            <BuyCrateBox text={"Buy same crate again"} />
+          </React.Fragment>
         )}
       </React.Fragment>
     );

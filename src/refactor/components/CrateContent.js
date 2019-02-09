@@ -36,6 +36,16 @@ export default class CrateContent extends Component {
           name="Tiny crate"
         />
 
+        <CrateItem type={"coins"} amount={1600} rarity={2} chance={5} />
+
+        <CrateItem type={"coins"} amount={1600} rarity={3} chance={2} />
+        <CrateItem
+          type={"crate"}
+          rarity={3}
+          chance={2}
+          hue={0}
+          name="Premium crate"
+        />
         <CrateItem
           type={"product"}
           rarity={2}
@@ -50,16 +60,6 @@ export default class CrateContent extends Component {
           chance={5}
           image={"https://i.imgur.com/xBjQ6Ld.png"}
           name="BIC Lighter"
-        />
-        <CrateItem type={"coins"} amount={1600} rarity={2} chance={5} />
-
-        <CrateItem type={"coins"} amount={1600} rarity={3} chance={2} />
-        <CrateItem
-          type={"crate"}
-          rarity={3}
-          chance={2}
-          hue={0}
-          name="Premium crate"
         />
         <CrateItem
           type={"product"}

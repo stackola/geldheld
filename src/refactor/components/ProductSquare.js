@@ -1,14 +1,26 @@
 import React, { Component } from "react";
-import { Text, View, Image, ActivityIndicator } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  ActivityIndicator,
+  TouchableOpacity
+} from "react-native";
 import StandardBox from "./StandardBox";
 import style from "../../style";
 import Coins from "./Coins";
 import StarRating from "react-native-star-rating";
 import colors from "../../colors";
 
+import { withNavigation } from "react-navigation";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Title from "./Title";
+import { navToProduct } from "../../lib";
 export class ProductSquare extends Component {
+  pressed() {
+    this.props.navigation.navigate(navToProduct("nope"));
+  }
   render() {
     return (
       <StandardBox
@@ -28,7 +40,12 @@ export class ProductSquare extends Component {
             <ActivityIndicator color={colors.text} />
           </View>
         ) : (
-          <React.Fragment>
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => {
+              this.pressed();
+            }}
+          >
             <Image
               source={{ uri: "https://i.imgur.com/xBjQ6Ld.png" }}
               resizeMode={"contain"}
@@ -82,11 +99,11 @@ export class ProductSquare extends Component {
                 </View>
               </View>
             </View>
-          </React.Fragment>
+          </TouchableOpacity>
         )}
       </StandardBox>
     );
   }
 }
 
-export default ProductSquare;
+export default withNavigation(ProductSquare);

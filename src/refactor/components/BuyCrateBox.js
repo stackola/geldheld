@@ -38,7 +38,7 @@ export class BuyCrateBox extends Component {
           this.toggleOpen();
         }}
       >
-        <Icon name="cart" color={colors.text} size={20} /> Buy
+        <Icon name="cart" color={colors.text} size={20} /> {this.props.text||"Buy"}
       </ColorButton>
     ) : (
       <View>

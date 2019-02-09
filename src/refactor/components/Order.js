@@ -18,7 +18,10 @@ import Title from "./Title";
 import { format } from "date-fns";
 import SText from "./SText";
 
-export default class Order extends Component {
+import { withNavigation } from "react-navigation";
+import { navToProduct } from "../../lib";
+
+export class Order extends Component {
   constructor(props) {
     super(props);
     this.state = { open: false };
@@ -68,7 +71,10 @@ export default class Order extends Component {
             <View style={{ flex: 1 }} />
             <SText>LED Lighter</SText>
             {this.state.open && (
-              <View
+              <TouchableOpacity
+                onPress={() => {
+                  this.props.navigation.navigate(navToProduct("id"));
+                }}
                 style={{
                   borderRadius: 2,
                   overflow: "hidden",
@@ -85,7 +91,7 @@ export default class Order extends Component {
                   }}
                   resizeMode={"contain"}
                 />
-              </View>
+              </TouchableOpacity>
             )}
           </View>
 
@@ -130,3 +136,5 @@ export default class Order extends Component {
     );
   }
 }
+
+export default withNavigation(Order);
