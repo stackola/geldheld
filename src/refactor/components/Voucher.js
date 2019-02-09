@@ -88,7 +88,7 @@ export default class Voucher extends Component {
             <View
               style={{
                 flex: 1,
-                backgroundColor: colors.action,
+                backgroundColor: colors.coin,
                 alignItems: "center",
                 justifyContent: "center"
               }}

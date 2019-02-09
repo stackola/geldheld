@@ -21,7 +21,7 @@ class UserButton extends PureComponent {
           marginRight: style.space / 2
         }}
       >
-        <Icon name="coin" color={colors.action} size={25} />
+        <Icon name="coin" color={colors.coin} size={25} />
         <Text style={{ fontWeight: "bold", color: colors.text }}>
           {user.coins}
         </Text>

@@ -18,6 +18,7 @@ import Shop from "./refactor/screens/Shop";
 import Inventory from "./refactor/screens/Inventory";
 
 import MyCrates from "./refactor/screens/MyCrates";
+import CratePage from "./refactor/screens/CratePage";
 import MyTransactions from "./refactor/screens/MyTransactions";
 import MyFriends from "./refactor/screens/MyFriends";
 import MyOrders from "./refactor/screens/MyOrders";
@@ -35,7 +36,8 @@ const AppStack = createStackNavigator(
     MyTransactions,
     MyFriends,
     MyOrders,
-    MyVouchers
+    MyVouchers,
+    CratePage
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

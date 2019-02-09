@@ -7,16 +7,25 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import LinearGradient from "react-native-linear-gradient";
 import Title from "./Title";
 import Coins from "./Coins";
+import { navToCratePage } from "../../lib";
+
+import { withNavigation } from "react-navigation";
 
 export class GameButton extends Component {
+  pressed() {
+    this.props.navigation.navigate(navToCratePage("123123"));
+  }
   render() {
     let h = this.props.hue;
     let color1 = "hsla(" + h + ", 100%, 25%, 1)";
     let color2 = "hsla(" + h + ", 100%, 40%, 1)";
     return (
       <TouchableOpacity
+        disabled={this.props.noLink}
+        onPress={() => this.pressed()}
         style={{
-          flex: 1
+          flex: 1,
+          overflow: "hidden"
         }}
       >
         <LinearGradient
@@ -24,9 +33,11 @@ export class GameButton extends Component {
           useAngle={true}
           angle={15}
           style={{
+            overflow: "hidden",
+            flex: 1,
             borderRadius: style.bigBorderRadius,
-            marginRight: style.space,
-            marginBottom: style.space
+            marginRight: this.props.noMargin ? 0 : style.space,
+            marginBottom: this.props.noMargin ? 0 : style.space
           }}
         >
           <View
@@ -67,4 +78,4 @@ export class GameButton extends Component {
   }
 }
 
-export default GameButton;
+export default withNavigation(GameButton);

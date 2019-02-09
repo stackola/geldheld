@@ -16,7 +16,12 @@ class ColorButton extends PureComponent {
     };
   }
   pressed() {
-    this.props.navigation.navigate(this.props.route);
+    if (this.props.onPress) {
+      this.props.onPress();
+    }
+    if (this.props.route) {
+      this.props.navigation.navigate(this.props.route);
+    }
   }
   render() {
     let props = this.props;
@@ -39,7 +44,7 @@ class ColorButton extends PureComponent {
           this.pressed();
         }}
         style={{
-          height: props.small ? 50 : 75,
+          height: props.small ? 50 : props.medium ? 62 : 75,
           flex: props.noFlex || props.inLine ? 0 : 1,
           margin: style.space,
           marginTop: 0,
@@ -54,26 +59,31 @@ class ColorButton extends PureComponent {
             padding: style.containerPadding,
             flex: 1,
             backgroundColor: color1,
-            justifyContent: "center"
+            justifyContent: "center",
+            alignItems: props.center ? "center" : "flex-start"
           }}
         >
           {!props.loading && !props.error && !props.done && (
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View
-                style={{ marginRight: style.space, marginLeft: style.space }}
-              >
-                {props.icon}
-              </View>
+              {!props.center && (
+                <View
+                  style={{ marginRight: style.space, marginLeft: style.space }}
+                >
+                  {props.icon}
+                </View>
+              )}
               <Text
                 style={{
-                  marginLeft: style.space,
+                  marginLeft: props.center ? 0 : style.space,
                   color: "white",
-                  fontSize: 20,
+                  flex: 1,
+                  textAlign: props.center ? "center" : "left",
+                  fontSize: props.smallFont ? 14 : 20,
                   color: colors.text,
                   fontWeight: "bold"
                 }}
               >
-                {props.text || props.title}
+                {this.props.children || props.text || props.title}
               </Text>
             </View>
           )}

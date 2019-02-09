@@ -27,7 +27,7 @@ export default class StandardBox extends Component {
       <View
         style={{
           backgroundColor: color,
-          borderRadius: style.bigBorderRadius,
+          borderRadius: props.noRadius?0:style.bigBorderRadius,
           overflow: "hidden",
           margin: props.noMargin ? 0 : style.space,
           marginTop: 0,

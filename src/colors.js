@@ -1,9 +1,10 @@
 var colors = {
   background: "#00051f",
   action: "#ff801f",
-  coin: "#ff801f",
+  coin: "hsla(" + 40 + ", 100%, 40%, 1)",
   text: "#eee",
   textMinor: "#888",
+  textDark: "#444",
   green: "#369131",
   star: "#ffb800",
   red: "#ee0000",
@@ -13,6 +14,12 @@ var colors = {
   error: "#ee0000",
   indicatorColor: "white",
   headerBorder: "white",
-  headerBackground: "white"
+  headerBackground: "white",
+  rarity: {
+    0: "grey",
+    1: "blue",
+    2: "orange",
+    3: "red"
+  }
 };
 export default colors;
