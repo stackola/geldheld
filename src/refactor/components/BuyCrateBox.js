@@ -15,7 +15,8 @@ import * as RNIap from "react-native-iap";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../colors";
 import StandardBox from "./StandardBox";
-import { IapCrateButton } from "./IapCrateButton";
+import IapCrateButton from "./IapCrateButton";
+import BuyCrateButton from "./BuyCrateButton";
 export class BuyCrateBox extends Component {
   constructor(props) {
     super(props);
@@ -74,10 +75,7 @@ export class BuyCrateBox extends Component {
         >
           Close
         </ColorButton>
-        <ColorButton center small hue={40}>
-          1 <Icon name="cube-outline" color={colors.text} size={20} /> for{" "}
-          {props.price} <Icon name="coin" color={colors.text} size={20} />
-        </ColorButton>
+        <BuyCrateButton {...this.props} />
         <View style={{ flexDirection: "column" }}>
           {this.props.iaps.map(iap => {
             return (

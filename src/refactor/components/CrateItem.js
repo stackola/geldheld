@@ -31,11 +31,13 @@ export class CrateItem extends Component {
           marginBottom: props.margin || style.space / 2,
           alignItems: "center",
           justifyContent: "center",
-          overflow: "hidden"
+          overflow: "hidden",
+          ...(this.props.style || {})
         }}
       >
         {props.type == "crate" && (
           <TouchableOpacity
+            disabled={props.noLink}
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
             onPress={() => {
               this.props.navigation.navigate(
@@ -75,6 +77,7 @@ export class CrateItem extends Component {
         )}
         {props.type == "product" && (
           <TouchableOpacity
+            disabled={props.noLink}
             style={{ flex: 1 }}
             onPress={() => {
               this.props.navigation.navigate(
@@ -119,24 +122,26 @@ export class CrateItem extends Component {
             left: 0
           }}
         />
-        <View
-          style={{
-            position: "absolute",
-            top: style.containerPadding,
-            right: style.containerPadding
-          }}
-        >
-          <SText
+        {!this.props.hideChance && (
+          <View
             style={{
-              textAlign: "center",
-              color:
-                props.type == "product" ? colors.textDark : colors.textMinor,
-              fontSize: 11
+              position: "absolute",
+              top: style.containerPadding,
+              right: style.containerPadding
             }}
           >
-            {props.chance}%
-          </SText>
-        </View>
+            <SText
+              style={{
+                textAlign: "center",
+                color:
+                  props.type == "product" ? colors.textDark : colors.textMinor,
+                fontSize: 11
+              }}
+            >
+              {props.chance}%
+            </SText>
+          </View>
+        )}
       </View>
     );
   }

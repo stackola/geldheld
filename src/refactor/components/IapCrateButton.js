@@ -17,6 +17,14 @@ export class IapCrateButton extends Component {
     };
   }
 
+  pressed(sku) {
+    if (this.state.status == "done" || this.state.status == "error") {
+      this.setState({ status: "start" });
+      return;
+    }
+    this.buyIap(sku);
+  }
+
   buyIap(sku) {
     if (this.state.status != "start") {
       return;
@@ -29,9 +37,12 @@ export class IapCrateButton extends Component {
             console.log("response from fb", res);
             if (res.data.status == "ok") {
               RNIap.consumePurchase(r.purchaseToken).then(() => {
-                //this.props.navigation.navigate("MyCrates");
-                this.setState({ status: "done" });
+                this.setState({ status: "done" }, () => {
+                  this.props.navigation.navigate("MyCrates");
+                });
               });
+            } else {
+              this.setState({ status: "error" });
             }
           });
         })
@@ -49,7 +60,7 @@ export class IapCrateButton extends Component {
         error={this.state.status == "error"}
         done={this.state.status == "done"}
         onPress={() => {
-          this.buyIap(props.sku);
+          this.pressed(props.sku);
         }}
         center
         small

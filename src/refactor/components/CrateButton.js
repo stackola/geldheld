@@ -50,29 +50,39 @@ export class GameButton extends Component {
               height: 80
             }}
           >
+            {!this.props.hidePrice && (
+              <View
+                style={{
+                  alignItems: "center",
+                  flexDirection: "row",
+                  position: "absolute",
+                  top: style.containerPadding,
+                  right: style.containerPadding
+                }}
+              >
+                <Coins amount={this.props.price} />
+              </View>
+            )}
+            <Icon
+              name="cube-outline"
+              color={"white"}
+              size={this.props.smallIcon ? 24 : 50}
+            />
+          </View>
+          {!this.props.hideText && (
             <View
               style={{
+                height: 40,
+                backgroundColor: colors.darkTransparent,
                 alignItems: "center",
-                flexDirection: "row",
-                position: "absolute",
-                top: style.containerPadding,
-                right: style.containerPadding
+                justifyContent: "center"
               }}
             >
-              <Coins amount={this.props.price} />
+              <Title style={{ fontSize: this.props.smallText ? 12 : 16 }}>
+                {this.props.name}
+              </Title>
             </View>
-            <Icon name="cube-outline" color={"white"} size={50} />
-          </View>
-          <View
-            style={{
-              height: 40,
-              backgroundColor: colors.darkTransparent,
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-          >
-            <Title>{this.props.name}</Title>
-          </View>
+          )}
         </LinearGradient>
       </TouchableOpacity>
     );
