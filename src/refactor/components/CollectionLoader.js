@@ -45,11 +45,16 @@ export default class CollectionLoader extends Component {
   }
   render() {
     return this.state.loading ? (
-      <View>
-        <ActivityIndicator />
-      </View>
+      this.props.loading ? (
+        this.props.loading
+      ) : (
+        <View>
+          <ActivityIndicator />
+        </View>
+      )
     ) : (
       <FlatList
+        ListHeaderComponent={this.props.header || null}
         ListFooterComponent={<View style={{ height: 8 }} />}
         style={this.props.style}
         refreshControl={

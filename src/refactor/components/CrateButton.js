@@ -13,10 +13,10 @@ import { withNavigation } from "react-navigation";
 
 export class GameButton extends Component {
   pressed() {
-    this.props.navigation.navigate(navToCratePage("123123"));
+    this.props.navigation.navigate(navToCratePage(this.props.id));
   }
   render() {
-    let h = this.props.hue;
+    let h = this.props.hue || 0;
     let color1 = "hsla(" + h + ", 100%, 25%, 1)";
     let color2 = "hsla(" + h + ", 100%, 40%, 1)";
     return (
@@ -37,6 +37,7 @@ export class GameButton extends Component {
             flex: 1,
             borderRadius: style.bigBorderRadius,
             marginRight: this.props.noMargin ? 0 : style.space,
+            marginLeft: this.props.noMargin ? 0 : style.space,
             marginBottom: this.props.noMargin ? 0 : style.space
           }}
         >

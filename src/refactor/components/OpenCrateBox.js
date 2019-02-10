@@ -21,36 +21,14 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 export class OpenCrateBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { open: false, opened: false };
+    this.state = { open: false, opened: false, items: [] };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
-    this.items = [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6,
-      7,
-      8,
-      9,
-      10,
-      11,
-      12,
-      13,
-      14,
-      15,
-      16,
-      17,
-      18,
-      19,
-      20,
-      21,
-      22,
-      23
-    ];
-    this.itemCount = this.items.length;
+    this.calc();
+  }
+  calc() {
+    this.itemCount = this.state.items.length;
     this.itemWidth = 120;
     this.spacerWidth = 200;
     this.totalWidth = this.itemWidth + this.spacerWidth;
@@ -70,9 +48,14 @@ export class OpenCrateBox extends Component {
       -this.totalWidth / 2 + this.containerWidth / 2 - this.spacerWidth / 2
     );
   }
-  componentDidMount() {}
+  componentDidMount() {
+    this.setState({ items: this.props.items }, () => {
+      this.calc();
+    });
+  }
   spin() {
     //this.offset.setValue(this.getStartPos());
+
     Animated.timing(this.offset, {
       toValue: this.getEndPos(),
       duration: 12000,
@@ -88,16 +71,32 @@ export class OpenCrateBox extends Component {
     this.setState({ open: !this.state.open });
   }
   openCrate() {
-    let p = LayoutAnimation.Presets.easeInEaseOut;
-    p = { ...p, duration: 1000 };
-    this.offset.setValue(this.getStartPos());
-    LayoutAnimation.configureNext(p);
-    this.setState({ open: true }, () => {
-      setTimeout(() => {
-        this.spin();
-      }, 1000);
-    });
+    this.setState(
+      {
+        items: [
+          this.state.items[4],
+          ...this.state.items,
+          ...this.state.items,
+          ...this.state.items,
+          ...this.state.items,
+          ...this.state.items
+        ]
+      },
+      () => {
+        this.calc();
+        let p = LayoutAnimation.Presets.easeInEaseOut;
+        p = { ...p, duration: 1000 };
+        this.offset.setValue(this.getStartPos());
+        LayoutAnimation.configureNext(p);
+        this.setState({ open: true }, () => {
+          setTimeout(() => {
+            this.spin();
+          }, 1000);
+        });
+      }
+    );
   }
+
   render() {
     let dp = {
       margin: style.space / 2,
@@ -106,7 +105,11 @@ export class OpenCrateBox extends Component {
     };
 
     return (
-      <React.Fragment>
+      <View
+        style={{
+          marginBottom: this.state.open ? style.space * 30 : 0
+        }}
+      >
         {this.state.open ? (
           <Well
             static
@@ -131,18 +134,11 @@ export class OpenCrateBox extends Component {
                   translateX: this.offset
                 }}
               >
-                {this.items.map(() => {
+                {this.state.items.map(item => {
                   return (
                     <React.Fragment>
                       <Spacer horizontal size={this.spacerWidth} />
-                      <CrateItem
-                        {...dp}
-                        type={"crate"}
-                        rarity={1}
-                        chance={10}
-                        hue={199}
-                        name="Tiny crate"
-                      />
+                      <CrateItem {...dp} {...item} />
                     </React.Fragment>
                   );
                 })}
@@ -192,10 +188,10 @@ export class OpenCrateBox extends Component {
               Quick sell for 80{" "}
               <Icon name="coin" size={20} color={colors.text} />
             </ColorButton>
-            <BuyCrateBox text={"Buy same crate again"} />
+            <BuyCrateBox {...this.props} text={"Buy same crate again"} />
           </React.Fragment>
         )}
-      </React.Fragment>
+      </View>
     );
   }
 }

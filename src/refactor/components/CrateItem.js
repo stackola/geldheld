@@ -11,7 +11,16 @@ import { withNavigation } from "react-navigation";
 export class CrateItem extends Component {
   render() {
     let props = this.props;
-    let rarity = props.rarity || 0;
+    let rarity = 0;
+    if (props.chance < 50) {
+      rarity = 1;
+    }
+    if (props.chance < 20) {
+      rarity = 2;
+    }
+    if (props.chance < 10) {
+      rarity = 3;
+    }
     return (
       <View
         style={{
@@ -29,7 +38,9 @@ export class CrateItem extends Component {
           <TouchableOpacity
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
             onPress={() => {
-              this.props.navigation.navigate(navToCratePage("nope"));
+              this.props.navigation.navigate(
+                navToCratePage(this.props.crateId)
+              );
             }}
           >
             <View
@@ -58,7 +69,7 @@ export class CrateItem extends Component {
             <SText
               style={{ marginBottom: style.containerPadding, fontSize: 12 }}
             >
-              {formatMoney(props.amount)} coins
+              {formatMoney(props.value)} coins
             </SText>
           </React.Fragment>
         )}
@@ -66,7 +77,9 @@ export class CrateItem extends Component {
           <TouchableOpacity
             style={{ flex: 1 }}
             onPress={() => {
-              this.props.navigation.navigate(navToProduct("nope"));
+              this.props.navigation.navigate(
+                navToProduct(this.props.productId)
+              );
             }}
           >
             <View

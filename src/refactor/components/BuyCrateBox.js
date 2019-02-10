@@ -10,13 +10,16 @@ import {
 } from "react-native";
 import ColorButton from "./ColorButton";
 
+import * as RNIap from "react-native-iap";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../colors";
 import StandardBox from "./StandardBox";
+import { IapCrateButton } from "./IapCrateButton";
 export class BuyCrateBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { open: false };
+    this.state = { open: false, skuMap: {} };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
@@ -27,7 +30,23 @@ export class BuyCrateBox extends Component {
     LayoutAnimation.configureNext(p);
     this.setState({ open: !this.state.open });
   }
+  componentDidMount() {
+    this.loadSKUs();
+  }
+  loadSKUs() {
+    let skuArray = this.props.iaps.map(i => i.sku);
+    RNIap.getProducts(skuArray).then(products => {
+      console.log(products);
+      let skuMap = {};
+      products.map(p => {
+        skuMap[p.productId] = p;
+      });
+      this.setState({ skuMap: skuMap });
+    });
+  }
+
   render() {
+    let props = this.props;
     return !this.state.open ? (
       <ColorButton
         center
@@ -56,22 +75,20 @@ export class BuyCrateBox extends Component {
           Close
         </ColorButton>
         <ColorButton center small hue={40}>
-          1 <Icon name="cube-outline" color={colors.text} size={20} /> for 100{" "}
-          <Icon name="coin" color={colors.text} size={20} />
+          1 <Icon name="cube-outline" color={colors.text} size={20} /> for{" "}
+          {props.price} <Icon name="coin" color={colors.text} size={20} />
         </ColorButton>
         <View style={{ flexDirection: "column" }}>
-          <ColorButton center small hue={110}>
-            1 <Icon name="cube-outline" color={colors.text} size={20} /> for
-            $1.09 <Icon name="google-play" color={colors.text} size={20} />
-          </ColorButton>
-          <ColorButton center small hue={110}>
-            5 <Icon name="cube-outline" color={colors.text} size={20} /> for
-            $4.59 <Icon name="google-play" color={colors.text} size={20} />
-          </ColorButton>
-          <ColorButton center small hue={110}>
-            10 <Icon name="cube-outline" color={colors.text} size={20} /> for
-            $9.00 <Icon name="google-play" color={colors.text} size={20} />
-          </ColorButton>
+          {this.props.iaps.map(iap => {
+            return (
+              <IapCrateButton
+                {...iap}
+                storeInfo={
+                  this.state.skuMap[iap.sku] ? this.state.skuMap[iap.sku] : {}
+                }
+              />
+            );
+          })}
         </View>
       </View>
     );
