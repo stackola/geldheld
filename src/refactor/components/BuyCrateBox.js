@@ -38,10 +38,23 @@ export class BuyCrateBox extends Component {
           this.toggleOpen();
         }}
       >
-        <Icon name="cart" color={colors.text} size={20} /> {this.props.text||"Buy"}
+        <Icon name="cart" color={colors.text} size={20} />{" "}
+        {this.props.text || "Buy"}
       </ColorButton>
     ) : (
       <View>
+        <ColorButton
+          onPress={() => {
+            this.toggleOpen();
+          }}
+          center
+          small
+          hue={110}
+          sat={0}
+          smallFont
+        >
+          Close
+        </ColorButton>
         <ColorButton center small hue={40}>
           1 <Icon name="cube-outline" color={colors.text} size={20} /> for 100{" "}
           <Icon name="coin" color={colors.text} size={20} />
@@ -58,18 +71,6 @@ export class BuyCrateBox extends Component {
           <ColorButton center small hue={110}>
             10 <Icon name="cube-outline" color={colors.text} size={20} /> for
             $9.00 <Icon name="google-play" color={colors.text} size={20} />
-          </ColorButton>
-          <ColorButton
-            onPress={() => {
-              this.toggleOpen();
-            }}
-            center
-            small
-            hue={110}
-            sat={0}
-            smallFont
-          >
-            Close
           </ColorButton>
         </View>
       </View>

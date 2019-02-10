@@ -163,13 +163,13 @@ export class OpenCrateBox extends Component {
                   height: 0,
                   backgroundColor: "transparent",
                   borderStyle: "solid",
-                  borderLeftWidth: 10,
-                  borderRightWidth: 10,
+                  borderLeftWidth: 5,
+                  borderRightWidth: 5,
                   transform: [{ rotate: "180deg" }],
-                  borderBottomWidth: 20,
+                  borderBottomWidth: 10,
                   borderLeftColor: "transparent",
                   borderRightColor: "transparent",
-                  borderBottomColor: "black"
+                  borderBottomColor: colors.text
                 }}
               />
             </View>
