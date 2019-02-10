@@ -19,27 +19,13 @@ import ProductRow from "../components/ProductRow";
 import Order from "../components/Order";
 import Friend from "../components/Friend";
 import Voucher from "../components/Voucher";
+import OfferList from "../components/OfferList";
 export class Home extends Component {
   render() {
     return (
       <Wrapper>
         <Header title={"Home"} />
-        <ScrollView>
-          <View style={{ height: style.space }} />
-          <Voucher />
-          <Voucher />
-          <Friend amount={100} />
-          <Challenge
-            continous
-            complete={80}
-            total={120}
-            title={"120 Coins verdienen"}
-            text={
-              "Verdienen Sie 120 Coins mit Aufgaben, um diese Belohnung zu erhalten."
-            }
-          />
-          <Order />
-        </ScrollView>
+        <OfferList />
       </Wrapper>
     );
   }

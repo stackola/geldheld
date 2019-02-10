@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Text, View, Image } from "react-native";
+import { Text, View, Image, ActivityIndicator } from "react-native";
 import StandardBox from "../components/StandardBox";
 
 import colors from "../../colors";
@@ -9,10 +9,25 @@ import Coins from "./Coins";
 
 export default class Offer extends Component {
   render() {
+    if (this.props.loading) {
+      return (
+        <StandardBox
+          noPadding
+          style={{
+            flexDirection: "row",
+            height: 80,
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <ActivityIndicator color={colors.text} />
+        </StandardBox>
+      );
+    }
     return (
       <StandardBox noPadding style={{ flexDirection: "row" }}>
         <Image
-          source={{ uri: "https://i.imgur.com/FUqv7e3.png" }}
+          source={{ uri: this.props.image }}
           resizeMode={"cover"}
           style={{ width: 80, minHeight: 80 }}
         />
@@ -24,11 +39,8 @@ export default class Offer extends Component {
             paddingBottom: style.containerPadding
           }}
         >
-          <Text style={style.containerHeadline}>Candy Crush</Text>
-          <Text style={style.text}>
-            Play this legendary game! Start playing Candy Crush Saga today –
-            loved by millions of players around the world.
-          </Text>
+          <Text style={style.containerHeadline}>{this.props.title}</Text>
+          <Text style={style.text}>{this.props.text}</Text>
         </View>
         <View
           style={{
@@ -39,7 +51,7 @@ export default class Offer extends Component {
             flexDirection: "row"
           }}
         >
-          <Coins amount={1000} />
+          <Coins amount={this.props.coins} />
         </View>
       </StandardBox>
     );
