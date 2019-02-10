@@ -1,4 +1,5 @@
 import firebase from "react-native-firebase";
+import colors from "../colors";
 const sendCoinFlip = firebase.functions().httpsCallable("coinflip");
 const sendSlot = firebase.functions().httpsCallable("slot");
 const sendBuyCrate = firebase.functions().httpsCallable("buyCrate");
@@ -161,4 +162,22 @@ export function formatMoney(
   } catch (e) {
     console.log(e);
   }
+}
+
+export function orderStatusToString(status) {
+  if (status == "new") return "New";
+  if (status == "processed") return "Processed";
+  if (status == "refund") return "Refunded";
+  if (status == "canceled") return "Canceled";
+
+  return status;
+}
+
+export function orderStatusToColor(status) {
+  if (status == "new") return "orange";
+  if (status == "processed") return colors.green;
+  if (status == "refund") return colors.textMinor;
+  if (status == "canceled") return colors.red;
+
+  return colors.text;
 }

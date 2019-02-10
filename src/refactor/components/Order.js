@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import StandardBox from "../components/StandardBox";
 
+import ShippingOption from "../screens/ShippingOption";
+
 import colors from "../../colors";
 import style from "../../style";
 
@@ -19,7 +21,11 @@ import { format } from "date-fns";
 import SText from "./SText";
 
 import { withNavigation } from "react-navigation";
-import { navToProduct } from "../../lib";
+import {
+  navToProduct,
+  orderStatusToString,
+  orderStatusToColor
+} from "../../lib";
 
 export class Order extends Component {
   constructor(props) {
@@ -45,7 +51,7 @@ export class Order extends Component {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Title>Order #9Aui7</Title>
+            <Title>Order #{(this.props.id || "").substr(0, 7)}</Title>
             <View style={{ flex: 1 }} />
 
             <Text
@@ -55,7 +61,8 @@ export class Order extends Component {
                 fontSize: 11
               }}
             >
-              {format(new Date(), "YYYY/MM/DD")} {format(new Date(), "HH:mm")}
+              {format(this.props.time, "YYYY/MM/DD")}{" "}
+              {format(this.props.time, "HH:mm")}
             </Text>
           </View>
 
@@ -69,7 +76,7 @@ export class Order extends Component {
           >
             <SText>Contains:</SText>
             <View style={{ flex: 1 }} />
-            <SText>LED Lighter</SText>
+            <SText>{this.props.product.name}</SText>
             {this.state.open && (
               <TouchableOpacity
                 onPress={() => {
@@ -82,7 +89,7 @@ export class Order extends Component {
                 }}
               >
                 <Image
-                  source={{ uri: "https://i.imgur.com/xBjQ6Ld.png" }}
+                  source={{ uri: this.props.product.image }}
                   style={{
                     height: 60,
                     width: 60,
@@ -98,36 +105,36 @@ export class Order extends Component {
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <SText>Order status: </SText>
             <View style={{ flex: 1 }} />
-            <SText color={colors.green}>New</SText>
+            <SText color={orderStatusToColor(this.props.status)}>
+              {orderStatusToString(this.props.status)}
+            </SText>
           </View>
         </TouchableOpacity>
         {this.state.open && (
           <React.Fragment>
+            {this.props.shippingOption.tracking && (
+              <React.Fragment>
+                <View style={{ height: 4 }} />
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <SText>Tracking #: </SText>
+                  <View style={{ flex: 1 }} />
+                  {this.props.trackingId ? (
+                    <SText>{this.props.trackingId}</SText>
+                  ) : (
+                    <SText style={{ color: colors.textMinor, fontSize: 10 }}>
+                      No available yet
+                    </SText>
+                  )}
+                </View>
+              </React.Fragment>
+            )}
             <View style={{ height: 4 }} />
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <SText>Tracking #: </SText>
-              <View style={{ flex: 1 }} />
-              <SText>243j0fi39f99</SText>
-            </View>
-            <View style={{ height: 4 }} />
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <SText style={{ paddingRight: style.space / 2 }}>
-                Shipping method:
-              </SText>
-              <View style={{ flex: 1 }} />
-              <SText style={{}}>Free Shipping</SText>
-            </View>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ flex: 1 }} />
-              <SText color={colors.textMinor} style={{ fontSize: 11 }}>
-                (4-5 Weeks)
-              </SText>
-            </View>
+            <ShippingOption hidePrice {...this.props.shippingOption} />
             <View style={{ height: 4 }} />
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <SText>Total Price: </SText>
               <View style={{ flex: 1 }} />
-              <Coins amount={1000} />
+              <Coins amount={this.props.totalPrice} />
             </View>
           </React.Fragment>
         )}

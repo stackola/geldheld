@@ -646,8 +646,10 @@ exports.order = functions.https.onCall((data, context) => {
             //create order item.
             //substract coins.
             //mark voucher as used.
-            transaction.create(db.collection("orders").doc(), {
+            let newOrder = db.collection("orders").doc();
+            transaction.create(newOrder, {
               user: uid,
+              id: newOrder.id,
               time: admin.firestore.FieldValue.serverTimestamp(),
               productId: productId,
               status: "new",

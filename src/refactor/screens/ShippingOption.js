@@ -18,7 +18,12 @@ export default class ShippingOption extends Component {
         }}
       >
         <SText style={{ flex: 1 }}>{props.name}</SText>
-        <View style={{ flex: 1.5, justifyContent: "center" }}>
+        <View
+          style={{
+            flex: this.props.hidePrice ? 0 : 1.5,
+            justifyContent: "center"
+          }}
+        >
           <SText style={{ color: colors.textMinor, fontSize: 10 }}>
             {" "}
             <Icon name="close" color={"#0000"} size={10} /> {props.time}
@@ -48,16 +53,18 @@ export default class ShippingOption extends Component {
             </SText>
           )}
         </View>
-        <View
-          style={{
-            width: 60,
-            flexDirection: "row",
-            justifyContent: "flex-end",
-            alignItems: "center"
-          }}
-        >
-          <Coins amount={props.price} />
-        </View>
+        {!this.props.hidePrice && (
+          <View
+            style={{
+              width: 60,
+              flexDirection: "row",
+              justifyContent: "flex-end",
+              alignItems: "center"
+            }}
+          >
+            <Coins amount={props.price} />
+          </View>
+        )}
       </View>
     );
   }
