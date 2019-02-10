@@ -18,7 +18,7 @@ export class MyTransactions extends Component {
           header={<View style={{ height: style.space }} />}
           loading={<Transaction loading />}
           path={"users/" + getUID()}
-          collection={"vouchers"}
+          collection={"transactions"}
           orderBy={"time"}
           renderItem={i => {
             return <Transaction {...i} />;

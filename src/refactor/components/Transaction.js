@@ -44,7 +44,7 @@ export default class Transaction extends Component {
             paddingBottom: style.containerPadding
           }}
         >
-          <Text style={[style.containerHeadline, {}]}>Candy Crush</Text>
+          <Text style={[style.containerHeadline, {}]}>{this.props.text}</Text>
         </View>
         <View
           style={{
@@ -61,9 +61,9 @@ export default class Transaction extends Component {
               fontSize: 11
             }}
           >
-            {format(new Date(), "YYYY/MM/DD")}
+            {format(this.props.time, "YYYY/MM/DD")}
             {"\n"}
-            {format(new Date(), "HH:mm")}
+            {format(this.props.time, "HH:mm")}
           </Text>
         </View>
       </StandardBox>

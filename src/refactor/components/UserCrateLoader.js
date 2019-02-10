@@ -59,7 +59,7 @@ class UserCrateLoader extends PureComponent {
                     <View style={{}}>
                       <CrateItem
                         width={100}
-                        {...crate.items[2]}
+                        {...crate.items[Math.floor(Math.random()*5)]}
                         hideChance
                         style={{ marginBottom: 0, height: 80 }}
                       />
