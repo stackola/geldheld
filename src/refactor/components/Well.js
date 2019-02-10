@@ -7,13 +7,15 @@ import Title from "./Title";
 export default class Well extends Component {
   render() {
     let h = this.props.hue || Math.random() * 255;
+    let l = this.props.l || 50;
+    let s = this.props.sat || 35;
     return (
       <LinearGradient
         colors={[
-          "hsla(" + h + ", 35%, 50%, 1)",
-          "hsla(" + h + ", 35%, 60%, 1)",
-          "hsla(" + h + ", 35%, 60%, 1)",
-          "hsla(" + h + ", 35%, 50%, 1)"
+          "hsla(" + h + ", " + s + "%, " + l + "%, 1)",
+          "hsla(" + h + ", " + s + "%, " + (l + 10) + "%, 1)",
+          "hsla(" + h + ", " + s + "%, " + (l + 10) + "%, 1)",
+          "hsla(" + h + ", " + s + "%, " + l + "%, 1)"
         ]}
         style={{
           borderColor: "hsla(240, 35%, 11%, 1)",

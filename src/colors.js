@@ -16,10 +16,10 @@ var colors = {
   headerBorder: "white",
   headerBackground: "white",
   rarity: {
-    0: "grey",
-    1: "blue",
-    2: "orange",
-    3: "red"
+    0: "#999",
+    1: "hsla(" + 190 + ", 100%, 40%, 1)",
+    2: "hsla(" + 40 + ", 100%, 40%, 1)",
+    3: "hsla(" + 10 + ", 100%, 40%, 1)"
   }
 };
 export default colors;

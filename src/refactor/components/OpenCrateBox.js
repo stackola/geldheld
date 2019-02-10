@@ -111,7 +111,9 @@ export class OpenCrateBox extends Component {
           <Well
             static
             style={{ marginBottom: style.space }}
-            hue={this.props.hue}
+            hue={240}
+            sat={34}
+            l={7}
           >
             <View
               style={{ height: 88, flex: 1 }}
