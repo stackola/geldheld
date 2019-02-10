@@ -20,8 +20,10 @@ import Coins from "./Coins";
 import colors from "../../colors";
 import { format } from "date-fns";
 import Title from "./Title";
+import ColorButton from "./ColorButton";
+import Spacer from "./Spacer";
 import SText from "./SText";
-import { navToProduct } from "../../lib";
+import { navToProduct, quickSell } from "../../lib";
 
 export class Voucher extends Component {
   constructor(props) {
@@ -35,9 +37,32 @@ export class Voucher extends Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState({ open: !this.state.open });
   }
+  sell() {
+    let id = this.props.id;
+    this.setState({ sellItemState: "loading" }, () => {
+      quickSell(id)
+        .then(r => {
+          console.log(r);
+          if (r.data.status == "ok") {
+            LayoutAnimation.configureNext(
+              LayoutAnimation.Presets.easeInEaseOut
+            );
+            this.setState({ sellItemState: "done", open: false });
+          } else {
+            this.setState({ sellItemState: "error" });
+          }
+        })
+        .catch(e => {
+          console.log(e);
+          this.setState({ sellItemState: "error" });
+        });
+    });
+  }
   render() {
-    let color = this.props.amount >= 0 ? colors.green : colors.red;
-    let used = false;
+    let props = this.props;
+    let used = props.used;
+    let sold = props.sold || this.state.sellItemState == "done";
+
     return this.props.loading ? (
       <StandardBox
         noPadding
@@ -78,42 +103,47 @@ export class Voucher extends Component {
           </View>
           <SText>1x</SText>
           <View style={{ width: style.space / 2 }} />
-          <Title style={{ flex: 1 }}> Laser Pointer</Title>
+          <Title style={{ flex: 1 }}> {props.item.name}</Title>
           <Image
             style={{ width: 60, height: "100%", backgroundColor: "white" }}
             resizeMode={"contain"}
-            source={{ uri: "https://i.imgur.com/xBjQ6Ld.png" }}
+            source={{ uri: props.item.image }}
           />
         </TouchableOpacity>
         {this.state.open && (
-          <View style={{ height: 60, flexDirection: "row" }}>
-            <View
-              style={{
-                flex: 1,
-                backgroundColor: colors.coin,
-                alignItems: "center",
-                justifyContent: "center"
-              }}
-            >
-              <Icon name={"coin"} color={"white"} size={25} />
-              <SText style={{ fontSize: 10 }}>
-                Sell for 80 <Icon name={"coin"} color={"white"} size={10} />
-              </SText>
-            </View>
-            <TouchableOpacity
+          <View style={{ flexDirection: "row", marginTop: style.space / 2 }}>
+            <ColorButton
+              loading={this.state.sellItemState == "loading"}
+              done={this.state.sellItemState == "done"}
+              error={this.state.sellItemState == "error"}
+              noMargin
+              smallFont
+              center
+              style={{ marginBottom: 0 }}
+              hue={40}
+              medium
               onPress={() => {
-                this.props.navigation.navigate(navToProduct("id"));
-              }}
-              style={{
-                flex: 1,
-                backgroundColor: colors.green,
-                alignItems: "center",
-                justifyContent: "center"
+                this.sell();
               }}
             >
-              <Icon name={"arrow-right"} color={"white"} size={25} />
-              <SText style={{ fontSize: 10 }}>View product</SText>
-            </TouchableOpacity>
+              Sell for {props.price} <Icon name="coin" size={14} />
+            </ColorButton>
+            <Spacer horizontal size={style.space / 2} />
+            <ColorButton
+              onPress={() => {
+                this.props.navigation.navigate(
+                  navToProduct(props.item.productId)
+                );
+              }}
+              smallFont
+              center
+              noMargin
+              style={{ marginBottom: 0 }}
+              hue={240}
+              medium
+            >
+              View in shop
+            </ColorButton>
           </View>
         )}
 
@@ -139,6 +169,32 @@ export class Voucher extends Component {
               }}
             >
               USED
+            </Text>
+          </View>
+        )}
+
+        {sold && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              bottom: 0,
+              left: 0,
+              right: 0,
+              backgroundColor: colors.darkTransparent,
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <Text
+              style={{
+                color: colors.text,
+                fontWeight: "bold",
+                fontSize: 30,
+                transform: [{ rotate: "-10deg" }]
+              }}
+            >
+              SOLD
             </Text>
           </View>
         )}

@@ -41,6 +41,7 @@ export class Product extends Component {
   }
 
   render() {
+    let productId = this.props.navigation.getParam("productId", null);
     return (
       <Wrapper>
         <Header showBack />
@@ -59,7 +60,7 @@ export class Product extends Component {
             <Spacer />
             <StandardBox>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Title>Laser Pointer</Title>
+                <Title>Laser Pointer {productId}</Title>
                 <View style={{ flex: 1 }} />
                 <Coins amount={100} />
               </View>
