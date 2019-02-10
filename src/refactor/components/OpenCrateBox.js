@@ -17,11 +17,12 @@ import ColorButton from "./ColorButton";
 import BuyCrateBox from "./BuyCrateBox";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { openCrate as sendOpenCrate } from "../../lib";
 
 export class OpenCrateBox extends Component {
   constructor(props) {
     super(props);
-    this.state = { open: false, opened: false, items: [] };
+    this.state = { wellOpen: false, status: "start", items: [] };
     if (Platform.OS === "android") {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
@@ -62,39 +63,67 @@ export class OpenCrateBox extends Component {
       easing: Easing.inOut(Easing.cubic),
       useNativeDriver: true
     }).start(() => {
+      //done spinning
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      this.setState({ opened: true });
+      this.setState({ status: "done" });
     });
   }
-  toggleOpen() {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    this.setState({ open: !this.state.open });
-  }
+
   openCrate() {
-    this.setState(
-      {
-        items: [
-          this.state.items[4],
-          ...this.state.items,
-          ...this.state.items,
-          ...this.state.items,
-          ...this.state.items,
-          ...this.state.items
-        ]
-      },
-      () => {
-        this.calc();
-        let p = LayoutAnimation.Presets.easeInEaseOut;
-        p = { ...p, duration: 1000 };
-        this.offset.setValue(this.getStartPos());
-        LayoutAnimation.configureNext(p);
-        this.setState({ open: true }, () => {
-          setTimeout(() => {
-            this.spin();
-          }, 1000);
+    let userCrateId = this.props.userCrateId;
+    //set state to loading.
+    //open crate on server
+    //open well
+    //start spinning
+    //set status to done.
+    this.setState({ status: "loading" }, () => {
+      //open box..
+      sendOpenCrate(userCrateId)
+        .then(resp => {
+          //build the array!
+          this.setState(
+            {
+              items: [
+                resp.data.data.item,
+                ...this.state.items,
+                ...this.state.items,
+                ...this.state.items,
+                ...this.state.items,
+                ...this.state.items
+              ]
+            },
+            () => {
+              this.calc();
+              let p = LayoutAnimation.Presets.easeInEaseOut;
+              p = { ...p, duration: 1000 };
+              this.offset.setValue(this.getStartPos());
+              LayoutAnimation.configureNext(p);
+              this.setState({ wellOpen: true }, () => {
+                setTimeout(() => {
+                  this.spin();
+                }, 1000);
+              });
+            }
+          );
+        })
+        .catch(err => {
+          this.setState({ status: "error" });
         });
-      }
-    );
+    });
+  }
+
+  open() {
+    let userCrateId = this.props.navigation.getParam("id", null);
+    openCrate(userCrateId).then(resp => {
+      let p = {
+        droppedItem: resp.data.data,
+        status: "finished",
+        openCrateLoading: false,
+        slotItem: resp.data.data.item.order
+      };
+
+      this.slot.spinTo(resp.data.data.item.order);
+    });
   }
 
   render() {
@@ -107,10 +136,10 @@ export class OpenCrateBox extends Component {
     return (
       <View
         style={{
-          marginBottom: this.state.open ? style.space * 30 : 0
+          marginBottom: this.state.wellOpen ? style.space * 30 : 0
         }}
       >
-        {this.state.open ? (
+        {this.state.wellOpen ? (
           <Well
             static
             style={{ marginBottom: style.space }}
@@ -173,6 +202,8 @@ export class OpenCrateBox extends Component {
         ) : (
           <ColorButton
             center
+            loading={this.state.status == "loading"}
+            error={this.state.status == "error"}
             small
             hue={120}
             onPress={() => {
@@ -182,7 +213,7 @@ export class OpenCrateBox extends Component {
             Open
           </ColorButton>
         )}
-        {this.state.opened && (
+        {this.state.status == "done" && (
           <React.Fragment>
             <ColorButton small center hue={40}>
               Quick sell for 80{" "}

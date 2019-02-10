@@ -7,6 +7,7 @@ import colors from "../../colors";
 import { navToUserCrate } from "../../lib";
 import StandardBox from "./StandardBox";
 import CrateButton from "./CrateButton";
+import ColorButton from "./ColorButton";
 import CrateItem from "./CrateItem";
 import Title from "./Title";
 import Spacer from "./Spacer";
@@ -27,6 +28,7 @@ class UserCrateLoader extends PureComponent {
       >
         {userCrate => {
           console.log(userCrate);
+          let opened = userCrate.opened;
           let cratePath = "crates/" + userCrate.crateId;
           return (
             <ItemLoader
@@ -37,6 +39,7 @@ class UserCrateLoader extends PureComponent {
             >
               {crate => {
                 console.log("got both crates");
+
                 return (
                   <StandardBox
                     noPadding
@@ -46,6 +49,7 @@ class UserCrateLoader extends PureComponent {
                       <CrateButton
                         {...crate}
                         noMargin
+                        sat={opened ? 0 : 100}
                         hidePrice
                         smallIcon
                         hideText
@@ -53,17 +57,40 @@ class UserCrateLoader extends PureComponent {
                       />
                     </View>
                     <Spacer horizontal />
-                    <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1, justifyContent: "center" }}>
                       <Title>{crate.name}</Title>
                     </View>
-                    <View style={{}}>
-                      <CrateItem
-                        width={100}
-                        {...crate.items[Math.floor(Math.random()*5)]}
-                        hideChance
-                        style={{ marginBottom: 0, height: 80 }}
-                      />
-                    </View>
+                    {!opened && (
+                      <View>
+                        <ColorButton
+                          onPress={() => {
+                            this.props.navigation.navigate(
+                              navToUserCrate(userCrate.id)
+                            );
+                          }}
+                          hue={120}
+                          style={{ height: 80, width: 100, marginBottom: 0 }}
+                          noMargin
+                          center
+                        >
+                          <Icon
+                            name="arrow-right-bold"
+                            color={colors.text}
+                            size={40}
+                          />
+                        </ColorButton>
+                      </View>
+                    )}
+                    {opened && (
+                      <View style={{}}>
+                        <CrateItem
+                          width={100}
+                          {...userCrate.content}
+                          hideChance
+                          style={{ marginBottom: 0, height: 80 }}
+                        />
+                      </View>
+                    )}
                   </StandardBox>
                 );
               }}

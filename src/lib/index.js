@@ -98,7 +98,7 @@ export function navToCratePage(id) {
 
 export function navToUserCrate(id) {
   return {
-    routeName: "SettingsMyCrate",
+    routeName: "MyCrate",
     params: { id: id },
     key: "myCrate_" + id
   };

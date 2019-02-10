@@ -220,7 +220,9 @@ function drawItem(items) {
   if (!winningItem) {
     winningItem = convertedItems[convertedItems.length - 1];
   }
-
+  winningItem = Object.assign({}, winningItem, {
+    chance: winningItem.chance * 100
+  });
   return winningItem;
 }
 exports.openCrate = functions.https.onCall((data, context) => {

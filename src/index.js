@@ -23,6 +23,8 @@ import Category from "./refactor/screens/Category";
 import Inventory from "./refactor/screens/Inventory";
 
 import MyCrates from "./refactor/screens/MyCrates";
+import MyCrate from "./refactor/screens/MyCrate";
+
 import CratePage from "./refactor/screens/CratePage";
 import MyTransactions from "./refactor/screens/MyTransactions";
 import MyFriends from "./refactor/screens/MyFriends";
@@ -38,6 +40,7 @@ const AppStack = createStackNavigator(
     Shop: Shop,
     Inventory: Inventory,
     MyCrates: MyCrates,
+    MyCrate: MyCrate,
     MyTransactions: MyTransactions,
     MyFriends: MyFriends,
     MyOrders: MyOrders,
