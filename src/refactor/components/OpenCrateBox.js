@@ -60,8 +60,8 @@ export class OpenCrateBox extends Component {
 
     Animated.timing(this.offset, {
       toValue: this.getEndPos(),
-      duration: 12000,
-      easing: Easing.inOut(Easing.cubic),
+      duration: 6000,
+      easing: Easing.inOut(Easing.sin),
       useNativeDriver: true
     }).start(() => {
       //done spinning
@@ -87,8 +87,6 @@ export class OpenCrateBox extends Component {
               droppedItem: resp.data.data,
               items: [
                 resp.data.data.item,
-                ...this.state.items,
-                ...this.state.items,
                 ...this.state.items,
                 ...this.state.items,
                 ...this.state.items
@@ -155,7 +153,7 @@ export class OpenCrateBox extends Component {
                   return (
                     <React.Fragment key={index}>
                       <Spacer horizontal size={this.spacerWidth} />
-                      <CrateItem {...dp} {...item} />
+                      <CrateItem noLink {...dp} {...item} />
                     </React.Fragment>
                   );
                 })}

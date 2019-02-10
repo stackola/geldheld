@@ -17,7 +17,7 @@ export class GameButton extends Component {
   }
   render() {
     let h = this.props.hue || 0;
-    let sat = this.props.sat >= 0 ? this.props.sat : 100;
+    let sat = this.props.sat >= 0 ? this.props.sat : 60;
     let color1 = "hsla(" + h + ", " + sat + "%, 25%, 1)";
     let color2 = "hsla(" + h + ", " + sat + "%, 40%, 1)";
     return (

@@ -41,57 +41,45 @@ class UserCrateLoader extends PureComponent {
                 console.log("got both crates");
 
                 return (
-                  <StandardBox
-                    noPadding
-                    style={{ height: 80, flexDirection: "row" }}
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate(
+                        navToUserCrate(userCrate.id)
+                      );
+                    }}
                   >
-                    <View style={{ width: 90 }}>
-                      <CrateButton
-                        {...crate}
-                        noMargin
-                        sat={opened ? 0 : 100}
-                        hidePrice
-                        smallIcon
-                        hideText
-                        noLink
-                      />
-                    </View>
-                    <Spacer horizontal />
-                    <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Title>{crate.name}</Title>
-                    </View>
-                    {!opened && (
-                      <View>
-                        <ColorButton
-                          onPress={() => {
-                            this.props.navigation.navigate(
-                              navToUserCrate(userCrate.id)
-                            );
-                          }}
-                          hue={120}
-                          style={{ height: 80, width: 100, marginBottom: 0 }}
+                    <StandardBox
+                      noPadding
+                      style={{ height: 80, flexDirection: "row" }}
+                    >
+                      <View style={{ width: 90 }}>
+                        <CrateButton
+                          {...crate}
                           noMargin
-                          center
-                        >
-                          <Icon
-                            name="arrow-right-bold"
-                            color={colors.text}
-                            size={40}
-                          />
-                        </ColorButton>
-                      </View>
-                    )}
-                    {opened && (
-                      <View style={{}}>
-                        <CrateItem
-                          width={100}
-                          {...userCrate.content}
-                          hideChance
-                          style={{ marginBottom: 0, height: 80 }}
+                          sat={opened ? 0 : -1}
+                          hidePrice
+                          smallIcon
+                          hideText
+                          noLink
                         />
                       </View>
-                    )}
-                  </StandardBox>
+                      <Spacer horizontal />
+                      <View style={{ flex: 1, justifyContent: "center" }}>
+                        <Title>{crate.name}</Title>
+                      </View>
+
+                      {opened && (
+                        <View style={{}}>
+                          <CrateItem
+                            width={100}
+                            {...userCrate.content}
+                            hideChance
+                            style={{ marginBottom: 0, height: 80 }}
+                          />
+                        </View>
+                      )}
+                    </StandardBox>
+                  </TouchableOpacity>
                 );
               }}
             </ItemLoader>

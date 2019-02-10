@@ -4,8 +4,8 @@ let space = 12;
 
 let style = {
   space: space,
-  bigBorderRadius: 8,
-  smallBorderRadius: 4,
+  bigBorderRadius: 3,
+  smallBorderRadius: 3,
   containerPadding: 8,
   text: {
     color: colors.text,

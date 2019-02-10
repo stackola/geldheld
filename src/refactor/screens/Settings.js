@@ -46,24 +46,26 @@ export class Settings extends Component {
               Update
             </ColorButton>
           </StandardBox>
-          <StandardBox style={{}}>
-            <Title style={{ textAlign: "center" }}>
-              <Icon name="check" size={16} color={colors.green} /> Notifications
-              enabled
-            </Title>
-            <Spacer />
-            <ColorButton
-              small
-              noMargin
-              smallFont
-              center
-              hue={10}
-              style={{ marginBottom: style.space / 2 }}
-              l={20}
-            >
-              Press to disable
-            </ColorButton>
-          </StandardBox>
+          {false && (
+            <StandardBox style={{}}>
+              <Title style={{ textAlign: "center" }}>
+                <Icon name="check" size={16} color={colors.green} />{" "}
+                Notifications enabled
+              </Title>
+              <Spacer />
+              <ColorButton
+                small
+                noMargin
+                smallFont
+                center
+                hue={10}
+                style={{ marginBottom: style.space / 2 }}
+                l={20}
+              >
+                Press to disable
+              </ColorButton>
+            </StandardBox>
+          )}
           <StandardBox style={{}}>
             <Title style={{ textAlign: "center" }}>
               <Icon name="close" size={16} color={colors.red} /> Notifications

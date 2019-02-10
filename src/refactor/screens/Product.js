@@ -89,9 +89,7 @@ export class Product extends Component {
                       <View
                         style={{ flexDirection: "row", alignItems: "center" }}
                       >
-                        <Title>
-                          {prod.name} {productId}
-                        </Title>
+                        <Title>{prod.name}</Title>
                         <View style={{ flex: 1 }} />
                         <Coins amount={prod.price} />
                       </View>

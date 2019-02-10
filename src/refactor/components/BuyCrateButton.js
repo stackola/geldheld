@@ -31,7 +31,9 @@ class BuyCrateButton extends Component {
       this.setState({ status: "start" });
       return;
     }
-    this.buy();
+    if (this.state.status == "start") {
+      this.buy();
+    }
   }
   render() {
     let props = this.props;
