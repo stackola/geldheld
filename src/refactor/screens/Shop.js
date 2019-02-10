@@ -35,13 +35,7 @@ export class Shop extends Component {
           </Title>
           {this.props.config.storeCategories.map(s => {
             return (
-              <ColorButton
-                small
-                center
-                route="CategoryPage"
-                key={s}
-                title={s}
-              />
+              <ColorButton small center route="Category" key={s} title={s} />
             );
           })}
         </ScrollView>

@@ -14,9 +14,11 @@ import Home from "./refactor/screens/Home";
 import Games from "./refactor/screens/Games";
 import Crates from "./refactor/screens/Crates";
 import Challenges from "./refactor/screens/Challenges";
-import Shop from "./refactor/screens/Shop";
+import Settings from "./refactor/screens/Settings";
 
+import Shop from "./refactor/screens/Shop";
 import Product from "./refactor/screens/Product";
+import Category from "./refactor/screens/Category";
 
 import Inventory from "./refactor/screens/Inventory";
 
@@ -36,12 +38,14 @@ const AppStack = createStackNavigator(
     Shop: Shop,
     Inventory: Inventory,
     MyCrates: MyCrates,
-    MyTransactions,
-    MyFriends,
-    MyOrders,
-    MyVouchers,
-    CratePage,
-    Product: Product
+    MyTransactions: MyTransactions,
+    MyFriends: MyFriends,
+    MyOrders: MyOrders,
+    MyVouchers: MyVouchers,
+    CratePage: CratePage,
+    Product: Product,
+    Category: Category,
+    Settings: Settings
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({
