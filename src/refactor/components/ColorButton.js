@@ -26,18 +26,23 @@ class ColorButton extends PureComponent {
   render() {
     let props = this.props;
     let h = props.hue || Math.random() * 255;
+    let l = props.l || 25;
     let color1 =
       "hsla(" +
       h +
       ", " +
       (this.props.sat >= 0 ? this.props.sat : 100) +
-      "%, 40%, 1)";
+      "%, " +
+      (l + 15) +
+      "%, 1)";
     let color2 =
       "hsla(" +
       h +
       ", " +
       (this.props.sat >= 0 ? this.props.sat : 100) +
-      "%, 25%, 1)";
+      "%, " +
+      l +
+      "%, 1)";
     return (
       <TouchableOpacity
         onPress={() => {
@@ -51,7 +56,8 @@ class ColorButton extends PureComponent {
           marginBottom: style.space,
           overflow: "hidden",
           borderRadius: style.smallBorderRadius,
-          backgroundColor: color2
+          backgroundColor: color2,
+          ...(this.props.style || {})
         }}
       >
         <View
