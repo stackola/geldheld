@@ -73,7 +73,7 @@ export class Product extends Component {
                   return <Review {...i} />;
                 }}
                 header={
-                  <React.Fragment>
+                  <View>
                     <TopContainer style={{ paddingTop: style.space }}>
                       <ScrollView horizontal style={{}}>
                         <Spacer horizontal />
@@ -105,6 +105,7 @@ export class Product extends Component {
                     </StandardBox>
 
                     <BuyProductBox
+                      {...prod}
                       buying={this.state.buying}
                       onPress={() => {
                         LayoutAnimation.configureNext(
@@ -123,7 +124,7 @@ export class Product extends Component {
                         <Spacer size={4} />
                       </StandardBox>
                     )}
-                  </React.Fragment>
+                  </View>
                 }
               />
             </Wrapper>

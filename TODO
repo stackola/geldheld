@@ -28,3 +28,12 @@ kartengame
 jackpot game
 RPS
 flip rubbellos
+
+
+
+refactor-todo:
+  redirect to crate after buy
+  load user crates to redux
+  jump no next crate after open
+  order process finish
+  review process

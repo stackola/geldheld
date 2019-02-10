@@ -46,8 +46,7 @@ export class CratePage extends Component {
                   <CrateButton noLink noMargin {...crate} />
                 </View>
                 <Spacer />
-                {true && <BuyCrateBox {...crate} />}
-                {true && <OpenCrateBox hue={199} {...crate} />}
+                <BuyCrateBox {...crate} />
                 <CrateContent items={crate.items} />
               </ScrollView>
             </Wrapper>
