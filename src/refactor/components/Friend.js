@@ -13,7 +13,10 @@ export default class Friend extends Component {
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
     return this.props.loading ? (
-      <StandardBox noPadding style={{ flexDirection: "row" }}>
+      <StandardBox
+        noPadding
+        style={{ flexDirection: "row", marginTop: style.space }}
+      >
         <View
           style={{
             flex: 1,

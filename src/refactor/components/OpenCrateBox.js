@@ -163,9 +163,9 @@ export class OpenCrateBox extends Component {
                   translateX: this.offset
                 }}
               >
-                {this.state.items.map(item => {
+                {this.state.items.map((item, index) => {
                   return (
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                       <Spacer horizontal size={this.spacerWidth} />
                       <CrateItem {...dp} {...item} />
                     </React.Fragment>

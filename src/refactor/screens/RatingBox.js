@@ -22,14 +22,14 @@ export default class RatingBox extends Component {
           }}
         >
           <Icon name="account" size={15} />
-          25
+          {this.props.count}
         </Text>
         <StarRating
           emptyStarColor={colors.textMinor}
           fullStarColor={colors.star}
           disabled={true}
           starSize={25}
-          rating={3.5}
+          rating={this.props.rating}
         />
       </View>
     );

@@ -77,10 +77,11 @@ export class BuyCrateBox extends Component {
         </ColorButton>
         <BuyCrateButton {...this.props} />
         <View style={{ flexDirection: "column" }}>
-          {this.props.iaps.map(iap => {
+          {this.props.iaps.map((iap, index) => {
             return (
               <IapCrateButton
                 {...iap}
+                key={index}
                 storeInfo={
                   this.state.skuMap[iap.sku] ? this.state.skuMap[iap.sku] : {}
                 }

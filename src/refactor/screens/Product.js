@@ -26,6 +26,8 @@ import colors from "../../colors";
 import Coins from "../components/Coins";
 import Review from "../components/Review";
 import BuyProductBox from "../components/BuyProductBox";
+import ItemLoader from "../components/ItemLoader";
+import InfiniteList from "../components/InfiniteList";
 import ShippingOption from "./ShippingOption";
 
 export class Product extends Component {
@@ -43,85 +45,91 @@ export class Product extends Component {
   render() {
     let productId = this.props.navigation.getParam("productId", null);
     return (
-      <Wrapper>
-        <Header showBack />
-        <ScrollView style={{ flex: 1 }}>
-          <React.Fragment>
-            <TopContainer style={{ paddingTop: style.space }}>
-              <ScrollView horizontal style={{}}>
-                <Spacer horizontal />
-                <ProductImage />
-                <ProductImage />
-                <ProductImage />
-                <ProductImage />
-              </ScrollView>
-              <Spacer />
-            </TopContainer>
+      <ItemLoader
+        loadingComponent={
+          <Wrapper>
+            <Header showBack />
             <Spacer />
-            <StandardBox>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Title>Laser Pointer {productId}</Title>
-                <View style={{ flex: 1 }} />
-                <Coins amount={100} />
-              </View>
-              <SText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                sodales in odio a molestie. Sed nec nunc nisl. Vestibulum ac
-                arcu tincidunt, vehicula lorem non, interdum eros. In imperdiet
-                vulputate fermentum.
-              </SText>
-              <Spacer />
-              <RatingBox />
-              <Spacer size={2} />
-            </StandardBox>
-          </React.Fragment>
+            <StandardBox loading loadingHeight={200} />
+          </Wrapper>
+        }
+        path={"products/" + productId}
+      >
+        {prod => {
+          return (
+            <Wrapper>
+              <Header showBack />
+              <InfiniteList
+                path={"products/" + productId}
+                collection={"reviews"}
+                loading={
+                  <StandardBox
+                    loading
+                    loadingHeight={200}
+                    style={{ marginTop: style.space }}
+                  />
+                }
+                renderItem={i => {
+                  return <Review {...i} />;
+                }}
+                header={
+                  <React.Fragment>
+                    <TopContainer style={{ paddingTop: style.space }}>
+                      <ScrollView horizontal style={{}}>
+                        <Spacer horizontal />
+                        <ProductImage />
+                        <ProductImage />
+                        <ProductImage />
+                        <ProductImage />
+                      </ScrollView>
+                      <Spacer />
+                    </TopContainer>
+                    <Spacer />
+                    <StandardBox>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Title>
+                          {prod.name} {productId}
+                        </Title>
+                        <View style={{ flex: 1 }} />
+                        <Coins amount={prod.price} />
+                      </View>
+                      <SText>{prod.text}</SText>
+                      <Spacer />
+                      <RatingBox
+                        count={prod.ratingCount}
+                        rating={prod.rating}
+                      />
+                      <Spacer size={2} />
+                    </StandardBox>
 
-          <BuyProductBox
-            buying={this.state.buying}
-            onPress={() => {
-              LayoutAnimation.configureNext(
-                LayoutAnimation.Presets.easeInEaseOut
-              );
-              this.setState({ buying: !this.state.buying });
-            }}
-          />
-          {!this.state.buying && (
-            <StandardBox>
-              <Title>Shipping options</Title>
+                    <BuyProductBox
+                      buying={this.state.buying}
+                      onPress={() => {
+                        LayoutAnimation.configureNext(
+                          LayoutAnimation.Presets.easeInEaseOut
+                        );
+                        this.setState({ buying: !this.state.buying });
+                      }}
+                    />
+                    {!this.state.buying && (
+                      <StandardBox>
+                        <Title>Shipping options</Title>
+                        {prod.shippingOptions.map((s, index) => {
+                          return <ShippingOption key={index} {...s} />;
+                        })}
 
-              <ShippingOption
-                time={"4-5 weeks"}
-                name={"Free shipping"}
-                tracking={false}
-                price={0}
+                        <Spacer size={4} />
+                      </StandardBox>
+                    )}
+                  </React.Fragment>
+                }
               />
-
-              <ShippingOption
-                time={"12-24 days"}
-                name={"Deluxe shipping"}
-                tracking={true}
-                price={255}
-              />
-
-              <ShippingOption
-                time={"12-24 days"}
-                name={"Super Deluxe shipping"}
-                tracking={true}
-                price={255}
-              />
-
-              <Spacer size={4} />
-            </StandardBox>
-          )}
-          {!this.state.buying && (
-            <React.Fragment>
-              <Review />
-              <Review />
-              <Review />
-            </React.Fragment>
-          )}
-        </ScrollView>
-      </Wrapper>
+            </Wrapper>
+          );
+        }}
+      </ItemLoader>
     );
   }
 }

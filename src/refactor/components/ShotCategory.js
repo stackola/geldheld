@@ -5,6 +5,8 @@ import InfiniteList from "./InfiniteList";
 import Title from "./Title";
 import style from "../../style";
 import Well from "./Well";
+import StandardBox from "./StandardBox";
+import Spacer from "./Spacer";
 
 export default class ShopCategory extends Component {
   render() {
@@ -26,7 +28,12 @@ export default class ShopCategory extends Component {
             header={<View style={{ width: style.space }} />}
             orderBy="popularity"
             horizontal={true}
-            loading={<ProductSquare loading/>}
+            loading={
+              <React.Fragment>
+                <Spacer horizontal />
+                <ProductSquare loading />
+              </React.Fragment>
+            }
             noRefresh={true}
             renderItem={p => {
               return <ProductSquare {...p} />;

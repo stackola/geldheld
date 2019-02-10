@@ -9,9 +9,11 @@ import Title from "./Title";
 import Spacer from "./Spacer";
 import style from "../../style";
 import { format } from "date-fns";
+import { review } from "../../lib";
 
 export default class Review extends Component {
   render() {
+    let p = this.props;
     return (
       <StandardBox>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -20,10 +22,10 @@ export default class Review extends Component {
             fullStarColor={colors.star}
             disabled={true}
             starSize={18}
-            rating={4}
+            rating={p.rating}
           />
           <Spacer size={style.space / 2} horizontal />
-          <Title>4/5</Title>
+          <Title>{p.rating}/5</Title>
           <View style={{ flex: 1 }} />
           <Text
             style={{
@@ -35,9 +37,9 @@ export default class Review extends Component {
             {format(new Date(), "YYYY/MM/DD")}
           </Text>
         </View>
-        <SText>Arrived after: 2 weeks</SText>
-        <SText>TBH this is pretty shit.</SText>
-        <Spacer size={4} />
+        {!!p.shippingTime && <SText>Arrived after: {p.shippingTime}</SText>}
+        {!!p.text && <SText>{p.text}</SText>}
+        {p.shippingTime || p.text ? <Spacer size={4} /> : null}
       </StandardBox>
     );
   }

@@ -6,6 +6,7 @@ import Spacer from "../components/Spacer";
 import CrateButton from "../components/CrateButton";
 import style from "../../style";
 import CollectionLoader from "../components/CollectionLoader";
+import StandardBox from "../components/StandardBox";
 
 export class Crates extends Component {
   render() {
@@ -15,6 +16,13 @@ export class Crates extends Component {
         <CollectionLoader
           header={<Spacer />}
           collection={"crates"}
+          loading={
+            <StandardBox
+              loading
+              loadingHeight={100 + style.space}
+              style={{ marginTop: style.space }}
+            />
+          }
           renderItem={i => {
             console.log(i);
             return <CrateButton {...i.item} />;

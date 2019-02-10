@@ -7,6 +7,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import firebase from "react-native-firebase";
+import StandardBox from "./StandardBox";
 export default class InfiniteList extends Component {
   constructor(props) {
     super(props);
@@ -157,13 +158,7 @@ export default class InfiniteList extends Component {
         }}
       />
     ) : (
-      <View
-        key={this.state.refreshKey.toString()}
-        style={{ flexDirection: this.props.horizontal ? "row" : "column" }}
-      >
-        {this.props.header}
-        {this.props.loading || <View style={{}} />}
-      </View>
+      this.props.loading || <StandardBox loading />
     );
   }
 }

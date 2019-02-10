@@ -65,16 +65,10 @@ export class Voucher extends Component {
 
     return this.props.loading ? (
       <StandardBox
-        noPadding
-        style={{
-          flex: 1,
-          minHeight: 60,
-          alignItems: "center",
-          justifyContent: "center"
-        }}
-      >
-        <ActivityIndicator color={colors.text} />
-      </StandardBox>
+        loading
+        loadingHeight={60}
+        style={{ marginTop: style.space }}
+      />
     ) : (
       <StandardBox noPadding style={{}}>
         <TouchableOpacity

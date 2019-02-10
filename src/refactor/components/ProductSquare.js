@@ -19,7 +19,7 @@ import Title from "./Title";
 import { navToProduct } from "../../lib";
 export class ProductSquare extends Component {
   pressed() {
-    this.props.navigation.navigate(navToProduct("nope"));
+    this.props.navigation.navigate(navToProduct(this.props.id));
   }
   render() {
     return (

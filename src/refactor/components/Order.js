@@ -35,7 +35,7 @@ export class Order extends Component {
   }
   render() {
     if (this.props.loading) {
-      return <StandardBox loading />;
+      return <StandardBox loading style={{ marginTop: style.space }} />;
     }
     return (
       <StandardBox style={{ paddingTop: 0 }}>

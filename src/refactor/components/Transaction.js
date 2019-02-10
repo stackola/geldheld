@@ -11,7 +11,13 @@ export default class Transaction extends Component {
   render() {
     let color = this.props.amount >= 0 ? colors.green : colors.red;
     if (this.props.loading) {
-      return <StandardBox loading loadingHeight={35} />;
+      return (
+        <StandardBox
+          loading
+          loadingHeight={35}
+          style={{ marginTop: style.space }}
+        />
+      );
     }
     return (
       <StandardBox

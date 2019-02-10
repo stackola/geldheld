@@ -20,7 +20,7 @@ export class MyCrates extends Component {
           path={"users/" + getUID()}
           collection={"crates"}
           header={<Spacer />}
-          loading={<StandardBox loading />}
+          loading={<StandardBox loading style={{ marginTop: style.space }} />}
           orderBy={"time"}
           renderItem={i => {
             return (

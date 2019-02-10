@@ -17,7 +17,8 @@ export default class Offer extends Component {
             flexDirection: "row",
             height: 80,
             alignItems: "center",
-            justifyContent: "center"
+            justifyContent: "center",
+            marginTop: style.space
           }}
         >
           <ActivityIndicator color={colors.text} />
