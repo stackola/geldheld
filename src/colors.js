@@ -1,7 +1,7 @@
 var colors = {
   background: "#00051f",
   action: "#ff801f",
-  coin: "hsla(" + 40 + ", 100%, 40%, 1)",
+  coin: "hsla(" + 40 + ", 100%, 50%, 1)",
   text: "#eee",
   textMinor: "#888",
   textDark: "#444",

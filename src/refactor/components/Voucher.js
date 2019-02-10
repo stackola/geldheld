@@ -4,10 +4,10 @@ import {
   View,
   Image,
   ActivityIndicator,
+  TouchableOpacity,
   Platform,
   UIManager,
-  LayoutAnimation,
-  TouchableOpacity
+  LayoutAnimation
 } from "react-native";
 import StandardBox from "../components/StandardBox";
 

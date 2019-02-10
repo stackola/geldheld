@@ -5,7 +5,7 @@ import colors from "../../colors";
 export default class StandardBox extends Component {
   render() {
     let props = this.props;
-    let o = "44";
+    let o = "77";
     let color = colors.lightTransparent;
     if (props.green) {
       color = colors.green + o;
@@ -27,7 +27,7 @@ export default class StandardBox extends Component {
       <View
         style={{
           backgroundColor: color,
-          borderRadius: props.noRadius?0:style.bigBorderRadius,
+          borderRadius: props.noRadius ? 0 : style.bigBorderRadius,
           overflow: "hidden",
           margin: props.noMargin ? 0 : style.space,
           marginTop: 0,

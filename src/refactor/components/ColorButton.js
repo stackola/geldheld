@@ -46,7 +46,7 @@ class ColorButton extends PureComponent {
         style={{
           height: props.small ? 50 : props.medium ? 62 : 75,
           flex: props.noFlex || props.inLine ? 0 : 1,
-          margin: style.space,
+          margin: props.noMargin ? 0 : style.space,
           marginTop: 0,
           marginBottom: style.space,
           overflow: "hidden",
