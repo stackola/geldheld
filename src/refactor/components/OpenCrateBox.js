@@ -18,6 +18,7 @@ import BuyCrateBox from "./BuyCrateBox";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { openCrate as sendOpenCrate } from "../../lib";
+import CrateItemProcess from "./CrateItemProcess";
 
 export class OpenCrateBox extends Component {
   constructor(props) {
@@ -83,6 +84,7 @@ export class OpenCrateBox extends Component {
           //build the array!
           this.setState(
             {
+              droppedItem: resp.data.data,
               items: [
                 resp.data.data.item,
                 ...this.state.items,
@@ -109,20 +111,6 @@ export class OpenCrateBox extends Component {
         .catch(err => {
           this.setState({ status: "error" });
         });
-    });
-  }
-
-  open() {
-    let userCrateId = this.props.navigation.getParam("id", null);
-    openCrate(userCrateId).then(resp => {
-      let p = {
-        droppedItem: resp.data.data,
-        status: "finished",
-        openCrateLoading: false,
-        slotItem: resp.data.data.item.order
-      };
-
-      this.slot.spinTo(resp.data.data.item.order);
     });
   }
 
@@ -214,13 +202,10 @@ export class OpenCrateBox extends Component {
           </ColorButton>
         )}
         {this.state.status == "done" && (
-          <React.Fragment>
-            <ColorButton small center hue={40}>
-              Quick sell for 80{" "}
-              <Icon name="coin" size={20} color={colors.text} />
-            </ColorButton>
-            <BuyCrateBox {...this.props} text={"Buy same crate again"} />
-          </React.Fragment>
+          <CrateItemProcess
+            {...this.props}
+            droppedItem={this.state.droppedItem}
+          />
         )}
       </View>
     );
