@@ -29,6 +29,11 @@ import BuyProductBox from "../components/BuyProductBox";
 import ItemLoader from "../components/ItemLoader";
 import InfiniteList from "../components/InfiniteList";
 import ShippingOption from "./ShippingOption";
+import ReviewBox from "../components/ReviewBox";
+
+import { connect } from "react-redux";
+import { ActionCreators } from "../../redux/actions";
+import { bindActionCreators } from "redux";
 
 export class Product extends Component {
   constructor(props) {
@@ -44,6 +49,13 @@ export class Product extends Component {
 
   render() {
     let productId = this.props.navigation.getParam("productId", null);
+    let hasBought =
+      this.props.user.boughtProducts &&
+      this.props.user.boughtProducts.includes(productId);
+
+    let hasReviewed =
+      this.props.user.reviewedProducts &&
+      this.props.user.reviewedProducts.includes(productId);
     return (
       <ItemLoader
         loadingComponent={
@@ -113,14 +125,21 @@ export class Product extends Component {
                       }}
                     />
                     {!this.state.buying && (
-                      <StandardBox>
-                        <Title>Shipping options</Title>
-                        {prod.shippingOptions.map((s, index) => {
-                          return <ShippingOption key={index} {...s} />;
-                        })}
+                      <React.Fragment>
+                        <StandardBox>
+                          <Title>Shipping options</Title>
+                          {prod.shippingOptions.map((s, index) => {
+                            return <ShippingOption key={index} {...s} />;
+                          })}
 
-                        <Spacer size={4} />
-                      </StandardBox>
+                          <Spacer size={4} />
+                        </StandardBox>
+
+                        <ReviewBox
+                          productId={prod.id}
+                          {...{ hasBought, hasReviewed }}
+                        />
+                      </React.Fragment>
                     )}
                   </View>
                 }
@@ -132,8 +151,6 @@ export class Product extends Component {
     );
   }
 }
-
-export default Product;
 
 let ProductImage = p => {
   return (
@@ -157,3 +174,16 @@ let ProductImage = p => {
     </View>
   );
 };
+
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Product);

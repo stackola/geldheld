@@ -3,25 +3,18 @@ payout refererr?!
 send notifications on events / on gift?
 
 fixes:
-  fix navigation (own tab?!)
   make sure transaction functions are pure!
-  loadnig styles
   Links: web version 
   user cant read stuff maybe before trigger?
-
-refactors:
-  componentize!!
-
 
 nice to have:
   webiste
   admin
   find box for product in product page
   group similar crates / pages dies das
+
   daily progress
   5 freunde
-
-
 
 Entenfischen
 kartengame
@@ -29,10 +22,11 @@ jackpot game
 RPS
 flip rubbellos
 
-
-
 refactor-todo:
   redirect to crate after buy
   load user crates to redux
   jump no next crate after open
-  review process
+  
+  settings stuffs
+  link to accounts
+  games
