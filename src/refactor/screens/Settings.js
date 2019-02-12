@@ -5,6 +5,10 @@ import Header from "../components/Header";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
+import { connect } from "react-redux";
+import { ActionCreators } from "../../redux/actions";
+import { bindActionCreators } from "redux";
+
 import style from "../../style";
 import colors from "../../colors";
 import ProductRow from "../components/ProductRow";
@@ -12,8 +16,67 @@ import Spacer from "../components/Spacer";
 import StandardBox from "../components/StandardBox";
 import Title from "../components/Title";
 import ColorButton from "../components/ColorButton";
+import {
+  enableNotifications,
+  updateAddress,
+  disableNotifications
+} from "../../lib";
 export class Settings extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      input: "",
+      notiLoading: false,
+      addressStatus: "start",
+      notiStatusOverride: null
+    };
+  }
+  doUpdateAddress() {
+    this.setState({ addressStatus: "loading" }, () => {
+      updateAddress(this.state.input)
+        .then(() => {
+          this.setState({ addressStatus: "done" });
+        })
+        .catch(() => {
+          this.setState({ addressStatus: "error" });
+        });
+    });
+  }
+
+  doEnableNotifications() {
+    this.setState({ notiLoading: true }, () => {
+      enableNotifications()
+        .then(() => {
+          this.setState({ notiLoading: false, notiStatusOverride: true });
+        })
+        .catch(() => {
+          this.setState({ notiLoading: false });
+        });
+    });
+  }
+
+  doDisableNotifications() {
+    this.setState({ notiLoading: true }, () => {
+      disableNotifications()
+        .then(() => {
+          this.setState({ notiLoading: false, notiStatusOverride: false });
+        })
+        .catch(() => {
+          this.setState({ notiLoading: false });
+        });
+    });
+  }
+  componentDidMount() {
+    this.setState({ input: this.props.user.address });
+  }
   render() {
+    let notsOn =
+      this.props.user.notificationsEnabled && !!this.props.user.token;
+
+    if (this.state.notiStatusOverride != "null") {
+      notsOn = this.state.notiStatusOverride;
+    }
     return (
       <Wrapper>
         <Header title={"Settings"} showBack />
@@ -24,7 +87,10 @@ export class Settings extends Component {
             <TextInput
               placeholder={"Name\nAddress\nCity & ZIP code\nState & Country"}
               placeholderTextColor={colors.textMinor}
-              onChangeText={t => {}}
+              onChangeText={t => {
+                this.setState({ input: t });
+              }}
+              value={this.state.input}
               style={{
                 color: colors.text,
                 textAlignVertical: "top",
@@ -38,6 +104,12 @@ export class Settings extends Component {
             <ColorButton
               small
               noMargin
+              loading={this.state.addressStatus == "loading"}
+              done={this.state.addressStatus == "done"}
+              error={this.state.addressStatus == "error"}
+              onPress={() => {
+                this.doUpdateAddress();
+              }}
               center
               smallFont
               hue={220}
@@ -46,7 +118,7 @@ export class Settings extends Component {
               Update
             </ColorButton>
           </StandardBox>
-          {false && (
+          {notsOn && (
             <StandardBox style={{}}>
               <Title style={{ textAlign: "center" }}>
                 <Icon name="check" size={16} color={colors.green} />{" "}
@@ -56,7 +128,11 @@ export class Settings extends Component {
               <ColorButton
                 small
                 noMargin
+                loading={this.state.notiLoading}
                 smallFont
+                onPress={() => {
+                  this.doDisableNotifications();
+                }}
                 center
                 hue={10}
                 style={{ marginBottom: style.space / 2 }}
@@ -66,24 +142,30 @@ export class Settings extends Component {
               </ColorButton>
             </StandardBox>
           )}
-          <StandardBox style={{}}>
-            <Title style={{ textAlign: "center" }}>
-              <Icon name="close" size={16} color={colors.red} /> Notifications
-              disabled
-            </Title>
-            <Spacer />
-            <ColorButton
-              small
-              noMargin
-              smallFont
-              center
-              hue={130}
-              style={{ marginBottom: style.space / 2 }}
-              l={20}
-            >
-              Press to enable
-            </ColorButton>
-          </StandardBox>
+          {!notsOn && (
+            <StandardBox style={{}}>
+              <Title style={{ textAlign: "center" }}>
+                <Icon name="close" size={16} color={colors.red} /> Notifications
+                disabled
+              </Title>
+              <Spacer />
+              <ColorButton
+                loading={this.state.notiLoading}
+                small
+                noMargin
+                smallFont
+                onPress={() => {
+                  this.doEnableNotifications();
+                }}
+                center
+                hue={130}
+                style={{ marginBottom: style.space / 2 }}
+                l={20}
+              >
+                Press to enable
+              </ColorButton>
+            </StandardBox>
+          )}
           <ColorButton small smallFont center hue={220}>
             Link Facebook account
           </ColorButton>
@@ -96,4 +178,15 @@ export class Settings extends Component {
   }
 }
 
-export default Settings;
+function mapStateToProps(state) {
+  return { user: state.user };
+}
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators(ActionCreators, dispatch);
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Settings);
