@@ -80,7 +80,9 @@ export class Order extends Component {
             {this.state.open && (
               <TouchableOpacity
                 onPress={() => {
-                  this.props.navigation.navigate(navToProduct("id"));
+                  this.props.navigation.navigate(
+                    navToProduct(this.props.productId)
+                  );
                 }}
                 style={{
                   borderRadius: 2,

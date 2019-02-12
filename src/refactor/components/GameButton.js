@@ -13,6 +13,11 @@ export class GameButton extends Component {
     let color2 = "hsla(" + h + ", 100%, 40%, 1)";
     return (
       <TouchableOpacity
+        onPress={() => {
+          if (this.props.routeName) {
+            this.props.navigation.navigate(this.props.routeName);
+          }
+        }}
         style={{
           flex: 1
         }}

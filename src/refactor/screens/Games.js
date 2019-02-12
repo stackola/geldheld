@@ -17,11 +17,7 @@ export class Games extends Component {
               image="https://i.imgur.com/wss02as.png"
               title={"Emoji spin"}
             />
-            <GameButton
-              hue={10}
-              image="heads_icon"
-              title={"Coin flip"}
-            />
+            <GameButton hue={10} image="heads_icon" title={"Coin flip"} />
           </View>
           <View style={{ width: "100%", flexDirection: "row" }}>
             <GameButton
@@ -33,6 +29,15 @@ export class Games extends Component {
               hue={185}
               title="Lucky wheel"
               image="https://i.imgur.com/2beknjX.png"
+            />
+          </View>
+          <View style={{ width: "100%", flexDirection: "row" }}>
+            <GameButton
+              hue={60}
+              title="Pick-a-duck"
+              routeName="DuckGame"
+              navigation={this.props.navigation}
+              image="https://i.imgur.com/5P2ZQbg.png"
             />
           </View>
         </ScrollView>

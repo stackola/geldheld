@@ -11,7 +11,10 @@ import store from "./redux/store";
 import AuthLoadingScreen from "./refactor/screens/AuthLoadingScreen";
 
 import Home from "./refactor/screens/Home";
+
 import Games from "./refactor/screens/Games";
+import DuckGame from "./refactor/screens/DuckGame";
+
 import Crates from "./refactor/screens/Crates";
 import Challenges from "./refactor/screens/Challenges";
 import Settings from "./refactor/screens/Settings";
@@ -51,6 +54,7 @@ const AppStack = createStackNavigator(
     CratePage: CratePage,
     Product: Product,
     Category: Category,
+    DuckGame: DuckGame,
     Settings: Settings
   },
   {

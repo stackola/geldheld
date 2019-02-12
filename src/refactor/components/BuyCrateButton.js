@@ -62,8 +62,8 @@ class BuyCrateButton extends Component {
         console.log(r);
         if (r.data.status == "ok") {
           this.setState({ status: "done" }, () => {
-            //this.props.navigation.navigate(navToUserCrate(r.data.userCrate));
-            this.props.navigation.navigate("MyCrates");
+            this.props.navigation.navigate(navToUserCrate(r.data.userCrate));
+            //this.props.navigation.navigate("MyCrates");
           });
         } else {
           this.setState({ status: "error" }, () => {});

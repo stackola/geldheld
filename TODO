@@ -3,9 +3,9 @@ payout refererr?!
 send notifications on events / on gift?
 
 fixes:
+  avoid nav stack spam
   make sure transaction functions are pure!
   Links: web version 
-  user cant read stuff maybe before trigger?
 
 nice to have:
   webiste
@@ -13,8 +13,12 @@ nice to have:
   find box for product in product page
   group similar crates / pages dies das
 
-  daily progress
-  5 freunde
+
+Challenges:
+  trigger:
+    daily progress
+    freunde werben
+    offer complete / coins
 
 Entenfischen
 kartengame
@@ -23,10 +27,6 @@ RPS
 flip rubbellos
 
 refactor-todo:
-  redirect to crate after buy
-  load user crates to redux
-  jump no next crate after open
-  
-  settings stuffs
-  link to accounts
+  load user crates to redux ?
+  jump no next crate after open ?
   games
