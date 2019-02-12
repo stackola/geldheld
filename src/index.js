@@ -31,6 +31,9 @@ import MyFriends from "./refactor/screens/MyFriends";
 import MyOrders from "./refactor/screens/MyOrders";
 import MyVouchers from "./refactor/screens/MyVouchers";
 
+import Logout from "./refactor/screens/Logout";
+import LoggedOut from "./refactor/screens/LoggedOut";
+
 const AppStack = createStackNavigator(
   {
     Home: Home,
@@ -62,6 +65,8 @@ let Navigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
+      Logout: Logout,
+      LoggedOut: LoggedOut,
       App: AppStack
     },
     {

@@ -36,4 +36,6 @@ target 'geldheld' do
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
 
+  pod 'RNGoogleSignin', :path => '../node_modules/react-native-google-signin'
+
 end

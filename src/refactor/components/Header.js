@@ -60,7 +60,7 @@ export class Header extends Component {
           {this.props.title}
         </Text>
         <View style={{ flex: 1 }} />
-        <UserButton hide={false} />
+        {!this.props.hideRight && <UserButton hide={this.props.hideBalance} />}
       </View>
     );
   }

@@ -9,6 +9,14 @@ import { connect } from "react-redux";
 import { ActionCreators } from "../../redux/actions";
 import { bindActionCreators } from "redux";
 
+import { GoogleSignin } from "react-native-google-signin";
+
+import {
+  StackActions,
+  NavigationActions,
+  SwitchActions
+} from "react-navigation";
+
 import style from "../../style";
 import colors from "../../colors";
 import ProductRow from "../components/ProductRow";
@@ -16,6 +24,8 @@ import Spacer from "../components/Spacer";
 import StandardBox from "../components/StandardBox";
 import Title from "../components/Title";
 import ColorButton from "../components/ColorButton";
+
+import firebase from "react-native-firebase";
 import {
   enableNotifications,
   updateAddress,
@@ -69,6 +79,39 @@ export class Settings extends Component {
   }
   componentDidMount() {
     this.setState({ input: this.props.user.address });
+  }
+  linkGoogle() {
+    // add any configuration settings here:
+    GoogleSignin.configure();
+
+    GoogleSignin.signIn()
+      .then(data => {
+        console.log("done");
+        const credential = firebase.auth.GoogleAuthProvider.credential(
+          data.idToken,
+          data.accessToken
+        );
+
+        firebase
+          .auth()
+          .currentUser.linkWithCredential(credential)
+          .then(
+            function(usercred) {
+              var user = usercred.user;
+              console.log("Account linking success", user);
+            },
+            function(error) {
+              console.log("Account linking error", error);
+            }
+          );
+      })
+      .catch(e => {
+        console.error(e);
+      });
+
+    // create a new firebase credential with the token
+
+    // login with credential
   }
   render() {
     let notsOn =
@@ -166,11 +209,29 @@ export class Settings extends Component {
               </ColorButton>
             </StandardBox>
           )}
-          <ColorButton small smallFont center hue={220}>
-            Link Facebook account
+
+          <ColorButton
+            small
+            smallFont
+            center
+            hue={200}
+            onPress={() => {
+              this.linkGoogle();
+            }}
+          >
+            Link Google account
           </ColorButton>
-          <ColorButton small smallFont center hue={200}>
-            Link Twitter account
+
+          <ColorButton
+            small
+            center
+            smallFont
+            sat={0}
+            onPress={() => {
+              this.props.navigation.navigate("Logout");
+            }}
+          >
+            Logout
           </ColorButton>
         </ScrollView>
       </Wrapper>
