@@ -21,6 +21,13 @@ const sendDisableNotifications = firebase
 export function getUID() {
   return firebase.auth().currentUser.uid;
 }
+export function hasGoogle() {
+  let res =
+    firebase.auth().currentUser.providerData.map(pd => {
+      return pd.providerId == "google.com";
+    }).length > 0;
+  return res;
+}
 export function flip(amount) {
   return sendCoinFlip({ bet: amount });
 }

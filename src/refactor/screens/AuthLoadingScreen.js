@@ -15,6 +15,15 @@ class AuthLoadingScreen extends Component {
     this.signIn();
   }
   afterLogin() {
+    firebase
+      .messaging()
+      .getToken()
+      .then(t => {
+        console.log(t);
+        if (t) {
+          setToken(t);
+        }
+      });
     this.props.userSubscribe();
     this.props.configSubscribe();
     this.props.navigation.navigate("App");
@@ -32,15 +41,6 @@ class AuthLoadingScreen extends Component {
         .auth()
         .signInAnonymously()
         .then(() => {
-          firebase
-            .messaging()
-            .getToken()
-            .then(t => {
-              console.log(t);
-              if (t) {
-                setToken(t);
-              }
-            });
           this.afterLogin();
           //set referrer if we have a link, otherwise set ref to false or something.!
           firebase

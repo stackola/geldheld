@@ -17,32 +17,53 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import colors from "../../colors";
 
 export class Inventory extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loginStates: {}
+    };
+  }
+  setLoginState(key, value, cb) {
+    this.setState(
+      { loginStates: { ...this.state.loginStates, [key]: value } },
+      () => {
+        cb && cb();
+      }
+    );
+  }
+
   signInWithGoogle() {
-    GoogleSignin.configure();
+    this.setLoginState("google", "loading", () => {
+      GoogleSignin.configure();
 
-    GoogleSignin.signIn()
-      .then(data => {
-        console.log("done");
-        const credential = firebase.auth.GoogleAuthProvider.credential(
-          data.idToken,
-          data.accessToken
-        );
-
-        firebase
-          .auth()
-          .signInWithCredential(credential)
-          .then(
-            usercred => {
-              this.props.navigation.navigate("AuthLoading");
-            },
-            error => {
-              console.log("Account linking error", error);
-            }
+      GoogleSignin.signIn()
+        .then(data => {
+          console.log("done");
+          const credential = firebase.auth.GoogleAuthProvider.credential(
+            data.idToken,
+            data.accessToken
           );
-      })
-      .catch(e => {
-        console.error(e);
-      });
+
+          firebase
+            .auth()
+            .signInWithCredential(credential)
+            .then(
+              usercred => {
+                this.setLoginState("google", "done");
+                this.props.navigation.navigate("AuthLoading");
+              },
+              error => {
+                console.log("Account linking error", error);
+                this.setLoginState("google", "error");
+              }
+            );
+        })
+        .catch(e => {
+          console.error(e);
+          this.setLoginState("google", "error");
+        });
+    });
   }
   anonSignin() {
     this.props.navigation.navigate("AuthLoading");
@@ -58,17 +79,25 @@ export class Inventory extends Component {
             onPress={() => {
               this.signInWithGoogle();
             }}
-            text="Log in with Google"
-            icon={<Icon name="google" color={colors.text} size={40} />}
-          />
+            loading={this.state.loginStates["google"] == "loading"}
+            center
+            done={this.state.loginStates["google"] == "done"}
+            error={this.state.loginStates["google"] == "error"}
+          >
+            <Icon name="google" color={colors.text} size={20} /> Log in with
+            Google
+          </ColorButton>
           <ColorButton
             hue={200}
             onPress={() => {
               this.anonSignin();
             }}
+            center
             text="Anonymous account"
-            icon={<Icon name="account" color={colors.text} size={40} />}
-          />
+          >
+            <Icon name="account" color={colors.text} size={20} /> Anonymous
+            account
+          </ColorButton>
         </ScrollView>
       </Wrapper>
     );

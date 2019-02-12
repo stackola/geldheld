@@ -29,6 +29,7 @@ import firebase from "react-native-firebase";
 import {
   enableNotifications,
   updateAddress,
+  hasGoogle,
   disableNotifications
 } from "../../lib";
 export class Settings extends Component {
@@ -39,6 +40,7 @@ export class Settings extends Component {
       input: "",
       notiLoading: false,
       addressStatus: "start",
+      loginStates: {},
       notiStatusOverride: null
     };
   }
@@ -79,35 +81,49 @@ export class Settings extends Component {
   }
   componentDidMount() {
     this.setState({ input: this.props.user.address });
+    console.log(firebase.auth().currentUser);
+  }
+  setLoginState(key, value, cb) {
+    this.setState(
+      { loginStates: { ...this.state.loginStates, [key]: value } },
+      () => {
+        cb && cb();
+      }
+    );
   }
   linkGoogle() {
     // add any configuration settings here:
-    GoogleSignin.configure();
+    this.setLoginState("google", "loading", () => {
+      GoogleSignin.configure();
 
-    GoogleSignin.signIn()
-      .then(data => {
-        console.log("done");
-        const credential = firebase.auth.GoogleAuthProvider.credential(
-          data.idToken,
-          data.accessToken
-        );
-
-        firebase
-          .auth()
-          .currentUser.linkWithCredential(credential)
-          .then(
-            function(usercred) {
-              var user = usercred.user;
-              console.log("Account linking success", user);
-            },
-            function(error) {
-              console.log("Account linking error", error);
-            }
+      GoogleSignin.signIn()
+        .then(data => {
+          console.log("done");
+          const credential = firebase.auth.GoogleAuthProvider.credential(
+            data.idToken,
+            data.accessToken
           );
-      })
-      .catch(e => {
-        console.error(e);
-      });
+
+          firebase
+            .auth()
+            .currentUser.linkWithCredential(credential)
+            .then(
+              usercred => {
+                var user = usercred.user;
+                console.log("Account linking success", user);
+                this.setLoginState("google", "done");
+              },
+              error => {
+                console.log("Account linking error", error);
+                this.setLoginState("google", "error");
+              }
+            );
+        })
+        .catch(e => {
+          console.error(e);
+          this.setLoginState("google", "error");
+        });
+    });
 
     // create a new firebase credential with the token
 
@@ -210,18 +226,27 @@ export class Settings extends Component {
             </StandardBox>
           )}
 
-          <ColorButton
-            small
-            smallFont
-            center
-            hue={200}
-            onPress={() => {
-              this.linkGoogle();
-            }}
-          >
-            Link Google account
-          </ColorButton>
-
+          {!hasGoogle() && (
+            <ColorButton
+              small
+              smallFont
+              loading={this.state.loginStates["google"] == "loading"}
+              done={this.state.loginStates["google"] == "done"}
+              error={this.state.loginStates["google"] == "error"}
+              center
+              hue={200}
+              onPress={() => {
+                this.linkGoogle();
+              }}
+            >
+              Link Google account
+            </ColorButton>
+          )}
+          {hasGoogle() && (
+            <ColorButton small smallFont center hue={200} onPress={() => {}}>
+              Google account linked!
+            </ColorButton>
+          )}
           <ColorButton
             small
             center
