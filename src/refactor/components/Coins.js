@@ -13,7 +13,11 @@ export default class Coins extends Component {
         <Text
           style={[
             style.text,
-            { fontWeight: "bold", color: this.props.color || colors.text }
+            {
+              fontWeight: "bold",
+              color: this.props.color || colors.text,
+              fontSize: this.props.size || style.text.fontSize
+            }
           ]}
         >
           {formatMoney(this.props.amount)}{" "}
@@ -21,7 +25,7 @@ export default class Coins extends Component {
         <Icon
           name="coin"
           color={this.props.color || colors.coin}
-          size={style.text.fontSize}
+          size={this.props.size || style.text.fontSize}
         />
       </React.Fragment>
     );
