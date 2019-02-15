@@ -4,6 +4,73 @@ admin.initializeApp(functions.config().firebase);
 
 const defaultBalance = 10;
 
+let startDucks = [
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  0,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  1,
+  2,
+  2,
+  3
+];
+
 exports.makeUser = functions.auth.user().onCreate(user => {
   let uid = user.uid;
   // make a user record.
@@ -810,7 +877,7 @@ exports.validate = functions.https.onCall((data, context) => {
     // Throwing an HttpsError so that the client gets the error details.
     return { error: true, uid, text: "Not authenticated" };
   }
-  //let uid = "ZxPwCFAISgOrCxImh6RXafu1Bxb2";
+  //let uid = "AqQVcObSssQRkAc5nYTOb2oSbBI3";
 
   let db = admin.firestore();
   const orderId = data.transactionId;
@@ -898,3 +965,99 @@ exports.validate = functions.https.onCall((data, context) => {
 
   console.log({ orderId, package_name, sku, my_token });
 });
+
+exports.duckGame = functions.https.onCall((data, context) => {
+  const uid = context.auth.uid;
+  if (!context.auth) {
+    // Throwing an HttpsError so that the client gets the error details.
+    return { error: true, uid, text: "Not authenticated" };
+  }
+
+  //let uid = "AqQVcObSssQRkAc5nYTOb2oSbBI3";
+
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  let bet = data.betSize;
+  let selectedDucks = data.selectedDucks;
+
+  if (!selectedDucks || selectedDucks.length < 1) {
+    return { error: true, text: "no ducks selected" };
+  }
+
+  if (bet < 5 || bet > 1000) {
+    return { error: true, text: "invalid betsize" };
+  }
+
+  let totalBet = bet * selectedDucks.length;
+  let shuffledDucks = shuffle(startDucks);
+
+  //calculate win.
+  let totalWin = 0;
+  selectedDucks.map(duck => {
+    let d = shuffledDucks[duck.row * 8 + duck.col];
+    console.log(d);
+    if (d == 0) {
+      totalWin += 0;
+    }
+    if (d == 1) {
+      totalWin += 2;
+    }
+    if (d == 2) {
+      totalWin += 5;
+    }
+    if (d == 3) {
+      totalWin += 10;
+    }
+  });
+  let totalPayout = totalWin * bet;
+  let addCoins = totalPayout - totalBet;
+  console.log({
+    bet,
+    selectedDucks,
+    totalBet,
+    addCoins,
+    totalWin,
+    totalPayout: totalPayout
+  });
+
+  return db
+    .runTransaction(transaction => {
+      return transaction.get(userRef).then(userDoc => {
+        let userData = userDoc.data(); //?
+        if (userData.coins < totalBet) {
+          throw "not enough coins.";
+        }
+        //credit / uncredit coins
+        //mark transaction
+
+        var newCoins = userDoc.data().coins + addCoins;
+        transaction.update(userRef, { coins: newCoins });
+      });
+    })
+    .then(() => {
+      logTransaction(uid, "Pick-a-duck fee", -totalBet);
+      if (totalPayout > 0) {
+        logTransaction(uid, "Pick-a-duck prize", totalPayout);
+      }
+      return {
+        status: "ok",
+        shuffledDucks: shuffledDucks,
+        totalPayout: totalPayout
+      };
+    })
+    .catch(e => {
+      console.error("Error in playDuck", e);
+      return { error: true };
+    });
+});
+
+function shuffle(a) {
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
+  }
+  return a;
+}

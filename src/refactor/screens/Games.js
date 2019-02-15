@@ -33,11 +33,11 @@ export class Games extends Component {
           </View>
           <View style={{ width: "100%", flexDirection: "row" }}>
             <GameButton
-              hue={60}
+              hue={220}
               title="Pick-a-duck"
               routeName="DuckGame"
               navigation={this.props.navigation}
-              image="https://i.imgur.com/5P2ZQbg.png"
+              image="https://i.imgur.com/J0GHuae.png"
             />
           </View>
         </ScrollView>

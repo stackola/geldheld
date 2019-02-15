@@ -11,6 +11,7 @@ const sendUpdateAddress = firebase.functions().httpsCallable("updateAddress");
 const sendSetToken = firebase.functions().httpsCallable("setToken");
 const sendSetFriend = firebase.functions().httpsCallable("setFriend");
 const sendValidate = firebase.functions().httpsCallable("validate");
+const sendDuckGame = firebase.functions().httpsCallable("duckGame");
 const sendEnableNotifications = firebase
   .functions()
   .httpsCallable("enableNotifications");
@@ -34,6 +35,10 @@ export function flip(amount) {
 
 export function validate(payload) {
   return sendValidate(payload);
+}
+
+export function playDuckGame(payload) {
+  return sendDuckGame(payload);
 }
 
 export function slot(amount) {

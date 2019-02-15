@@ -21,6 +21,7 @@ import Title from "../components/Title";
 import SText from "../components/SText";
 import Spacer from "../components/Spacer";
 import BetSizeSelector from "../components/BetSizeSelector";
+import { playDuckGame } from "../../lib";
 
 let ducks = [
   0,
@@ -89,73 +90,6 @@ let ducks = [
   3
 ];
 
-let nextDucks = [
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  1,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  0,
-  3,
-  0,
-  0,
-  0,
-  1,
-  0,
-  0,
-  0,
-  0,
-  1,
-  0,
-  0,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  0,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  1,
-  0,
-  1,
-  1,
-  1,
-  1,
-  2,
-  0,
-  2
-];
-
 export class Inventory extends Component {
   constructor(props) {
     super(props);
@@ -178,7 +112,7 @@ export class Inventory extends Component {
   // reveal ducks
   // show "shuffle" button.
   //
-  assignValuesToUserDucks(cb) {
+  assignValuesToUserDucks(nextDucks, cb) {
     let d = nextDucks;
     let newState = this.state.ducks.rows;
     for (let x = 0; x < 8; x++) {
@@ -225,24 +159,45 @@ export class Inventory extends Component {
   }
   play() {
     if (this.state.status == "done" || this.state.status == "error") {
+      LayoutAnimation.configureNext({
+        ...LayoutAnimation.Presets.easeInEaseOut,
+        duration: 500
+      });
       this.setState({ status: "start", hidden: true });
       return;
     }
     if (this.state.status == "start") {
+      LayoutAnimation.configureNext({
+        ...LayoutAnimation.Presets.easeInEaseOut,
+        duration: 500
+      });
       this.setState({ status: "loading" }, () => {
-        setTimeout(() => {
-          this.assignValuesToUserDucks(() => {
-            LayoutAnimation.configureNext({
-              ...LayoutAnimation.Presets.easeInEaseOut,
-              duration: 4000
-            });
-            this.setState({ hidden: false }, () => {
-              setTimeout(() => {
-                this.setState({ status: "done" });
-              }, 4000);
-            });
+        let payload = {
+          betSize: this.state.betSize,
+          selectedDucks: this.getSelectedDucks()
+        };
+        console.log(JSON.stringify(payload));
+        playDuckGame(payload)
+          .then(res => {
+            if (res.data.status == "ok") {
+              this.assignValuesToUserDucks(res.data.shuffledDucks, () => {
+                LayoutAnimation.configureNext({
+                  ...LayoutAnimation.Presets.easeInEaseOut,
+                  duration: 4000
+                });
+                this.setState({ hidden: false }, () => {
+                  setTimeout(() => {
+                    this.setState({ status: "done" });
+                  }, 4000);
+                });
+              });
+            } else {
+              this.setState({ status: "error" });
+            }
+          })
+          .catch(() => {
+            this.setState({ status: "error" });
           });
-        }, 1000);
       });
     }
     //set loading
@@ -251,29 +206,29 @@ export class Inventory extends Component {
     //reveal win
   }
   makeDuckObj(items) {
-    let row1 = items.slice(0, 8).map(i => {
-      return { value: i, selected: false };
+    let row1 = items.slice(0, 8).map((i, index) => {
+      return { value: i, selected: false, row: 0, col: index };
     });
-    let row2 = items.slice(8, 16).map(i => {
-      return { value: i, selected: false };
+    let row2 = items.slice(8, 16).map((i, index) => {
+      return { value: i, selected: false, row: 1, col: index };
     });
-    let row3 = items.slice(16, 24).map(i => {
-      return { value: i, selected: false };
+    let row3 = items.slice(16, 24).map((i, index) => {
+      return { value: i, selected: false, row: 2, col: index };
     });
-    let row4 = items.slice(24, 32).map(i => {
-      return { value: i, selected: false };
+    let row4 = items.slice(24, 32).map((i, index) => {
+      return { value: i, selected: false, row: 3, col: index };
     });
-    let row5 = items.slice(32, 40).map(i => {
-      return { value: i, selected: false };
+    let row5 = items.slice(32, 40).map((i, index) => {
+      return { value: i, selected: false, row: 4, col: index };
     });
-    let row6 = items.slice(40, 48).map(i => {
-      return { value: i, selected: false };
+    let row6 = items.slice(40, 48).map((i, index) => {
+      return { value: i, selected: false, row: 5, col: index };
     });
-    let row7 = items.slice(48, 56).map(i => {
-      return { value: i, selected: false };
+    let row7 = items.slice(48, 56).map((i, index) => {
+      return { value: i, selected: false, row: 6, col: index };
     });
-    let row8 = items.slice(56, 64).map(i => {
-      return { value: i, selected: false };
+    let row8 = items.slice(56, 64).map((i, index) => {
+      return { value: i, selected: false, row: 7, col: index };
     });
     return { rows: [row1, row2, row3, row4, row5, row6, row7, row8] };
   }
@@ -327,7 +282,11 @@ export class Inventory extends Component {
     let duckCount = this.getSelectedCount();
     return (
       <Wrapper>
-        <Header title="Pick-a-duck" showBack />
+        <Header
+          title="Pick-a-duck"
+          showBack
+          hideBalance={this.state.status == "loading"}
+        />
         <ScrollView style={{ flex: 1 }}>
           <Spacer />
           <StandardBox>
@@ -363,17 +322,12 @@ export class Inventory extends Component {
           </View>
           <React.Fragment>
             <Spacer />
-            <BetSizeSelector
-              betSize={this.state.betSize}
-              onChange={b => {
-                this.setState({ betSize: b });
-              }}
-            />
+
             <ColorButton
               small
               center
-              smallFont
               loading={this.state.status == "loading"}
+              error={this.state.status == "error"}
               hue={120}
               sat={duckCount ? 100 : 0}
               onPress={() => {
@@ -382,8 +336,7 @@ export class Inventory extends Component {
             >
               {this.state.status == "done" ? (
                 <React.Fragment>
-                  You won <Coins amount={this.getTotalWin()} />
-                  {"\n"}Press to reset
+                  You won <Coins amount={this.getTotalWin()} size={20} />
                 </React.Fragment>
               ) : (
                 <React.Fragment>
@@ -392,7 +345,7 @@ export class Inventory extends Component {
                       Buy {duckCount} duck{duckCount > 1 ? "s" : ""} for{" "}
                       <Coins
                         amount={duckCount * this.state.betSize}
-                        size={14}
+                        size={20}
                       />
                     </React.Fragment>
                   ) : (
@@ -401,6 +354,14 @@ export class Inventory extends Component {
                 </React.Fragment>
               )}
             </ColorButton>
+            {this.state.status == "start" && (
+              <BetSizeSelector
+                betSize={this.state.betSize}
+                onChange={b => {
+                  this.setState({ betSize: b });
+                }}
+              />
+            )}
           </React.Fragment>
         </ScrollView>
       </Wrapper>
@@ -432,16 +393,16 @@ function PayOut(p) {
 
 function getDuckColor(v) {
   if (v == 0) {
-    return "grey";
+    return "#AAAAAA";
   }
   if (v == 1) {
-    return "orange";
+    return "#FFA500";
   }
   if (v == 2) {
-    return "red";
+    return "#FF0000";
   }
   if (v == 3) {
-    return "green";
+    return "#00FF00";
   }
 }
 let Duck = p => {
@@ -453,9 +414,7 @@ let Duck = p => {
         justifyContent: "center",
         borderRadius: 2,
         margin: 2,
-        backgroundColor: p.data.selected
-          ? colors.green + "77"
-          : colors.lightTransparent
+        backgroundColor: p.data.selected ? colors.green + "77" : "rgba(0,0,0,0)"
       }}
       onPress={() => {
         p.pressed();
@@ -464,13 +423,13 @@ let Duck = p => {
       <View style={{ width: 20, height: 20 }}>
         <Icon
           name={"duck"}
-          color={getDuckColor(p.data.value)}
+          color={getDuckColor(p.data.value) + (p.data.selected ? "FF" : "33")}
           size={20}
           style={{ position: "absolute", width: p.hidden ? 0 : "100%" }}
         />
         <Icon
           name={"duck"}
-          color={"yellow"}
+          color={p.data.selected ? "yellow" : "#ffff0033"}
           size={20}
           style={{ position: "absolute", width: !p.hidden ? 0 : "100%" }}
         />
@@ -499,9 +458,12 @@ let Row = p => {
 };
 
 function shuffle(a) {
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
+  var j, x, i;
+  for (i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * (i + 1));
+    x = a[i];
+    a[i] = a[j];
+    a[j] = x;
   }
   return a;
 }
