@@ -387,7 +387,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
                 });
             })
             .catch(err => {
-              console.log("error!!");
+              console.log("error!!",err);
               throw err;
             });
         })
@@ -396,22 +396,13 @@ exports.openCrate = functions.https.onCall((data, context) => {
         });
     })
     .then(r => {
+      challengeTrigger(uid, "crateOpened", 1);
       console.log("transaction done!!!", r);
       return { status: "ok", data: r };
     })
     .catch(err => {
-      console.log("errorrr!!");
+      console.log("errorrr!!", err);
       return { error: true, text: err };
-    });
-
-  return db
-    .collection("users")
-    .doc(uid)
-    .collection("crates")
-    .doc(userCrateId)
-    .get()
-    .then(userCrate => {
-      console.log(userCrate.data());
     });
 });
 
@@ -458,6 +449,7 @@ exports.buyCrate = functions.https.onCall((data, context) => {
           .then(() => {
             console.log("Transaction successfully committed!");
             logTransaction(uid, "Crate purchase", -price);
+            
             return { status: "ok", userCrate: newUserCrate.id };
           })
           .catch(function(error) {
@@ -1060,4 +1052,98 @@ function shuffle(a) {
     a[j] = x;
   }
   return a;
+}
+
+
+
+function challengeTrigger(uid, trigger, amount) {
+  //fetch all active challenges for user with this trigger.
+
+  let db = admin.firestore();
+  var userRef = db.collection("users").doc(uid);
+  return db.runTransaction(transaction => {
+    return transaction
+      .get(
+        db
+          .collection("challenges")
+          .where("active", "==", true)
+          .where("trigger", "==", trigger)
+      )
+      .then(challenges => {
+        challenges = challenges.docs;
+        // get user progress?
+        return transaction
+          .get(
+            db
+              .collection("users")
+              .doc(uid)
+              .collection("challenges")
+          )
+          .then(userChallenges => {
+            return transaction.get(userRef).then(userDoc => {
+              let userData = userDoc.data();
+
+              userChallenges = userChallenges.docs;
+              challenges.map(c => {
+                let userChallenge = userChallenges.filter(uc => {
+                  return uc.id == c.id;
+                });
+                userChallenge = userChallenge[0] ? userChallenge[0] : null;
+                let newNextStep = userChallenge
+                  ? userChallenge.data().nextStep
+                  : 0;
+                //get challenge step.
+                let currentStep = userChallenge
+                  ? c
+                      .data()
+                      .steps.filter(
+                        a => a.order == userChallenge.data().nextStep
+                      )
+                  : c.data().steps.filter(a => a.order == 0);
+                console.log(currentStep[0]);
+                currentStep = currentStep[0];
+                if (!currentStep) {
+                  console.log("no further steps.");
+                  return;
+                }
+                //update user challenge
+                let newProgress = userChallenge
+                  ? userChallenge.data().progress + amount
+                  : amount;
+
+                if (newProgress >= currentStep.target) {
+                  console.log("GOTTA PAY THAT USER!!");
+                  currentStep.prizes.map(p => {
+                    console.log("giving prize", p);
+                    if (p.type == "coins") {
+                      transaction.update(userRef, {
+                        coins: userData.coins + p.value
+                      });
+                      logTransaction(uid, "Challenge prize", p.value);
+                    }
+                  });
+                  newNextStep = currentStep.order + 1;
+                }
+                transaction.set(
+                  userChallenge
+                    ? userChallenge.ref
+                    : db
+                        .collection("users")
+                        .doc(uid)
+                        .collection("challenges")
+                        .doc(c.id),
+                  userChallenge
+                    ? { progress: newProgress, nextStep: newNextStep }
+                    : {
+                        id: c.id,
+                        progress: newProgress,
+                        nextStep: newNextStep
+                      },
+                  { merge: true }
+                );
+              });
+            });
+          });
+      });
+  });
 }

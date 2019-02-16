@@ -35,17 +35,12 @@ export default class Challenge extends Component {
   }
   getCurrentStep() {
     let complete = this.state.userProgress
-      ? this.state.userProgress.progress
+      ? this.state.userProgress.nextStep
       : 0;
-    let cs = null;
 
-    this.props.steps.map(s => {
-      console.log(s);
-      if (complete < s.target && !cs) {
-        cs = s;
-      }
-    });
-    return cs || this.props.steps[this.props.steps.length - 1];
+    return this.props.steps.filter(a => {
+      return a.order == complete;
+    })[0] || this.props.steps[this.props.steps.length-1];
   }
   render() {
     console.log(this.props);
