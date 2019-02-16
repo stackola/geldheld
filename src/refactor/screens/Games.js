@@ -17,7 +17,13 @@ export class Games extends Component {
               image="https://i.imgur.com/wss02as.png"
               title={"Emoji spin"}
             />
-            <GameButton hue={10} image="heads_icon" title={"Coin flip"} />
+            <GameButton
+              hue={10}
+              image="heads_icon"
+              title={"Coin flip"}
+              routeName="CoinGame"
+              navigation={this.props.navigation}
+            />
           </View>
           <View style={{ width: "100%", flexDirection: "row" }}>
             <GameButton

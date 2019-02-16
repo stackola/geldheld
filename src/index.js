@@ -14,6 +14,7 @@ import Home from "./refactor/screens/Home";
 
 import Games from "./refactor/screens/Games";
 import DuckGame from "./refactor/screens/DuckGame";
+import CoinGame from "./refactor/screens/CoinGame";
 
 import Crates from "./refactor/screens/Crates";
 import Challenges from "./refactor/screens/Challenges";
@@ -55,7 +56,8 @@ const AppStack = createStackNavigator(
     Product: Product,
     Category: Category,
     DuckGame: DuckGame,
-    Settings: Settings
+    Settings: Settings,
+    CoinGame: CoinGame
   },
   {
     defaultNavigationOptions: ({ navigation }) => ({

@@ -7,11 +7,6 @@ fixes:
   make sure transaction functions are pure!
   Links: web version 
 
-nice to have:
-  webiste
-  admin
-  find box for product in product page
-  group similar crates / pages dies das
 
 
 Challenges:
@@ -23,9 +18,16 @@ Challenges:
 kartengame
 jackpot game
 RPS
-flip rubbellos
+rubbellos
 
 refactor-todo:
-  load user crates to redux ?
+  coingame
+  emoji spin
+
+
+nice to have:
   jump no next crate after open ?
-  games
+  webiste
+  admin
+  find box for product in product page
+  group similar crates / pages dies das
