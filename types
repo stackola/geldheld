@@ -1,0 +1,23 @@
+challenge = {
+    trigger:string
+    id:string
+    steps:step[]
+    continous:bool
+    active:bool
+}
+
+
+step = {
+    name:string
+    text:string
+    target:number
+    order:number
+    prizes:prize[]
+}
+
+
+prize = {
+    type:string
+    value:number
+    name:string
+}

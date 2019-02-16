@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React, { Component } from "react";
 import { Text, View } from "react-native";
 import StandardBox from "./StandardBox";
 import Title from "./Title";
@@ -8,13 +8,55 @@ import ContinousBar from "./ContinousBar";
 import colors from "../../colors";
 import style from "../../style";
 
-export default class Challenge extends PureComponent {
+import firebase from "react-native-firebase";
+import { getUID } from "../../lib";
+
+export default class Challenge extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userProgress: null
+    };
+  }
+  componentDidMount() {
+    // fetch user progress.
+    firebase
+      .firestore()
+      .doc("users/" + getUID())
+      .collection("challenges")
+      .doc(this.props.id)
+      .get()
+      .then(userProgress => {
+        console.log("got user progress", userProgress);
+        if (userProgress._data) {
+          this.setState({ userProgress: userProgress._data });
+        }
+      });
+  }
+  getCurrentStep() {
+    let complete = this.state.userProgress
+      ? this.state.userProgress.progress
+      : 0;
+    let cs = null;
+
+    this.props.steps.map(s => {
+      console.log(s);
+      if (complete < s.target && !cs) {
+        cs = s;
+      }
+    });
+    return cs || this.props.steps[this.props.steps.length - 1];
+  }
   render() {
-    let total = this.props.total;
-    let complete = this.props.complete;
+    console.log(this.props);
+    let step = this.getCurrentStep();
+    let total = step.target;
+    let complete = this.state.userProgress
+      ? this.state.userProgress.progress
+      : 0;
     let continous = this.props.continous;
-    let text = this.props.text;
-    let title = this.props.title;
+    let text = step.text;
+    let title = step.name;
     return (
       <StandardBox>
         <View style={{ flexDirection: "row" }}>

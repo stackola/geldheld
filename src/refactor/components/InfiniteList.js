@@ -124,7 +124,7 @@ export default class InfiniteList extends Component {
         }}
         onEndReachedThreshold={0.05}
         keyExtractor={i => {
-          return i.id;
+          return i.id + this.state.refreshKey.toString();
         }}
         ListHeaderComponent={
           (

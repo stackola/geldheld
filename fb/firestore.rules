@@ -18,6 +18,9 @@ service cloud.firestore {
     match /users/{user}/transactions/{any} {
       allow read: if user == request.auth.uid; 
     }
+    match /users/{user}/challenges/{any} {
+      allow read: if user == request.auth.uid; 
+    }
     match /offers/{offer}{
       allow read: if true;
     }
@@ -25,6 +28,9 @@ service cloud.firestore {
       allow read: if true;
     }
     match /crates/{crate}{
+      allow read: if true;
+    }
+    match /challenges/{crate}{
       allow read: if true;
     }
     match /orders/{order}{
