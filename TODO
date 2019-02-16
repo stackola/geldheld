@@ -3,10 +3,10 @@ payout refererr?!
 send notifications on events / on gift?
 
 fixes:
-  avoid nav stack spam
+  store friend count in user?
+  avoid nav stack spam (crates)
   make sure transaction functions are pure!
-  Links: web version 
-
+  Links: web version
 
 
 Challenges:
@@ -15,17 +15,19 @@ Challenges:
     freunde werben
     offer complete / coins
 
-kartengame
-jackpot game
-RPS
-rubbellos
 
-refactor-todo:
-  coingame
-  emoji spin
 
+
+
+
+Game Ideas:
+  kartengame
+  jackpot game
+  RPS
+  rubbellos
 
 nice to have:
+  emoji spin
   jump no next crate after open ?
   webiste
   admin
