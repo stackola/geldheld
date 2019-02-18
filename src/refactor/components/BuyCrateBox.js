@@ -35,6 +35,9 @@ export class BuyCrateBox extends Component {
     this.loadSKUs();
   }
   loadSKUs() {
+    if (!this.props.iaps) {
+      return;
+    }
     let skuArray = this.props.iaps.map(i => i.sku);
     RNIap.getProducts(skuArray).then(products => {
       console.log(products);
@@ -77,17 +80,18 @@ export class BuyCrateBox extends Component {
         </ColorButton>
         <BuyCrateButton {...this.props} />
         <View style={{ flexDirection: "column" }}>
-          {this.props.iaps.map((iap, index) => {
-            return (
-              <IapCrateButton
-                {...iap}
-                key={index}
-                storeInfo={
-                  this.state.skuMap[iap.sku] ? this.state.skuMap[iap.sku] : {}
-                }
-              />
-            );
-          })}
+          {this.props.iaps &&
+            this.props.iaps.map((iap, index) => {
+              return (
+                <IapCrateButton
+                  {...iap}
+                  key={index}
+                  storeInfo={
+                    this.state.skuMap[iap.sku] ? this.state.skuMap[iap.sku] : {}
+                  }
+                />
+              );
+            })}
         </View>
       </View>
     );
