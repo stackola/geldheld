@@ -39,6 +39,16 @@ class UserCrateLoader extends PureComponent {
             >
               {crate => {
                 console.log("got both crates");
+                if (!crate) {
+                  return (
+                    <StandardBox
+                      noPadding
+                      style={{ height: 80, flexDirection: "row" }}
+                    >
+                      <Title>Crate no longer available.</Title>
+                    </StandardBox>
+                  );
+                }
 
                 return (
                   <TouchableOpacity

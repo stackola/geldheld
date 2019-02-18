@@ -387,7 +387,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
                 });
             })
             .catch(err => {
-              console.log("error!!",err);
+              console.log("error!!", err);
               throw err;
             });
         })
@@ -449,7 +449,7 @@ exports.buyCrate = functions.https.onCall((data, context) => {
           .then(() => {
             console.log("Transaction successfully committed!");
             logTransaction(uid, "Crate purchase", -price);
-            
+
             return { status: "ok", userCrate: newUserCrate.id };
           })
           .catch(function(error) {
@@ -1053,8 +1053,6 @@ function shuffle(a) {
   }
   return a;
 }
-
-
 
 function challengeTrigger(uid, trigger, amount) {
   //fetch all active challenges for user with this trigger.

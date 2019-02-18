@@ -38,9 +38,11 @@ export default class Challenge extends Component {
       ? this.state.userProgress.nextStep
       : 0;
 
-    return this.props.steps.filter(a => {
-      return a.order == complete;
-    })[0] || this.props.steps[this.props.steps.length-1];
+    return (
+      this.props.steps.filter(a => {
+        return a.order == complete;
+      })[0] || this.props.steps[this.props.steps.length - 1]
+    );
   }
   render() {
     console.log(this.props);

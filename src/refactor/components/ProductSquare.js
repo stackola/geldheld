@@ -22,6 +22,7 @@ export class ProductSquare extends Component {
     this.props.navigation.navigate(navToProduct(this.props.id));
   }
   render() {
+    let p = this.props;
     return (
       <StandardBox
         noPadding
@@ -47,7 +48,7 @@ export class ProductSquare extends Component {
             }}
           >
             <Image
-              source={{ uri: "https://i.imgur.com/xBjQ6Ld.png" }}
+              source={{ uri: p.image }}
               resizeMode={"contain"}
               style={{ height: 80, backgroundColor: "white" }}
             />
@@ -61,7 +62,7 @@ export class ProductSquare extends Component {
                 paddingBottom: style.containerPadding
               }}
             >
-              <Title style={style.containerHeadline}>Laser Pointer</Title>
+              <Title style={style.containerHeadline}>{p.name}</Title>
               <View
                 style={{
                   flexDirection: "row",
@@ -69,24 +70,31 @@ export class ProductSquare extends Component {
                   marginTop: style.space / 2
                 }}
               >
-                <StarRating
-                  emptyStarColor={colors.textMinor}
-                  fullStarColor={colors.star}
-                  disabled={true}
-                  starSize={18}
-                  rating={3.5}
-                />
-                <Text
-                  style={{
-                    color: colors.textMinor,
-                    fontSize: 14,
-                    paddingLeft: style.space / 4,
-                    flex: 1
-                  }}
-                >
-                  <Icon name="account" size={14} />
-                  25
-                </Text>
+                {p.ratingCount > 0 ? (
+                  <React.Fragment>
+                    <StarRating
+                      emptyStarColor={colors.textMinor}
+                      fullStarColor={colors.star}
+                      disabled={true}
+                      starSize={18}
+                      rating={this.props.rating}
+                    />
+
+                    <Text
+                      style={{
+                        color: colors.textMinor,
+                        fontSize: 14,
+                        paddingLeft: style.space / 4,
+                        flex: 1
+                      }}
+                    >
+                      <Icon name="account" size={14} />
+                      {p.ratingCount}
+                    </Text>
+                  </React.Fragment>
+                ) : (
+                  <View style={{ flex: 1 }} />
+                )}
                 <View
                   style={{
                     minWidth: 60,
@@ -95,7 +103,7 @@ export class ProductSquare extends Component {
                     flexDirection: "row"
                   }}
                 >
-                  <Coins amount={1000} />
+                  <Coins amount={p.price} />
                 </View>
               </View>
             </View>
