@@ -2,6 +2,8 @@ const functions = require("firebase-functions");
 var admin = require("firebase-admin");
 admin.initializeApp(functions.config().firebase);
 
+let db = admin.firestore();
+
 const defaultBalance = 10;
 
 let startDucks = [
@@ -74,8 +76,7 @@ let startDucks = [
 exports.makeUser = functions.auth.user().onCreate(user => {
   let uid = user.uid;
   // make a user record.
-  return admin
-    .firestore()
+  return db
     .collection("users")
     .doc(uid)
     .set(
@@ -106,7 +107,6 @@ exports.setFriend = functions.https.onCall((data, context) => {
   if (uid == friendId) {
     return { error: true, text: "Can't invite yourself." };
   }
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   var friendRef = db.collection("users").doc(friendId);
   return db.runTransaction(transaction => {
@@ -155,7 +155,6 @@ exports.setToken = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
 
-  let db = admin.firestore();
   let token = data.token;
   var userRef = db.collection("users").doc(uid);
   return userRef
@@ -177,7 +176,6 @@ exports.updateAddress = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
 
-  let db = admin.firestore();
   let address = data.address;
   var userRef = db.collection("users").doc(uid);
   return userRef
@@ -199,7 +197,6 @@ exports.enableNotifications = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
 
-  let db = admin.firestore();
   let token = data.token;
   var userRef = db.collection("users").doc(uid);
   return userRef
@@ -221,7 +218,6 @@ exports.disableNotifications = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4ZYYoopltey2";
 
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return userRef
     .set({ notificationsEnabled: false }, { merge: true })
@@ -301,7 +297,6 @@ exports.openCrate = functions.https.onCall((data, context) => {
 
   //let uid = "8UuBdgKlpmUUitTImczv9iLSre72";
   let userCrateId = data.crateId;
-  let db = admin.firestore();
 
   var userRef = db.collection("users").doc(uid);
   return db
@@ -407,6 +402,7 @@ exports.openCrate = functions.https.onCall((data, context) => {
 });
 
 exports.buyCrate = functions.https.onCall((data, context) => {
+  console.log("AM NOW IN FUNC!");
   const uid = context.auth.uid;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
@@ -417,15 +413,20 @@ exports.buyCrate = functions.https.onCall((data, context) => {
 
   let crateId = data.crateId;
 
-  let db = admin.firestore();
+  console.log("Before FS init");
+  console.log("Before first FS call");
   let userRef = db.collection("users").doc(uid);
+  console.log("After first FS call");
   let newUserCrate = userRef.collection("crates").doc();
+  console.log("After first FS doc ref");
   return db
     .collection("crates")
     .doc(crateId)
     .get()
     .then(snap => {
+      console.log("After first FS snap have");
       let crate = snap.data();
+      console.log("After first FS data have");
       if (crate) {
         let price = crate.price;
         return db
@@ -480,7 +481,6 @@ exports.slot = functions.https.onCall((data, context) => {
   addCoins += winAmount;
   //console.log({ bet, win, addCoins });
 
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return db
     .runTransaction(transaction => {
@@ -521,7 +521,6 @@ exports.coinflip = functions.https.onCall((data, context) => {
   if (outcome) {
     addCoins = data.bet;
   }
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return db
     .runTransaction(transaction => {
@@ -549,7 +548,6 @@ exports.coinflip = functions.https.onCall((data, context) => {
 });
 
 function logTransaction(user, text, amount) {
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(user);
   userRef
     .collection("transactions")
@@ -576,7 +574,6 @@ exports.quickSell = functions.https.onCall((data, context) => {
 
   let voucherId = data.voucherId;
 
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   var voucherRef = db
     .collection("users")
@@ -627,7 +624,6 @@ exports.order = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4OZYYoopltey2";
 
-  let db = admin.firestore();
   let productId = data.productId;
   let voucherRef = null;
 
@@ -762,7 +758,6 @@ exports.review = functions.https.onCall((data, context) => {
 
   //let uid = "BJfqbecAOiTebHd4OZYYoopltey2";
 
-  let db = admin.firestore();
   let rating = data.rating;
   let text = data.text;
   let shippingTime = data.shippingTime;
@@ -854,16 +849,15 @@ function updateRatings(p, r) {
   return newRating;
 }
 
-const { google } = require("googleapis");
-const publisher = google.androidpublisher("v2");
-const authClient = new google.auth.JWT({
-  email: "diese-service-acct@geldheld-746c9.iam.gserviceaccount.com",
-  key:
-    "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrPdZX5BdwVyzU\nYN7IKgKdVc18m0o3tfla2mDK/+JOjHdHZPeiiQpxuMkCyS5Qk6u9P5b2x/Dc56c4\n5kLaafV8S2lUhoVUNg8GvzL6NLe60YIpgf+8HCwWPs0Pe9sq2EWYiCjswUMUQUCj\np3H0t8a6lGaSsn4Jdce4l2wo3HUInooejX0sks/tllXKiY8bLKU4NvXT8nW3OIrX\n/3t1dRjoSfZImkYvC0I5lvMmyH6DT9nHQbHwSNHlzfGRV49quYZmlK2ent+cTJof\nXExw73mMstlsaDgWccqh+9zyVcrih9D7GiglUOTwNdSQ5jgkg3T+wD6AwIraIM/J\nz0jJ53IPAgMBAAECggEAR2hs9o++GnGv1wxiOnQSTQvXuauEIoE272T7UgusknbO\n0q3O+i9NdKjK4eeE8cLyreNTj6tGzMepGvgiTrQ6008bKE1EUh6M25JlrqLHLxdo\nwOhd/VJ+K/SaTGeouFAhjX7SGhBpaYvgaZ5MzfDI5Us3Dttx5X4A///c8ZklEKdj\nof7A7yZLKRXYq5FyhdXrKF4DJmHYA6VKZ+QRnqZndDmWNvTxSl8mRKf0+Yo3TJ2g\nXsJk8E0KNOUTtiRTSjcr/DUQnYyfmGscFHhajzg59nnzwkfP1io4FTcSbmnZxLwm\nWbuoII7QytzCvukJpCCMZcp4bcOlRWJeYLW5UXs8EQKBgQDxuf7BPTn12SMAlXyh\n5Zrm/mJlw14z/TsSRmQSVAa/EeBeBSpLbqjdbh3hTXJNbjFw64JuYsWszmhntmOl\nJyczwnGOcQq8m68ZkKmOaUmjGy+e83qiV/erRfrKpN+VvNn4mKKt11QYKpvd41zV\nsTE6AaUexokbdayRM5H9VfKNJwKBgQC1Wl8jq3W4F3UWOgrMouj9kxSrAGR1+3lt\nsQx9B4odX/ZMJhHASXiimjLYo1KknIiipriIFktbjcAT1++ohNa/1SpWF86FoXbu\now8J1ZmhXIo5PjobCp+lTuqj2QXpBc/p2LEbX7+eV0u7MsebTJ96WwYtL6KsDhTL\nJJ89RztU2QKBgQC56to7+kFoC7fWLSOMybIYVDOOHXOI/Q3AAo/ZYPNHZhJxffuH\nxPbwSE+HCDAPyd8RALJzAFkVjjPTAP8m+TQ3pSf97IfbhMpqGU+wDt7qKnC4CoCZ\n+JqvCsXXsnOdEYF8qLkGiAVQCQWU5dhzKzO3b6h2QTEXA6zUiRuSA9boJQKBgG83\n/SDjBk7gE+6NqhHV1w2sJgC5POMeVlnvOrly5kEdmO8aaciDRnhyGLzDbOuHFESr\n+n97LLv5MtL4mwG+dfUvxccG0qEhZM71MUPWu2E6X4q7nub2nPHEdCIH9pfx+JBx\nVCx1jA6PeuJTQhb75tIjAKa1kA30lMwAqafrB3gBAoGATAl2oA1txlrO3LFiRqB0\n5OxeXG07Pt27ICSIPCehQAJRPM1XhT96LElEmC6B9YWpz0TIK4ckLS7/53Gz4zEq\nmSp2wr7Ru2adUJzAdc3d/vpGzbAYwwPF+dcbZOIeDS4xZYymWLksrm+DP53qKzaZ\nsgnh7U+caylXrCmFhxFsSTo=\n-----END PRIVATE KEY-----\n",
-  scopes: ["https://www.googleapis.com/auth/androidpublisher"]
-});
-
 exports.validate = functions.https.onCall((data, context) => {
+  const { google } = require("googleapis");
+  const publisher = google.androidpublisher("v2");
+  const authClient = new google.auth.JWT({
+    email: "diese-service-acct@geldheld-746c9.iam.gserviceaccount.com",
+    key:
+      "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCrPdZX5BdwVyzU\nYN7IKgKdVc18m0o3tfla2mDK/+JOjHdHZPeiiQpxuMkCyS5Qk6u9P5b2x/Dc56c4\n5kLaafV8S2lUhoVUNg8GvzL6NLe60YIpgf+8HCwWPs0Pe9sq2EWYiCjswUMUQUCj\np3H0t8a6lGaSsn4Jdce4l2wo3HUInooejX0sks/tllXKiY8bLKU4NvXT8nW3OIrX\n/3t1dRjoSfZImkYvC0I5lvMmyH6DT9nHQbHwSNHlzfGRV49quYZmlK2ent+cTJof\nXExw73mMstlsaDgWccqh+9zyVcrih9D7GiglUOTwNdSQ5jgkg3T+wD6AwIraIM/J\nz0jJ53IPAgMBAAECggEAR2hs9o++GnGv1wxiOnQSTQvXuauEIoE272T7UgusknbO\n0q3O+i9NdKjK4eeE8cLyreNTj6tGzMepGvgiTrQ6008bKE1EUh6M25JlrqLHLxdo\nwOhd/VJ+K/SaTGeouFAhjX7SGhBpaYvgaZ5MzfDI5Us3Dttx5X4A///c8ZklEKdj\nof7A7yZLKRXYq5FyhdXrKF4DJmHYA6VKZ+QRnqZndDmWNvTxSl8mRKf0+Yo3TJ2g\nXsJk8E0KNOUTtiRTSjcr/DUQnYyfmGscFHhajzg59nnzwkfP1io4FTcSbmnZxLwm\nWbuoII7QytzCvukJpCCMZcp4bcOlRWJeYLW5UXs8EQKBgQDxuf7BPTn12SMAlXyh\n5Zrm/mJlw14z/TsSRmQSVAa/EeBeBSpLbqjdbh3hTXJNbjFw64JuYsWszmhntmOl\nJyczwnGOcQq8m68ZkKmOaUmjGy+e83qiV/erRfrKpN+VvNn4mKKt11QYKpvd41zV\nsTE6AaUexokbdayRM5H9VfKNJwKBgQC1Wl8jq3W4F3UWOgrMouj9kxSrAGR1+3lt\nsQx9B4odX/ZMJhHASXiimjLYo1KknIiipriIFktbjcAT1++ohNa/1SpWF86FoXbu\now8J1ZmhXIo5PjobCp+lTuqj2QXpBc/p2LEbX7+eV0u7MsebTJ96WwYtL6KsDhTL\nJJ89RztU2QKBgQC56to7+kFoC7fWLSOMybIYVDOOHXOI/Q3AAo/ZYPNHZhJxffuH\nxPbwSE+HCDAPyd8RALJzAFkVjjPTAP8m+TQ3pSf97IfbhMpqGU+wDt7qKnC4CoCZ\n+JqvCsXXsnOdEYF8qLkGiAVQCQWU5dhzKzO3b6h2QTEXA6zUiRuSA9boJQKBgG83\n/SDjBk7gE+6NqhHV1w2sJgC5POMeVlnvOrly5kEdmO8aaciDRnhyGLzDbOuHFESr\n+n97LLv5MtL4mwG+dfUvxccG0qEhZM71MUPWu2E6X4q7nub2nPHEdCIH9pfx+JBx\nVCx1jA6PeuJTQhb75tIjAKa1kA30lMwAqafrB3gBAoGATAl2oA1txlrO3LFiRqB0\n5OxeXG07Pt27ICSIPCehQAJRPM1XhT96LElEmC6B9YWpz0TIK4ckLS7/53Gz4zEq\nmSp2wr7Ru2adUJzAdc3d/vpGzbAYwwPF+dcbZOIeDS4xZYymWLksrm+DP53qKzaZ\nsgnh7U+caylXrCmFhxFsSTo=\n-----END PRIVATE KEY-----\n",
+    scopes: ["https://www.googleapis.com/auth/androidpublisher"]
+  });
   const uid = context.auth.uid;
   if (!context.auth) {
     // Throwing an HttpsError so that the client gets the error details.
@@ -871,7 +865,6 @@ exports.validate = functions.https.onCall((data, context) => {
   }
   //let uid = "AqQVcObSssQRkAc5nYTOb2oSbBI3";
 
-  let db = admin.firestore();
   const orderId = data.transactionId;
   const package_name = "com.stackola.geldheld"; //TODO
   const sku = data.productId;
@@ -967,7 +960,6 @@ exports.duckGame = functions.https.onCall((data, context) => {
 
   //let uid = "AqQVcObSssQRkAc5nYTOb2oSbBI3";
 
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   let bet = data.betSize;
   let selectedDucks = data.selectedDucks;
@@ -1057,7 +1049,6 @@ function shuffle(a) {
 function challengeTrigger(uid, trigger, amount) {
   //fetch all active challenges for user with this trigger.
 
-  let db = admin.firestore();
   var userRef = db.collection("users").doc(uid);
   return db.runTransaction(transaction => {
     return transaction
