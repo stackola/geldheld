@@ -192,18 +192,20 @@ export class BuyProductBox extends Component {
             )}
           </ColorButton>
         )}
-        <ColorButton
-          center
-          small
-          hue={120}
-          sat={100}
-          smallFont
-          onPress={() => {
-            this.buy(false);
-          }}
-        >
-          Buy for {this.getTotalPrice()} <Icon name="coin" size={14} />
-        </ColorButton>
+        {!this.state.voucher && (
+          <ColorButton
+            center
+            small
+            hue={120}
+            sat={100}
+            smallFont
+            onPress={() => {
+              this.buy(false);
+            }}
+          >
+            Buy for {this.getTotalPrice()} <Icon name="coin" size={14} />
+          </ColorButton>
+        )}
         <ColorButton
           center
           small

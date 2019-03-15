@@ -89,10 +89,12 @@ export class Product extends Component {
                     <TopContainer style={{ paddingTop: style.space }}>
                       <ScrollView horizontal style={{}}>
                         <Spacer horizontal />
-                        <ProductImage />
-                        <ProductImage />
-                        <ProductImage />
-                        <ProductImage />
+                        <ProductImage image={prod.image} />
+                        {!!prod.images &&
+                          prod.images.length > 0 &&
+                          prod.images.map(i => {
+                            return <ProductImage key={i} image={i} />;
+                          })}
                       </ScrollView>
                       <Spacer />
                     </TopContainer>
@@ -169,7 +171,7 @@ let ProductImage = p => {
           backgroundColor: "white"
         }}
         resizeMode={"contain"}
-        source={{ uri: "https://i.imgur.com/xBjQ6Ld.png" }}
+        source={{ uri: p.image }}
       />
     </View>
   );

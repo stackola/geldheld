@@ -78,7 +78,7 @@ export default class CoinSelect extends Component {
         <View style={{ width: 8 }} />
         <TouchableOpacity
           onPress={() => {
-            this.props.onSpin("heads");
+            this.props.onSpin("tails");
           }}
           style={{
             flex: 1,
