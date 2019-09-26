@@ -124,10 +124,6 @@ export class Settings extends Component {
           this.setLoginState("google", "error");
         });
     });
-
-    // create a new firebase credential with the token
-
-    // login with credential
   }
   render() {
     let notsOn =
